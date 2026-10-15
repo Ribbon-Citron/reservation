@@ -34,11 +34,11 @@ if (Astro.request.method === 'POST') {
   }
 }
 
-// 2. 表示する日付の範囲を生成（今日から例えば30日分、または12/15を含めるように十分に生成）
-// ※ここでは今日から未来へ向かって30日分の日付文字列配列を生成します
+// 2. 表示する日付の範囲を生成
+// ※ここでは今日から未来へ向かって60日分の日付文字列配列を生成します
 const dates: string[] = [];
 const today = new Date();
-for (let i = 0; i < 30; i++) {
+for (let i = 0; i < 60; i++) {
   const d = new Date(today);
   d.setDate(today.getDate() + i);
   // YYYY-MM-DD 形式に変換

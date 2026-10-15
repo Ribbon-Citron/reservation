@@ -256,10 +256,14 @@
         const dayNow = String(now.getDate()).padStart(2, '0');
         const todayStr = `${yearNow}-${monthNow}-${dayNow}`;
         
-        const maxAllowedDate = new Date();
-        maxAllowedDate.setMonth(maxAllowedDate.getMonth() + 2);
-        const maxAllowedDateStr = maxAllowedDate.toISOString().split('T')[0];
+        // const maxAllowedDate = new Date();
+        // maxAllowedDate.setMonth(maxAllowedDate.getMonth() + 2);
 
+        // 変更後（今日から正確に60日後まで）
+        const maxAllowedDate = new Date();
+        maxAllowedDate.setDate(maxAllowedDate.getDate() + 60);
+        const maxAllowedDateStr = maxAllowedDate.toISOString().split('T')[0];
+        
         if (checkInInput) {
           checkInInput.min = todayStr;
           checkInInput.max = maxAllowedDateStr;
