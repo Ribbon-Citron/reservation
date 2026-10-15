@@ -1,0 +1,60 @@
+---
+// src/pages/admin/reservation.astro
+import { supabase } from '../../lib/supabase';
+
+let reservations: any[] = [];
+let dbError: string | null = null;
+
+if (!supabase) {
+  dbError = "Supabaseクライアントが初期化されていません（環境変数を確認してください）。";
+} else {
+  const { data, error } = await supabase
+    .from('reservations')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    dbError = error.message;
+  } else {
+    reservations = data || [];
+  }
+}
+
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(amount || 0);
+};
+
+const getStatusBadge = (status: string) => {
+  switch (status) {
+    case 'approved':
+      return { text: '予約確定', style: 'background: #dcfce7; color: #15803d;' };
+    case 'pending':
+      return { text: '承認待ち', style: 'background: #fef9c3; color: #a16207;' };
+    case 'paid':
+      return { text: '決済完了', style: 'background: #e0f2fe; color: #0369a1;' };
+    case 'cancelled':
+      return { text: 'キャンセル', style: 'background: #fee2e2; color: #b91c1c;' };
+    default:
+      return { text: status || '未設定', style: 'background: #f3f4f6; color: #374151;' };
+  }
+};
+---
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>予約一覧</title>
+  </head>
+  <body style="font-family: sans-serif; background: #f8fafc; margin: 0; padding: 2rem;">
+    <div style="max-width: 1100px; margin: 0 auto;">
+      <h1 style="color: #0f172a; font-size: 1.5rem;">予約一覧 (管理画面)</h1>
+      
+      {dbError ? (
+        <div style="background: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
+          <strong>エラーが発生しています:</strong> {dbError}
+        </div>
+      ) : (
+        <p>データ件数: {reservations.length}件</p>
+      )}
+    </div>
+  </body>
+</html>

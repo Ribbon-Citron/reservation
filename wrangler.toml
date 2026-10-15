@@ -1,0 +1,20 @@
+name = "reservation"
+compatibility_date = "2024-03-20"
+
+[vars]
+ADMIN_PASSWORD = "1234"
+ADMIN_USER = "admin"
+PUBLIC_SUPABASE_ANON_KEY = ""
+PUBLIC_SUPABASE_URL = "https://dpirhczosxernkvgwxqc.supabase.co"
+RESEND_API_KEY = ""
+STRIPE_PUBLIC_KEY = ""
+STRIPE_SECRET_KEY = ""
+SUPABASE_SERVICE_ROLE_KEY = ""
+SUPABASE_URL = "https://dpirhczosxernkvgwxqc.supabase.co"
+
+[[kv_namespaces]]
+binding = "SESSION"
+id = "581879f1d1024e388d3d4f5f1bd4e627" # リモート側で使われていた方のID
+
+[observability]
+enabled = true

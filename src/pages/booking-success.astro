@@ -1,0 +1,71 @@
+---
+// src/pages/booking-success.astro
+import { resend } from '../lib/resend';
+
+// クエリパラメーター等から送信先情報を取得（テスト用のフォールバック設定付き）
+const url = new URL(Astro.request.url);
+const guestEmail = url.searchParams.get('email') || 'waterislandz@gmail.com';
+const guestName = url.searchParams.get('name') || '比嘉 太郎';
+
+let emailSent = false;
+let emailError = '';
+
+try {
+  // メール送信の実行
+  await resend.emails.send({
+    from: 'onboarding@resend.dev', // テスト送信用の標準送信元
+    to: [guestEmail],
+    subject: '【ご予約確定】ご予約ありがとうございます',
+    html: `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
+        <h2 style="color: #1e293b; border-bottom: 2px solid #635bff; padding-bottom: 8px;">ご予約ありがとうございます</h2>
+        <p>${guestName} 様</p>
+        <p>宿泊のご予約およびお支払いが正常に完了いたしました。</p>
+        
+        <div style="background-color: #f8fafc; padding: 15px; border-radius: 6px; margin: 20px 0;">
+          <h3 style="margin-top: 0; font-size: 1rem; color: #334155;">予約詳細</h3>
+          <ul style="list-style: none; padding: 0; margin: 0; line-style: none;">
+            <li style="padding: 4px 0;"><strong>ご予約者名:</strong> ${guestName} 様</li>
+            <li style="padding: 4px 0;"><strong>ステータス:</strong> 決済完了（確定）</li>
+          </ul>
+        </div>
+
+        <p style="font-size: 0.9rem; color: #64748b;">
+          チェックイン方法や詳細なアクセス情報については、ご宿泊日が近づきましたら改めてご案内いたします。
+        </p>
+      </div>
+    `,
+  });
+  emailSent = true;
+} catch (err: any) {
+  console.error('メール送信エラー:', err);
+  emailError = err.message;
+}
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>予約完了</title>
+  </head>
+  <body style="font-family: sans-serif; padding: 2rem; text-align: center; background: #f8fafc;">
+    <div style="max-width: 500px; margin: 0 auto; background: white; border: 1px solid #bbf7d0; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+      <h1 style="color: #15803d; margin-top: 0; font-size: 1.5rem;">🎉 決済・予約が完了しました！</h1>
+      <p>ご予約ありがとうございます。決済が正常に完了いたしました。</p>
+      
+      {emailSent ? (
+        <div style="background: #f0fdf4; color: #166534; padding: 10px; border-radius: 6px; font-size: 0.9rem; margin-top: 1rem;">
+          ✉️ ご登録のメールアドレス（{guestEmail}）へ予約確定メールを送信しました。
+        </div>
+      ) : (
+        <div style="background: #fff1f2; color: #9f1239; padding: 10px; border-radius: 6px; font-size: 0.85rem; margin-top: 1rem;">
+          ※メール送信テスト失敗: {emailError}
+        </div>
+      )}
+
+      <a href="/reservation" style="display: inline-block; margin-top: 1.5rem; padding: 10px 20px; background: #635bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold;">
+        予約画面に戻る
+      </a>
+    </div>
+  </body>
+</html>

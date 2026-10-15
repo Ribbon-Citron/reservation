@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "compatibility_date": "2026-10-13",
+  "compatibility_flags": ["global_fetch_strictly_public"],
+  "name": "reservation",
+  "observability": {
+    "enabled": true
+  },
+  "kv_namespaces": [
+    {
+      "binding": "SESSION",
+      "id": "add5b1d92d404404a61ce0e291772be9"
+    }
+  ]
+}
