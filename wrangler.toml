@@ -1,20 +1,15 @@
 name = "reservation"
 compatibility_date = "2024-03-20"
 
+# パブリックで固定の変数だけを書く（必要最小限に）
 [vars]
-ADMIN_PASSWORD = "1234"
 ADMIN_USER = "admin"
-PUBLIC_SUPABASE_ANON_KEY = ""
-PUBLIC_SUPABASE_URL = "https://dpirhczosxernkvgwxqc.supabase.co"
-RESEND_API_KEY = ""
-STRIPE_PUBLIC_KEY = ""
-STRIPE_SECRET_KEY = ""
-SUPABASE_SERVICE_ROLE_KEY = ""
 SUPABASE_URL = "https://dpirhczosxernkvgwxqc.supabase.co"
+PUBLIC_SUPABASE_URL = "https://dpirhczosxernkvgwxqc.supabase.co"
 
 [[kv_namespaces]]
 binding = "SESSION"
-id = "581879f1d1024e388d3d4f5f1bd4e627" # リモート側で使われていた方のID
+id = "add5b1d92d404404a61ce0e291772be9"
 
 [observability]
 enabled = true
