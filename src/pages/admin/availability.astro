@@ -55,7 +55,7 @@ let availability: any[] = [];
 try {
   const [resResult, availResult] = await Promise.all([
     supabase.from('reservations').select('*').order('created_at', { ascending: false }),
-    supabase.from('availability').select('*')
+    supabase.from('room_availability').select('*') // ← 'room_availability' に合わせる
   ]);
 
   if (resResult.error) console.error(resResult.error);
