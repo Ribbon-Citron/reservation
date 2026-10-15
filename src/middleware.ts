@@ -13,9 +13,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
       const decoded = atob(authValue);
       const [user, pwd] = decoded.split(':');
 
-      // .envファイルから環境変数を取得（設定されていない場合のデフォルト値もフォールバックとして用意）
-      const validUser = import.meta.env.ADMIN_USER || 'admin';
-      const validPassword = import.meta.env.ADMIN_PASSWORD || 'password123';
+      // ★ Cloudflareのランタイム環境から環境変数を取得する（取得できない場合はフォールバック）
+      const runtimeEnv = (context.locals as any).runtime?.env;
+      const validUser = runtimeEnv?.ADMIN_USER || import.meta.env.ADMIN_USER || 'admin';
+      const validPassword = runtimeEnv?.ADMIN_PASSWORD || import.meta.env.ADMIN_PASSWORD || 'password123';
 
       // ユーザー名とパスワードのチェック
       if (user === validUser && pwd === validPassword) {
