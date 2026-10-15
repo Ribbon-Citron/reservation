@@ -4,6 +4,7 @@ compatibility_date = "2024-03-20"
 # パブリックで固定の変数だけを書く（必要最小限に）
 [vars]
 ADMIN_USER = "admin"
+ADMIN_PASSWORD = "1234"
 SUPABASE_URL = "https://dpirhczosxernkvgwxqc.supabase.co"
 PUBLIC_SUPABASE_URL = "https://dpirhczosxernkvgwxqc.supabase.co"
 
