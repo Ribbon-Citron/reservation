@@ -1,4 +1,3 @@
-// src/middleware.ts
 import { defineMiddleware } from 'astro:middleware';
 
 export const onRequest = defineMiddleware(async (context, next) => {
@@ -9,18 +8,28 @@ export const onRequest = defineMiddleware(async (context, next) => {
     const authHeader = context.request.headers.get('authorization');
 
     if (authHeader) {
-      const authValue = authHeader.split(' ')[1];
-      const decoded = atob(authValue);
-      const [user, pwd] = decoded.split(':');
+      try {
+        const authValue = authHeader.split(' ')[1];
+        const decoded = atob(authValue);
+        const [user, pwd] = decoded.split(':');
 
-      // ★ Cloudflareのランタイム環境から環境変数を取得する（取得できない場合はフォールバック）
-      const runtimeEnv = (context.locals as any).runtime?.env;
-      const validUser = runtimeEnv?.ADMIN_USER || import.meta.env.ADMIN_USER || 'admin';
-      const validPassword = runtimeEnv?.ADMIN_PASSWORD || import.meta.env.ADMIN_PASSWORD || 'password123';
+        // 安全にCloudflareのランタイム環境を取得
+        let runtimeEnv: any = {};
+        try {
+          runtimeEnv = (context.locals as any)?.runtime?.env || {};
+        } catch (e) {
+          // localsがない環境でも落とさない
+        }
 
-      // ユーザー名とパスワードのチェック
-      if (user === validUser && pwd === validPassword) {
-        return next();
+        const validUser = runtimeEnv.ADMIN_USER || import.meta.env.ADMIN_USER || 'admin';
+        const validPassword = runtimeEnv.ADMIN_PASSWORD || import.meta.env.ADMIN_PASSWORD || 'password123';
+
+        // ユーザー名とパスワードのチェック
+        if (user === validUser && pwd === validPassword) {
+          return next();
+        }
+      } catch (err) {
+        console.error('Auth error:', err);
       }
     }
 
