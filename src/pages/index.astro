@@ -259,9 +259,9 @@
         // const maxAllowedDate = new Date();
         // maxAllowedDate.setMonth(maxAllowedDate.getMonth() + 2);
 
-        // 変更後（今日から正確に60日後まで）
+        // 変更後（今日を含んで60日後まで予約可能）
         const maxAllowedDate = new Date();
-        maxAllowedDate.setDate(maxAllowedDate.getDate() + 60);
+        maxAllowedDate.setDate(maxAllowedDate.getDate() + 59);
         const maxAllowedDateStr = maxAllowedDate.toISOString().split('T')[0];
         
         if (checkInInput) {
