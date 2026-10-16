@@ -41,6 +41,15 @@ const getStatusBadge = (status: string) => {
       return { text: status || '未設定', style: 'background: #f3f4f6; color: #374151;' };
   }
 };
+
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('ja-JP', {
+    style: 'currency',
+    currency: 'JPY',
+    maximumFractionDigits: 0,
+  }).format(amount ?? 0);
+};
+
 ---
 
 <html lang="ja">
