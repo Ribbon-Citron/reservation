@@ -4,7 +4,10 @@ import { getSupabase } from '../../lib/supabase';
 
 // Cloudflareのランタイム環境を取得
 const supabase = getSupabase();
+
 let dbError = '';
+let reservations: any[] = [];
+let availability: any[] = [];
 
 if (Astro.request.method === 'POST') {
 
@@ -62,9 +65,6 @@ for (let i = 0; i < 60; i++) {
 }
 
 // 3. 予約データと空室設定データを一括取得
-let reservations: any[] = [];
-let availability: any[] = [];
-
 try {
   const [resResult, availResult] = await Promise.all([
     supabase.from('reservations').select('*').order('created_at', { ascending: false }),
