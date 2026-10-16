@@ -13,11 +13,6 @@ if (!supabase) {
     .select('*')
     .order('created_at', { ascending: false });
 
-  // ★ ここにログを追加
-  console.log('Supabase error:', error);
-  console.log('取得件数:', data?.length);
-  console.log('取得結果:', data);
-
   if (error) {
     dbError = error.message;
   } else {

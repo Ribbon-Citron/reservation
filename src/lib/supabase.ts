@@ -6,9 +6,6 @@ import { env } from 'cloudflare:workers';
 const url = env.SUPABASE_URL;
 const key = env.SUPABASE_SERVICE_ROLE_KEY;
 
-console.log('Supabase URLあり:', !!url);
-console.log('Supabaseキーあり:', !!key);
-
 export const supabase =
   url && key ? createClient(url, key) : null;
 
