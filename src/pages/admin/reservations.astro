@@ -70,18 +70,24 @@ const formatCurrency = (amount) => {
         </div>
         <a
           href="/admin/availability"
-          style="padding: 8px 14px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-size: 0.9rem; font-weight: bold;"
+          style="padding: 8px 14px; background: #2563eb; color: #eeeeee; text-decoration: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold;"
         >
           ステータス設定
         </a>
-                <a
-          href="/admin/reservations"
-          style="padding: 8px 14px; background: #c7eb25; color: rgb(15, 9, 9); text-decoration: none; border-radius: 6px; font-size: 0.9rem; font-weight: bold;"
+        <a
+          href="/admin/scanner"
+          style="padding: 8px 14px; background: #c7eb25; color: #eeeeee; text-decoration: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold;"
         >
-          予約一覧
+          チェックインスキャナ
         </a>
       </div>
-
+        <a
+          href="/r"
+          style="padding: 8px 14px; background: #eb25ba; color: #eeeeee; text-decoration: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold;"
+        >
+          宿泊予約
+        </a>
+      </div>
       <!-- 予約データテーブル -->
       {dbError && (
         <div style="background:#fee2e2; color:#991b1b; padding:1rem; margin-bottom:1rem;">
