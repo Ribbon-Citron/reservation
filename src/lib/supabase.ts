@@ -1,11 +1,20 @@
 // src/lib/supabase.ts
+
 import { createClient } from '@supabase/supabase-js';
 
-// 環境変数からのみ取得する（直書きしないのでGitHubに怒られません）
-const url = import.meta.env.PUBLIC_SUPABASE_URL || import.meta.env.SUPABASE_URL || 'https://dpirhczosxernkvgwxqc.supabase.co';
-const key = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || import.meta.env.SUPABASE_SERVICE_ROLE_KEY || 'sb_publishable_S1mIwWP8TlShb-JK4RR-zg_szbfsPr2';
+const url =
+  import.meta.env.SUPABASE_URL ||
+  import.meta.env.PUBLIC_SUPABASE_URL;
 
-export const supabase = createClient(url, key);
+const key =
+  import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
+
+console.log('Supabase URL:', url);
+console.log('URLあり:', !!url);
+console.log('キーあり:', !!key);
+
+export const supabase =
+  url && key ? createClient(url, key) : null;
 
 export function getSupabase() {
   return supabase;

@@ -13,6 +13,11 @@ if (!supabase) {
     .select('*')
     .order('created_at', { ascending: false });
 
+  // ★ ここにログを追加
+  console.log('Supabase error:', error);
+  console.log('取得件数:', data?.length);
+  console.log('取得結果:', data);
+
   if (error) {
     dbError = error.message;
   } else {
@@ -42,11 +47,11 @@ const getStatusBadge = (status: string) => {
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
-    <title>予約一覧 GPT</title>
+    <title>予約一覧</title>
   </head>
   <body style="font-family: sans-serif; background: #f8fafc; margin: 0; padding: 2rem;">
     <div style="max-width: 1100px; margin: 0 auto;">
-      <h1 style="color: #0f172a; font-size: 1.5rem;">予約一覧 GPT debug</h1>
+      <h1 style="color: #0f172a; font-size: 1.5rem;">予約一覧</h1>
       
       {dbError ? (
         <div style="background: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
