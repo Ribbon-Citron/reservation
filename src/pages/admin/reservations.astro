@@ -5,19 +5,24 @@ import { supabase } from '../../lib/supabase';
 let reservations: any[] = [];
 let dbError: string | null = null;
 
-if (!supabase) {
-  dbError = "Supabaseクライアントが初期化されていません。";
-} else {
+try {
+  if (!supabase) {
+    throw new Error('Supabaseクライアントが初期化されていません');
+  }
+
   const { data, error } = await supabase
     .from('reservations')
     .select('*')
     .order('created_at', { ascending: false });
 
   if (error) {
-    dbError = error.message;
-  } else {
-    reservations = data || [];
+    throw new Error(error.message);
   }
+
+  reservations = data || [];
+} catch (e: any) {
+  console.error('予約一覧の取得エラー:', e);
+  dbError = e?.message || '予期せぬエラーが発生しました';
 }
 
 // ここから下は9:42版のformatCurrency、getStatusBadgeを残す
@@ -63,6 +68,11 @@ const getStatusBadge = (status: string) => {
       </div>
 
       <!-- 予約データテーブル -->
+      {dbError && (
+        <div style="background:#fee2e2; color:#991b1b; padding:1rem; margin-bottom:1rem;">
+          <strong>予約データの取得エラー:</strong> {dbError}
+        </div>
+      )}
       <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden;">
         <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
           <thead>
