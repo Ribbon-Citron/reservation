@@ -10,44 +10,47 @@ let reservations: any[] = [];
 let availability: any[] = [];
 
 if (Astro.request.method === 'POST') {
-
   try {
     if (!supabase) {
       throw new Error('Supabaseの接続設定を確認してください。');
     }
 
-    const [resResult, availResult] = await Promise.all([
-      supabase
-        .from('reservations')
-        .select('*')
-        .order('created_at', { ascending: false }),
+    const formData = await Astro.request.formData();
+    const targetDate = formData.get('targetDate')?.toString();
+    const isBlocked = formData.get('isBlocked') === 'true';
 
-      supabase
-        .from('room_availability')
-        .select('*')
-    ]);
+    const maxGuestsStr = formData.get('maxGuests')?.toString();
+    const maxGuests = maxGuestsStr ? parseInt(maxGuestsStr, 10) : 4;
 
-    if (resResult.error) {
-      console.error('予約データ取得エラー:', resResult.error);
-      dbError = resResult.error.message;
-    } else {
-      reservations = resResult.data || [];
+    const priceStr = formData.get('price')?.toString();
+    const price = priceStr ? parseInt(priceStr, 10) : 5000;
+
+    if (!targetDate) {
+      throw new Error('対象日が指定されていません。');
     }
 
-  if (availResult.error) {
-    console.error('空室設定取得エラー:', availResult.error);
-    dbError = dbError
-      ? `${dbError} / ${availResult.error.message}`
-      : availResult.error.message;
-  } else {
-    availability = availResult.data || [];
+    const { error } = await supabase
+      .from('room_availability')
+      .upsert(
+        {
+          target_date: targetDate,
+          is_blocked: isBlocked,
+          max_guests: maxGuests,
+          price: price
+        },
+        { onConflict: 'target_date' }
+      );
+
+    if (error) {
+      console.error('空室設定の保存エラー:', error);
+      dbError = `保存エラー: ${error.message}`;
+    } else {
+      console.log('空室設定の保存成功:', targetDate);
+    }
+  } catch (e: any) {
+    console.error('空室設定の更新エラー:', e);
+    dbError = e.message || '空室設定の更新に失敗しました。';
   }
-
-} catch (e: any) {
-  console.error('データ取得エラー:', e);
-  dbError = e.message || 'データベースからのデータ取得に失敗しました。';
-}
-
 }
 
 // 2. 表示する日付の範囲を生成
