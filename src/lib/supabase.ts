@@ -1,9 +1,13 @@
 // src/lib/supabase.ts
 
 import { createClient } from '@supabase/supabase-js';
+import { env } from 'cloudflare:workers';
 
-const url = import.meta.env.SUPABASE_URL;
-const key = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
+const url = env.SUPABASE_URL;
+const key = env.SUPABASE_SERVICE_ROLE_KEY;
+
+console.log('Supabase URLあり:', !!url);
+console.log('Supabaseキーあり:', !!key);
 
 export const supabase =
   url && key ? createClient(url, key) : null;
