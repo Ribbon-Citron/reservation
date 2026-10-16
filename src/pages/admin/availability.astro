@@ -3,35 +3,48 @@
 import { getSupabase } from '../../lib/supabase';
 
 // Cloudflareのランタイム環境を取得
-const runtimeEnv = (Astro.locals as any).runtime?.env;
-const supabase = getSupabase(runtimeEnv);
+const supabase = getSupabase();
+let dbError = '';
 
 if (Astro.request.method === 'POST') {
-  try {
-    const formData = await Astro.request.formData();
-    const targetDate = formData.get('targetDate')?.toString();
-    const isBlocked = formData.get('isBlocked') === 'true';
-    const maxGuestsStr = formData.get('maxGuests')?.toString();
-    const maxGuests = maxGuestsStr ? parseInt(maxGuestsStr, 10) : 4;
-    const priceStr = formData.get('price')?.toString();
-    const price = priceStr ? parseInt(priceStr, 10) : 5000;
 
-    if (targetDate) {
-      await supabase
-        .from('room_availability')
-        .upsert(
-          { 
-            target_date: targetDate, 
-            is_blocked: isBlocked,
-            max_guests: maxGuests,
-            price: price
-          },
-          { onConflict: 'target_date' }
-        );
+  try {
+    if (!supabase) {
+      throw new Error('Supabaseの接続設定を確認してください。');
     }
-  } catch (err) {
-    console.error('更新エラー:', err);
+
+    const [resResult, availResult] = await Promise.all([
+      supabase
+        .from('reservations')
+        .select('*')
+        .order('created_at', { ascending: false }),
+
+      supabase
+        .from('room_availability')
+        .select('*')
+    ]);
+
+    if (resResult.error) {
+      console.error('予約データ取得エラー:', resResult.error);
+      dbError = resResult.error.message;
+    } else {
+      reservations = resResult.data || [];
+    }
+
+  if (availResult.error) {
+    console.error('空室設定取得エラー:', availResult.error);
+    dbError = dbError
+      ? `${dbError} / ${availResult.error.message}`
+      : availResult.error.message;
+  } else {
+    availability = availResult.data || [];
   }
+
+} catch (e: any) {
+  console.error('データ取得エラー:', e);
+  dbError = e.message || 'データベースからのデータ取得に失敗しました。';
+}
+
 }
 
 // 2. 表示する日付の範囲を生成
@@ -67,6 +80,14 @@ try {
 } catch (e: any) {
   dbError = e.message || "データベースからのデータ取得に失敗しました。";
 }
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('ja-JP', {
+      style: 'currency',
+      currency: 'JPY',
+      maximumFractionDigits: 0,
+    }).format(amount ?? 0);
+  };
+
 ---
 
 <html lang="ja">
