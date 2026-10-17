@@ -1,25 +1,77 @@
+// scanner画面で予約QRコードを読み込むと「該当する予約が見つかりませんでした」となる。
+// これはUUIDと照合している為と思われる。reservation_codeと照合すれば治ると思う。
+// そうならコードを教えて
 ---
 // src/pages/admin/scanner.astro
 ---
-<script>
-      let html5QrCode = null;
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>【管理】チェックインスキャナ</title>
+    <!-- html5-qrcode ライブラリの読み込み -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  </head>
+  <body style="font-family: sans-serif; background: #f8fafc; margin: 0; padding: 1.5rem; color: #0f172a;">
+    <div style="max-width: 600px; margin: 0 auto;">
+      <!-- ヘッダー -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h1 style="margin: 0; font-size: 1.25rem;">📷 現地</h1>
+        <div style="text-align: right; display: flex; justify-content: flex-end; gap: 5px;">        
+           <a href="/" style="padding: 8px 14px; background: #eeff77; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
+            🏡
+          </a>
+          <a href="/admin/reservations" style="padding: 8px 14px; background:#eeff77; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
+            📊
+          </a>
+          <a href="/admin/availability" style="padding: 8px 14px; background:#eeff77; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
+            🎛️
+          </a>
+        </div>
+      </div>
 
-      async function onScanSuccess(decodedText, decodedResult) {
+      <!-- スキャナー表示エリア -->
+      <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 1.5rem; text-align: center;">
+        <p style="color: #64748b; font-size: 0.9rem; margin-top: 0;">ゲストのメールに届いたQRコードをカメラにかざしてください</p>
+
+        <!-- カメラ映像が映る要素 -->
+        <div id="reader" style="width: 100%; max-width: 400px; margin: 0 auto; border-radius: 8px; overflow: hidden;"></div>
+
+        <!-- 結果表示エリア -->
+        <div id="result-container" style="margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; text-align: left;">
+          <h3 id="result-title" style="margin: 0 0 8px 0; font-size: 1.1rem;"></h3>
+          <p id="result-details" style="margin: 0; font-size: 0.9rem; line-height: 1.5;"></p>
+        </div>
+
+        <div style="margin-top: 1.5rem;">
+          <button
+            id="restart-btn"
+            onclick="restartScanner()"
+            style="display: none; padding: 10px 20px; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.95rem;"
+          >
+            次のコードを読み取る
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let html5QrCode;
+
+      function onScanSuccess(decodedText, decodedResult) {
+        // QRコードの読み取りに成功したら、スキャナーを一時停止してAPIを叩く
         console.log(`Code matched = ${decodedText}`, decodedResult);
-        
-        // スキャナーが動いている場合は安全に停止する
-        if (html5QrCode && html5QrCode.isScanning) {
-          try {
-            await html5QrCode.stop();
-          } catch (err) {
+
+        if (html5QrCode) {
+          html5QrCode.stop().catch((err) => {
             console.error("Failed to stop scanner.", err);
-          }
+          });
         }
 
         processCheckIn(decodedText);
       }
 
-      async function processCheckIn(reservationCode) {
+      async function processCheckIn(reservationId) {
         const resultContainer = document.getElementById('result-container');
         const resultTitle = document.getElementById('result-title');
         const resultDetails = document.getElementById('result-details');
@@ -29,13 +81,13 @@
         resultContainer.style.background = '#fef3c7';
         resultTitle.style.color = '#92400e';
         resultTitle.innerText = '処理中...';
-        resultDetails.innerText = `予約コード: ${reservationCode} の確認を行っています`;
+        resultDetails.innerText = `予約ID: ${reservationId} の確認を行っています`;
 
         try {
           const res = await fetch('/api/admin/check-in', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ reservationCode })
+            body: JSON.stringify({ reservationId })
           });
 
           const data = await res.json();
@@ -44,10 +96,9 @@
             resultContainer.style.background = '#dcfce7';
             resultTitle.style.color = '#166534';
             resultTitle.innerText = data.alreadyCheckedIn ? '⚠️ すでにチェックイン済みです' : '✅ チェックインが完了しました！';
-            
+
             const r = data.reservation;
             resultDetails.innerHTML = `
-              <strong>予約コード:</strong> ${r.reservation_code || reservationCode}<br>
               <strong>お名前:</strong> ${r.guest_name} 様<br>
               <strong>宿泊日程:</strong> ${r.check_in_date} 〜 ${r.check_out_date}<br>
               <strong>人数:</strong> ${r.guests_count || 1}名
@@ -66,36 +117,30 @@
           resultDetails.innerText = 'サーバーとの通信に失敗しました。';
         }
 
-        // 「次のコードを読み取る」ボタンを表示
         restartBtn.style.display = 'inline-block';
       }
 
-      async function restartScanner() {
+      function restartScanner() {
         document.getElementById('result-container').style.display = 'none';
         document.getElementById('restart-btn').style.display = 'none';
-        await startScanner();
+        startScanner();
       }
 
-      async function startScanner() {
-        // すでにインスタンスがあればクリア
-        if (!html5QrCode) {
-          html5QrCode = new Html5Qrcode("reader");
-        }
-        
+      function startScanner() {
+        html5QrCode = new Html5Qrcode("reader");
         const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-        
-        try {
-          if (!html5QrCode.isScanning) {
-            await html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess);
-          }
-        } catch (err) {
-          console.error("Unable to start scanning.", err);
-          alert("カメラを起動できませんでした。カメラの権限が許可されているかご確認ください。");
-        }
+
+        html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess)
+          .catch((err) => {
+            console.error("Unable to start scanning.", err);
+            alert("カメラを起動できませんでした。カメラの権限が許可されているかご確認ください。");
+          });
       }
 
-      // ページ読み込み時にカメラ起動
+      // ページ読み込み時にカメラ起動を試みる
       window.addEventListener('load', () => {
         startScanner();
       });
     </script>
+  </body>
+</html>
