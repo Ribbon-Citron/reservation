@@ -1,4 +1,5 @@
 // src/pages/api/admin/check-in.ts
+
 import type { APIRoute } from 'astro';
 import { supabase } from '../../../lib/supabase';
 

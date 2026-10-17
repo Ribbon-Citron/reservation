@@ -1,3 +1,5 @@
+// src/middleware.ts
+
 import { defineMiddleware } from 'astro:middleware';
 import { env } from 'cloudflare:workers';
 

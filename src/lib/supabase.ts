@@ -1,6 +1,7 @@
 // src/lib/supabase.ts
 
 import { createClient } from '@supabase/supabase-js';
+import { env } from 'cloudflare:workers';
 
 const url = import.meta.env.SUPABASE_URL;
 const key = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
