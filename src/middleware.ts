@@ -1,6 +1,5 @@
 // src/middleware.ts
 import { defineMiddleware } from 'astro:middleware';
-import { env } from 'cloudflare:workers';
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const url = new URL(context.request.url);
@@ -15,9 +14,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
         const decoded = atob(authValue);
         const [user, pwd] = decoded.split(':');
 
-        // Cloudflare v6 の env から認証情報を取得（フォールバック付き）
-        const validUser = env?.ADMIN_USER || import.meta.env.ADMIN_USER || 'admin';
-        const validPassword = env?.ADMIN_PASSWORD || import.meta.env.ADMIN_PASSWORD || 'password123';
+        // Cloudflareランタイム環境 または import.meta.env から安全に取得
+        const runtimeEnv = (context.locals as any)?.runtime?.env || {};
+        const validUser = runtimeEnv.ADMIN_USER || import.meta.env.ADMIN_USER || 'admin';
+        const validPassword = runtimeEnv.ADMIN_PASSWORD || import.meta.env.ADMIN_PASSWORD || 'password123';
 
         // ユーザー名とパスワードのチェック
         if (user === validUser && pwd === validPassword) {
