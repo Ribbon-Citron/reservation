@@ -1,57 +1,58 @@
+// src/pages/api/admin/check-in.ts のイメージ
 import type { APIRoute } from 'astro';
-import { supabase } from '../../../lib/supabase';
+import { getSupabase } from '../../../lib/supabase';
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
-    const { reservationId } = await request.json();
+    const body = await request.json();
+    const { reservationCode } = body; // フロントから reservationCode を受け取る
 
-    if (!reservationId) {
-      return new Response(JSON.stringify({ error: '予約IDが指定されていません。' }), { status: 400 });
+    if (!reservationCode) {
+      return new Response(JSON.stringify({ error: '予約コードが指定されていません。' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
-    // 1. 予約データの取得
-    const { data: reservation, error: fetchError } = await supabase
+    const runtimeEnv = (locals as any).runtime?.env;
+    const supabase = getSupabase(runtimeEnv);
+
+    // id (UUID) ではなく reservation_code で検索する
+    const { data: reservation, error } = await supabase
       .from('reservations')
       .select('*')
-      .eq('id', reservationId)
+      .eq('reservation_code', reservationCode)
       .single();
 
-    if (fetchError || !reservation) {
-      return new Response(JSON.stringify({ error: '該当する予約が見つかりませんでした。' }), { status: 404 });
+    if (error || !reservation) {
+      return new Response(JSON.stringify({ error: '該当する予約が見つかりませんでした。' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
-    if (reservation.status === 'checked_in') {
-      return new Response(JSON.stringify({ 
-        success: true, 
-        alreadyCheckedIn: true,
-        reservation 
-      }), { status: 200 });
-    }
+    // すでにチェックイン済みの判定などがあればここで処理
+    const alreadyCheckedIn = reservation.status === 'checked_in'; // 例
 
-    // 2. ステータスを 'checked_in'（チェックイン済み）に更新
-    const { error: updateError } = await supabase
+    // ステータスをチェックイン済みに更新する場合
+    await supabase
       .from('reservations')
       .update({ status: 'checked_in' })
-      .eq('id', reservationId);
-
-    if (updateError) {
-      throw new Error(`ステータスの更新に失敗しました: ${updateError.message}`);
-    }
+      .eq('reservation_code', reservationCode);
 
     return new Response(JSON.stringify({ 
       success: true, 
-      alreadyCheckedIn: false,
+      alreadyCheckedIn,
       reservation 
     }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
     });
 
   } catch (err: any) {
-    console.error('Check-in error:', err);
-    return new Response(JSON.stringify({ error: err.message || '予期せぬエラーが発生しました。' }), {
+    return new Response(JSON.stringify({ error: err.message || 'サーバーエラーが発生しました。' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
     });
   }
 };

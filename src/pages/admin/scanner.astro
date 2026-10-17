@@ -15,8 +15,8 @@
       
       <!-- ヘッダー -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h1 style="margin: 0; font-size: 1.25rem;">📷現地</h1>
-        <div style="text-align: right; display: flex; justify-content: flex-end; gap: 10px;">        
+        <h1 style="margin: 0; font-size: 1.25rem;">📷 現地チェックイン</h1>
+        <div style="text-align: right; display: flex; justify-content: flex-end; gap: 5px;">        
            <a href="/" style="padding: 8px 14px; background: #eeff77; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
             🏡
           </a>
@@ -59,7 +59,6 @@
       let html5QrCode;
 
       function onScanSuccess(decodedText, decodedResult) {
-        // QRコードの読み取りに成功したら、スキャナーを一時停止してAPIを叩く
         console.log(`Code matched = ${decodedText}`, decodedResult);
         
         if (html5QrCode) {
@@ -71,7 +70,7 @@
         processCheckIn(decodedText);
       }
 
-      async function processCheckIn(reservationId) {
+      async function processCheckIn(reservationCode) {
         const resultContainer = document.getElementById('result-container');
         const resultTitle = document.getElementById('result-title');
         const resultDetails = document.getElementById('result-details');
@@ -81,13 +80,14 @@
         resultContainer.style.background = '#fef3c7';
         resultTitle.style.color = '#92400e';
         resultTitle.innerText = '処理中...';
-        resultDetails.innerText = `予約ID: ${reservationId} の確認を行っています`;
+        resultDetails.innerText = `予約コード: ${reservationCode} の確認を行っています`;
 
         try {
+          // reservationCode として送信
           const res = await fetch('/api/admin/check-in', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ reservationId })
+            body: JSON.stringify({ reservationCode })
           });
 
           const data = await res.json();
@@ -99,6 +99,7 @@
             
             const r = data.reservation;
             resultDetails.innerHTML = `
+              <strong>予約コード:</strong> ${r.reservation_code || reservationCode}<br>
               <strong>お名前:</strong> ${r.guest_name} 様<br>
               <strong>宿泊日程:</strong> ${r.check_in_date} 〜 ${r.check_out_date}<br>
               <strong>人数:</strong> ${r.guests_count || 1}名
@@ -137,7 +138,6 @@
           });
       }
 
-      // ページ読み込み時にカメラ起動を試みる
       window.addEventListener('load', () => {
         startScanner();
       });
