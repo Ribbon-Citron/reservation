@@ -8,42 +8,50 @@ export const POST: APIRoute = async ({ request }) => {
     const { reservationId } = await request.json();
 
     if (!reservationId) {
-      return new Response(JSON.stringify({ error: '予約IDが指定されていません。' }), { status: 400 });
+      return new Response(
+        JSON.stringify({ error: '予約コードが指定されていません。' }),
+        { status: 400 }
+      );
     }
 
-    // 1. 予約データの取得
+    // 1. 予約コード（6文字）で予約データを取得
     const { data: reservation, error: fetchError } = await supabase
       .from('reservations')
       .select('*')
-      .eq('id', reservationId)
+      .eq('reservation_code', reservationId)
       .single();
 
     if (fetchError || !reservation) {
-      return new Response(JSON.stringify({ error: '該当する予約が見つかりませんでした。' }), { status: 404 });
+      return new Response(
+        JSON.stringify({ error: '該当する予約が見つかりませんでした。' }),
+        { status: 404 }
+      );
     }
 
     if (reservation.status === 'checked_in') {
-      return new Response(JSON.stringify({ 
-        success: true, 
+      return new Response(JSON.stringify({
+        success: true,
         alreadyCheckedIn: true,
-        reservation 
+        reservation
       }), { status: 200 });
     }
 
-    // 2. ステータスを 'checked_in'（チェックイン済み）に更新
+    // 2. チェックイン済みに更新
     const { error: updateError } = await supabase
       .from('reservations')
       .update({ status: 'checked_in' })
-      .eq('id', reservationId);
+      .eq('reservation_code', reservationId);
 
     if (updateError) {
-      throw new Error(`ステータスの更新に失敗しました: ${updateError.message}`);
+      throw new Error(
+        `ステータスの更新に失敗しました: ${updateError.message}`
+      );
     }
 
-    return new Response(JSON.stringify({ 
-      success: true, 
+    return new Response(JSON.stringify({
+      success: true,
       alreadyCheckedIn: false,
-      reservation 
+      reservation
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
@@ -51,13 +59,14 @@ export const POST: APIRoute = async ({ request }) => {
 
   } catch (err: any) {
     console.error('Check-in error:', err);
-    return new Response(JSON.stringify({ error: err.message || '予期せぬエラーが発生しました。' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return new Response(
+      JSON.stringify({
+        error: err.message || '予期せぬエラーが発生しました。'
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
   }
 };
-
-
-
-
