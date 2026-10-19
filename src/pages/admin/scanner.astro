@@ -43,7 +43,6 @@
         <div style="margin-top: 1.5rem;">
           <button
             id="restart-btn"
-            onclick="restartScanner()"
             style="display: none; padding: 10px 20px; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.95rem;"
           >
             次のコードを読み取る
@@ -120,6 +119,8 @@
       function restartScanner() {
         document.getElementById('result-container').style.display = 'none';
         document.getElementById('restart-btn').style.display = 'none';
+        document.getElementById('restart-btn')
+         ?.addEventListener('click', restartScanner);
         startScanner();
       }
 
