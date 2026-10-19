@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>【管理】チェックインスキャナ</title>
+    <title>【管理】入室処理</title>
     <!-- html5-qrcode ライブラリの読み込み -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   </head>
@@ -13,7 +13,7 @@
     <div style="max-width: 600px; margin: 0 auto;">
       <!-- ヘッダー -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h1 style="margin: 0; font-size: 1.25rem;">📷 現地</h1>
+        <h1 style="margin: 0; font-size: 1.25rem;">📷 入室処理</h1>
         <div style="text-align: right; display: flex; justify-content: flex-end; gap: 5px;">        
            <a href="/" style="padding: 8px 14px; background: #eeff77; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
             🏡
@@ -29,7 +29,7 @@
 
       <!-- スキャナー表示エリア -->
       <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 1.5rem; text-align: center;">
-        <p style="color: #64748b; font-size: 0.9rem; margin-top: 0;">ゲストのメールに届いたQRコードをカメラにかざしてください</p>
+        <p style="color: #64748b; font-size: 0.9rem; margin-top: 0;">Scan the QR code!</p>
 
         <!-- カメラ映像が映る要素 -->
         <div id="reader" style="width: 100%; max-width: 400px; margin: 0 auto; border-radius: 8px; overflow: hidden;"></div>

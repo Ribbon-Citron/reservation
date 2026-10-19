@@ -1,5 +1,6 @@
 ---
 // src/pages/admin/reservations.astro
+
 import { supabase } from '../../lib/supabase';
 
 let reservations: any[] = [];
@@ -24,8 +25,6 @@ try {
   console.error('予約一覧の取得エラー:', e);
   dbError = e?.message || '予期せぬエラーが発生しました';
 }
-
-// ここから下は9:42版のformatCurrency、getStatusBadgeを残す
 
 const getStatusBadge = (status: string) => {
   switch (status) {
@@ -55,7 +54,7 @@ const formatCurrency = (amount) => {
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
-    <title>【管理】予約一覧</title>
+    <title>【管理】状況一覧</title>
   </head>
   <body style="font-family: sans-serif; background-color: #f8fafc; margin: 0; padding: 2rem;">
     <div style="max-width: 1200px; margin: 0 auto;">
@@ -63,7 +62,7 @@ const formatCurrency = (amount) => {
       <!-- ヘッダーエリア -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
         <div>
-          <h1 style="margin: 0; color: #0f172a; font-size: 1.5rem;">📊 予約一覧</h1>
+          <h1 style="margin: 0; color: #0f172a; font-size: 1.5rem;">📊 状況一覧</h1>
           <p style="margin: 0.25rem 0 0; color: #64748b; font-size: 0.9rem;">
             ゲストからのリクエスト確認・予約承認
           </p>
@@ -76,7 +75,7 @@ const formatCurrency = (amount) => {
             🎛️ 設定
           </a>
           <a href="/admin/scanner" style="padding: 8px 14px; background:#eeff77; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
-            📷 現地
+            📷 入室
           </a>
         </div>
       </div>

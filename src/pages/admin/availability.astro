@@ -1,5 +1,6 @@
 ---
 // src/pages/admin/availability.astro
+
 import { getSupabase } from '../../lib/supabase';
 
 // Cloudflareのランタイム環境を取得
@@ -96,7 +97,7 @@ try {
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
-    <title>【管理】ステータス設定</title>
+    <title>【管理】各種設定</title>
   </head>
   <body style="font-family: sans-serif; background: #f8fafc; margin: 0; padding: 2rem;">
     <div style="max-width: 1100px; margin: 0 auto;">
@@ -112,10 +113,10 @@ try {
             🏡 予約
           </a>
           <a href="/admin/reservations" style="padding: 8px 14px; background:#eeff77; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
-            📊 一覧
+            📊 状況
           </a>
           <a href="/admin/scanner" style="padding: 8px 14px; background:#eeff77; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
-            📷 現地
+            📷 入室
           </a>
         </div>
       </div>
@@ -143,7 +144,7 @@ try {
               const avail = availability?.find((a) => a.target_date === dateStr);
               const isBlocked = avail?.is_blocked ?? false;
               const dailyMaxGuests = avail?.max_guests ?? 4;
-              const dailyPrice = avail?.price ?? 5000;
+              const dailyPrice = avail?.price ?? 4200;
 
               let bookedGuestsCount = 0;
               reservations?.forEach((r) => {
