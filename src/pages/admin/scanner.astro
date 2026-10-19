@@ -119,10 +119,11 @@
       function restartScanner() {
         document.getElementById('result-container').style.display = 'none';
         document.getElementById('restart-btn').style.display = 'none';
-        document.getElementById('restart-btn')
-         ?.addEventListener('click', restartScanner);
         startScanner();
       }
+      // restartScanner() の外側に置く
+        document.getElementById('restart-btn')
+         ?.addEventListener('click', restartScanner);
 
       function startScanner() {
         html5QrCode = new Html5Qrcode("reader");
