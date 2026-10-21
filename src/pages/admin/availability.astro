@@ -28,7 +28,7 @@ if (Astro.request.method === 'POST') {
       const maxGuestsStr = formData.get(`maxGuests-${targetDate}`)?.toString();
       const isBlocked = formData.get(`isBlocked-${targetDate}`) === 'true';
 
-      const price = priceStr === undefined || priceStr === '' ? 4200 : Number.parseInt(priceStr, 10);
+      const price = priceStr === undefined || priceStr === '' ? 5000 : Number.parseInt(priceStr, 10);
       const maxGuests = maxGuestsStr === undefined || maxGuestsStr === '' ? 4 : Number.parseInt(maxGuestsStr, 10);
 
       if (!Number.isFinite(price) || price < 0) {
@@ -154,7 +154,7 @@ const formatCurrency = (amount: number) => {
                 const avail = availability?.find((a) => a.target_date === dateStr);
                 const isBlocked = avail?.is_blocked ?? false;
                 const dailyMaxGuests = avail?.max_guests ?? 4;
-                const dailyPrice = avail?.price ?? 4200;
+                const dailyPrice = avail?.price ?? 5000;
 
                 let bookedGuestsCount = 0;
                 reservations?.forEach((r) => {

@@ -71,16 +71,61 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // 宿泊日数・料金計算 (5,000円/泊/人)
-    const inDate = new Date(checkIn);
-    const outDate = new Date(checkOut);
-    const nights = Math.ceil((outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60 * 24));
-    const guestCount = parseInt(guests) || 1;
-    const totalAmount = nights * 5000 * guestCount;
+
+    // 宿泊日数・料金計算（日ごとの料金 × 人数）
+    const inDate = new Date(`${checkIn}T00:00:00Z`);
+    const outDate = new Date(`${checkOut}T00:00:00Z`);
+
+    const nights = Math.round(
+      (outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    const guestCount = parseInt(guests, 10) || 1;
+
+    // 宿泊する各日の日別料金をDBから取得
+    const { data: dailyPrices, error: priceError } = await supabase
+      .from('room_availability')
+      .select('target_date, price')
+      .gte('target_date', checkIn)
+      .lt('target_date', checkOut);
+
+    if (priceError) {
+      console.error('宿泊料金の取得エラー:', priceError);
+      return new Response(
+        JSON.stringify({ error: '宿泊料金を確認できません。時間をおいて再度お試しください。' }),
+        { status: 503, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // DBに日別設定がない日は、デフォルト料金5,000円
+    const priceMap = new Map(
+      (dailyPrices || []).map((row) => [row.target_date, row.price])
+    );
+
+    let totalPricePerPerson = 0;
+
+    for (let i = 0; i < nights; i++) {
+      const date = new Date(inDate);
+      date.setUTCDate(date.getUTCDate() + i);
+      const dateStr = date.toISOString().slice(0, 10);
+
+      const dailyPrice = priceMap.get(dateStr) ?? 5000;
+
+      if (!Number.isFinite(Number(dailyPrice)) || Number(dailyPrice) < 0) {
+        return new Response(
+          JSON.stringify({ error: `${dateStr} の宿泊料金が正しくありません。` }),
+          { status: 400, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+
+      totalPricePerPerson += Number(dailyPrice);
+    }
+
+    const totalAmount = totalPricePerPerson * guestCount;
+
 
     // 来場受付用ユニークQRコード文字列の生成
     const qrCode = `CHECKIN-${Date.now()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
-    
+
     // ★ 短い予約コードを生成 (例: A3K9M2)
     const reservationCode = generateReservationCode();
 
@@ -122,7 +167,7 @@ export const POST: APIRoute = async ({ request }) => {
           <h2 style="color: #0f172a; margin-top: 0;">ご予約リクエストを受け付けました</h2>
           <p>${name} 様</p>
           <p>この度はご予約リクエストをいただき誠にありがとうございます。<br>現在ホストにて確認を行っております。確定まで今しばらくお待ちください。</p>
-          
+
           <!-- ★ 短い予約コードの表示 -->
           <div style="background: #e0f2fe; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center;">
             <p style="margin: 0; font-size: 0.9rem; color: #0369a1;">予約コード（お問い合わせ・照合用）</p>
@@ -139,7 +184,7 @@ export const POST: APIRoute = async ({ request }) => {
               <li><strong>概算合計金額:</strong> ￥${totalAmount.toLocaleString()}（税込）</li>
             </ul>
           </div>
-          
+
           <p style="font-size: 0.85rem; color: #64748b;">
             ※ホストによる承認後、正式なご予約確定メールとチェックイン用QRコードをお送りいたします。
           </p>
