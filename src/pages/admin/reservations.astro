@@ -149,7 +149,7 @@ const formatCurrency = (amount) => {
                           </button>
                         </div>
                       ) : item.status === 'approved' || item.status === 'paid' ? (
-                        <div style="display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap;">
+                        <div style="display: flex; flex-direction: column; gap: 4px; align-items: center; justify-content: center;">
                           <button
                             onclick={`quickCheckIn('${item.id}')`}
                             style="width: 130px; padding: 6px 0; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
