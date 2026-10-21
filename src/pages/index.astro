@@ -1,5 +1,5 @@
 ---
-// src/pages/reservation.astro
+// src/pages/index.astro
 ---
 
 <!DOCTYPE html>
@@ -42,7 +42,12 @@
 
         <!-- 予約フォーム本体 -->
         <form id="requestForm" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1.5rem;">
-
+        <div id="bookingPauseMessage" style="display: none; background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 14px; border-radius: 8px; font-weight: bold; text-align: center;">
+          現在、予約受付を一時停止しています。
+          <div style="font-size: 0.85rem; font-weight: normal; margin-top: 5px;">
+            受付再開までお待ちください。
+          </div>
+        </div>
           <!-- 1. 空室カレンダー (1ヶ月表示) -->
           <section style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
@@ -246,6 +251,8 @@
         const totalPriceEl = document.getElementById('totalPrice');
         const form = document.getElementById('requestForm');
         const submitBtn = document.getElementById('submitBtn');
+        const bookingPauseMessage = document.getElementById('bookingPauseMessage');
+        let isBookingPaused = false;
         const qrModal = document.getElementById('qrModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
 
@@ -256,13 +263,9 @@
         const todayStr = `${yearNow}-${monthNow}-${dayNow}`;
         
         // const maxAllowedDate = new Date();
-        // maxAllowedDate.setMonth(maxAllowedDate.getMonth() + 2);
+        // 予約可能な最終日は、APIから取得した設定値を使用
+        let maxAllowedDateStr = '';
 
-        // 変更後（今日を含んで60日後まで予約可能）
-        const maxAllowedDate = new Date();
-        maxAllowedDate.setDate(maxAllowedDate.getDate() + 59);
-        const maxAllowedDateStr = maxAllowedDate.toISOString().split('T')[0];
-        
         if (checkInInput) {
           checkInInput.min = todayStr;
           checkInInput.max = maxAllowedDateStr;
@@ -342,6 +345,49 @@
             if (res.ok) {
               const data = await res.json();
               monthlyAvailability = data.availability || {};
+
+              // 管理画面で設定した予約可能な最終日
+              if (data.settings?.bookingEndDate) {
+                maxAllowedDateStr = data.settings.bookingEndDate;
+
+                if (checkInInput) {
+                  checkInInput.max = maxAllowedDateStr;
+                }
+              }
+              // 受付停止期間の判定（日本時間の日付）
+              const pauseStart = data.settings?.pauseStartDate;
+              const pauseEnd = data.settings?.pauseEndDate;
+
+              const jstToday = new Intl.DateTimeFormat('sv-SE', {
+                timeZone: 'Asia/Tokyo'
+              }).format(new Date());
+
+              isBookingPaused = !!(
+                pauseStart &&
+                pauseEnd &&
+                jstToday >= pauseStart &&
+                jstToday <= pauseEnd
+          );
+
+          if (submitBtn) {
+            submitBtn.disabled = isBookingPaused;
+            submitBtn.style.opacity = isBookingPaused ? '0.5' : '1';
+            submitBtn.style.cursor = isBookingPaused ? 'not-allowed' : 'pointer';
+          }
+
+          if (bookingPauseMessage) {
+            bookingPauseMessage.style.display = isBookingPaused ? 'block' : 'none';
+          }            
+          // 受付停止中は、予約フォーム内の入力・操作を無効化
+          if (form) {
+            form.querySelectorAll('input, select, textarea, button').forEach((el) => {
+              if (el.id !== 'closeModalBtn') {
+                el.disabled = isBookingPaused;
+              }
+            });
+          }
+            } else {
+              console.error('availability API error:', res.status);
             }
           } catch (e) {
             console.error('availability fetch error:', e);

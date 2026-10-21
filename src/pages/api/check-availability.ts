@@ -83,10 +83,33 @@ export const GET: APIRoute = async ({ request }) => {
       });
     }
 
-    return new Response(JSON.stringify({ availability: availabilityMap }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    // 3. 予約受付設定を取得
+    const { data: settings, error: settingsError } = await supabase
+      .from('booking_settings')
+      .select('booking_end_date, pause_start_date, pause_end_date')
+      .eq('id', 1)
+      .single();
+
+    if (settingsError) {
+      console.error('settingsError:', settingsError.message);
+      throw new Error(`Booking settings fetch error: ${settingsError.message}`);
+    }
+
+    return new Response(
+      JSON.stringify({
+        availability: availabilityMap,
+        settings: {
+          bookingEndDate: settings.booking_end_date,
+          pauseStartDate: settings.pause_start_date,
+          pauseEndDate: settings.pause_end_date
+        }
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+
   } catch (err: any) {
     console.error('API Check Availability Critical Error:', err);
     return new Response(JSON.stringify({ error: err.message || 'Internal Server Error' }), { 

@@ -1,0 +1,143 @@
+
+---
+import { getSupabase } from '../../lib/supabase';
+
+const supabase = getSupabase();
+let message = '';
+let errorMessage = '';
+
+let settings = {
+  booking_end_date: '',
+  pause_start_date: '',
+  pause_end_date: '',
+};
+
+if (!supabase) {
+  errorMessage = 'Supabaseの接続設定を確認してください。';
+} else {
+  if (Astro.request.method === 'POST') {
+    try {
+      const formData = await Astro.request.formData();
+      const bookingEndDate = String(formData.get('booking_end_date') || '');
+      const pauseStartDate = String(formData.get('pause_start_date') || '');
+      const pauseEndDate = String(formData.get('pause_end_date') || '');
+
+      if (!bookingEndDate) {
+        throw new Error('予約可能な最終日を指定してください。');
+      }
+
+      if ((pauseStartDate && !pauseEndDate) || (!pauseStartDate && pauseEndDate)) {
+        throw new Error('受付停止の開始日と終了日を両方指定してください。');
+      }
+
+      if (pauseStartDate && pauseEndDate && pauseStartDate > pauseEndDate) {
+        throw new Error('受付停止の終了日は開始日以降にしてください。');
+      }
+
+      const { error } = await supabase
+        .from('booking_settings')
+        .upsert({
+          id: 1,
+          booking_end_date: bookingEndDate,
+          pause_start_date: pauseStartDate || null,
+          pause_end_date: pauseEndDate || null,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'id' });
+
+      if (error) throw error;
+      message = '設定を保存しました。';
+    } catch (e: any) {
+      errorMessage = e.message || '設定の保存に失敗しました。';
+    }
+  }
+
+  const { data, error } = await supabase
+    .from('booking_settings')
+    .select('*')
+    .eq('id', 1)
+    .maybeSingle();
+
+  if (error) {
+    errorMessage = error.message;
+  } else if (data) {
+    settings = {
+      booking_end_date: data.booking_end_date || '',
+      pause_start_date: data.pause_start_date || '',
+      pause_end_date: data.pause_end_date || '',
+    };
+  } else {
+    errorMessage = '設定データがありません。先ほどのSQLを確認してください。';
+  }
+}
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>予約受付設定</title>
+  </head>
+  <body>
+    <main style="max-width: 640px; margin: 40px auto; padding: 20px; font-family: sans-serif;">
+      <h1>🚫 予約受付設定</h1>
+
+      {message && <p style="color: green;">{message}</p>}
+      {errorMessage && <p style="color: red;">{errorMessage}</p>}
+
+      <form method="POST">
+        <section style="margin-bottom: 28px;">
+          <h2>予約可能な最終日</h2>
+          <p>この日までの宿泊予約を受け付ける設定です。</p>
+          <input
+            type="date"
+            name="booking_end_date"
+            value={settings.booking_end_date}
+            required
+          />
+        </section>
+
+        <section style="margin-bottom: 28px;">
+          <h2>予約受付の一時停止</h2>
+          <p>管理者が不在などの期間に、新規予約の受付を停止します。両方空欄なら停止しません。</p>
+
+          <label>
+            停止開始日<br />
+            <input
+              type="date"
+              name="pause_start_date"
+              value={settings.pause_start_date}
+            />
+          </label>
+
+          <br /><br />
+
+          <label>
+            停止終了日<br />
+            <input
+              type="date"
+              name="pause_end_date"
+              value={settings.pause_end_date}
+            />
+          </label>
+        </section>
+
+        <button type="submit">設定を保存</button>
+      </form>
+
+        <div style="text-align: right; display: flex; justify-content: flex-end; gap: 5px;">        
+           <a href="/" style="padding: 8px 14px; background: #f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
+            🏡 
+          </a>
+          <a href="/admin/reservations" style="padding: 8px 14px; background:#f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
+            📊 
+          </a>
+          <a href="/admin/availability" style="padding: 8px 14px; background:#f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
+            🎛️ 
+          </a>
+          <a href="/admin/scanner" style="padding: 8px 14px; background:#f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
+            📷 
+          </a>
+        </div>
+    </main>
+  </body>
+</html>

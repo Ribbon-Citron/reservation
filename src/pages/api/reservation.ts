@@ -22,6 +22,55 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(JSON.stringify({ error: '必須項目が不足しています。' }), { status: 400 });
     }
 
+    // 予約受付設定の確認
+    const { data: bookingSettings, error: settingsError } = await supabase
+      .from('booking_settings')
+      .select('booking_end_date, pause_start_date, pause_end_date')
+      .eq('id', 1)
+      .maybeSingle();
+
+    if (settingsError || !bookingSettings) {
+      console.error('予約受付設定の取得エラー:', settingsError);
+      return new Response(
+        JSON.stringify({ error: '予約受付設定を確認できません。時間をおいて再度お試しください。' }),
+        { status: 503, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // 日付を YYYY-MM-DD 形式で比較
+    if (checkOut <= checkIn) {
+      return new Response(
+        JSON.stringify({ error: 'チェックアウト日はチェックイン日より後の日付を指定してください。' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (checkOut > bookingSettings.booking_end_date) {
+      return new Response(
+        JSON.stringify({ error: `現在の予約受付は ${bookingSettings.booking_end_date} までです。` }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // 日本時間の今日が受付停止期間内なら、新規予約を受け付けない
+    const todayJST = new Intl.DateTimeFormat('sv-SE', {
+      timeZone: 'Asia/Tokyo'
+    }).format(new Date());
+
+    if (
+      bookingSettings.pause_start_date &&
+      bookingSettings.pause_end_date &&
+      todayJST >= bookingSettings.pause_start_date &&
+      todayJST <= bookingSettings.pause_end_date
+    ) {
+      return new Response(
+        JSON.stringify({
+          error: '現在、新規予約の受付を一時停止しています。再開後にお申し込みください。'
+        }),
+        { status: 403, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     // 宿泊日数・料金計算 (5,000円/泊/人)
     const inDate = new Date(checkIn);
     const outDate = new Date(checkOut);
