@@ -57,23 +57,25 @@ const formatCurrency = (amount) => {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>【管理】状況一覧</title>
     
-<style>
+ <style>
   @media (max-width: 600px) {
     body {
-      padding: 8px !important;
+      padding: 6px !important;
     }
 
     table {
+      width: 100%;
+      table-layout: fixed;
       font-size: 0.6rem !important;
-      table-layout: auto;
     }
 
     th,
     td {
-      padding: 6px 3px !important;
+      padding: 5px 2px !important;
+      font-size: 0.6rem !important;
       white-space: nowrap !important;
-      overflow-wrap: normal !important;
-      word-break: normal !important;
+      overflow: hidden;
+      text-overflow: clip;
     }
 
     td:last-child > div {
@@ -82,8 +84,8 @@ const formatCurrency = (amount) => {
 
     td:last-child button {
       width: 100% !important;
-      max-width: 100px;
-      padding: 5px 2px !important;
+      max-width: 100% !important;
+      padding: 4px 1px !important;
       font-size: 0.6rem !important;
     }
   }
