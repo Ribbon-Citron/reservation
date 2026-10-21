@@ -106,21 +106,21 @@ const formatCurrency = (amount: number) => {
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
-    <title>【管理】各種設定</title>
+    <title>【管理】設定一覧</title>
   </head>
   <body style="font-family: sans-serif; background: #f8fafc; margin: 0; padding: 2rem;">
-    <div style="max-width: 1100px; margin: 0 auto;">
+    <div style="max-width: 1200px; margin: 0 auto;">
       <!-- ヘッダー -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
         <div>
-          <h1 style="margin: 0; color: #0f172a; font-size: 1.5rem;">🎛️ 設定</h1>
-          <p style="margin: 0.25rem 0 0; color: #64748b; font-size: 0.9rem;">宿泊料金、最大人数、休業日（ブロック）の個別設定</p>
+          <h1 style="margin: 0; color: #0f172a; font-size: 1.5rem;">🎛️ 設定一覧</h1>
+          <p style="margin: 0.25rem 0 0; color: #64748b; font-size: 0.9rem;">宿泊料金, 最大人数, ブロック(休業) の個別設定</p>
         </div>
-        <div style="text-align: right; display: flex; justify-content: flex-end; gap: 5px;">
-          <a href="/" style="padding: 8px 14px; background: #f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1rem; font-weight: bold;">🏡</a>
-          <a href="/admin/reservations" style="padding: 8px 14px; background: #f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1rem; font-weight: bold;">📊</a>
-          <a href="/admin/booking-settings" style="padding: 8px 14px; background: #f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1rem; font-weight: bold;">🚫</a>
-          <a href="/admin/scanner" style="padding: 8px 14px; background: #f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1rem; font-weight: bold;">📷</a>
+        <div style="text-align: right; display: flex; justify-content: flex-end; gap: 10px;">
+          <a href="/" style="padding: 4px 14px; background: #f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1rem; font-weight: bold;">🏡</a>
+          <a href="/admin/reservations" style="padding: 4px 14px; background: #f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1rem; font-weight: bold;">📊</a>
+          <a href="/admin/booking-settings" style="padding: 4px 14px; background: #f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1rem; font-weight: bold;">🚫</a>
+          <a href="/admin/scanner" style="padding: 4px 14px; background: #f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1rem; font-weight: bold;">📷</a>
         </div>
       </div>
 
@@ -130,20 +130,20 @@ const formatCurrency = (amount: number) => {
         </div>
       )}
 
-      <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 1.5rem; overflow-x: auto;">
+      <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow-x: auto;">
         <form method="POST" id="availability-form">
           <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
             <thead>
               <tr style="background: #f1f5f9; border-bottom: 2px solid #e2e8f0; color: #475569;">
                 <th style="padding: 12px;">日付</th>
-                <th style="padding: 12px;">1泊料金</th>
-                <th style="padding: 12px;">最大人数（定員）</th>
+                <th style="padding: 12px;">1泊の料金</th>
+                <th style="padding: 12px;">最大人数</th>
                 <th style="padding: 12px;">予約状況</th>
                 <th style="padding: 12px; text-align: center; white-space: nowrap;">
                   操作
                   <button
                     type="submit"
-                    style="margin-left: 8px; padding: 7px 10px; background: #2563eb; color: white; border: none; border-radius: 4px; font-size: 0.8rem; font-weight: bold; cursor: pointer; white-space: nowrap;"
+                    style="margin-left: 8px; padding: 2px 10px; background: #2563eb; color: white; border: none; border-radius: 4px; font-size: 0.8rem; font-weight: bold; cursor: pointer; white-space: nowrap;"
                   >更新</button>
                 </th>
               </tr>
@@ -202,9 +202,9 @@ const formatCurrency = (amount: number) => {
                     </td>
                     <td style="padding: 12px;">
                       {isBlocked ? (
-                        <span style="background: #f3f4f6; color: #4b5563; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;">休業ブロック中</span>
+                        <span style="background: #f3f4f6; color: #4b5563; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;">ブロック中</span>
                       ) : isFull ? (
-                        <span style="background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;">満室（予約 {bookedGuestsCount}名）</span>
+                        <span style="background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;">満室 (予約 {bookedGuestsCount}名)</span>
                       ) : (
                         <span style="background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;">
                           予約 {bookedGuestsCount}名 / 残り {remainingCapacity}枠
@@ -216,7 +216,7 @@ const formatCurrency = (amount: number) => {
                         type="button"
                         id={`block-button-${dateStr}`}
                         onclick={`(function(){const field=document.getElementById('blocked-${dateStr}');const button=document.getElementById('block-button-${dateStr}');const blocked=field.value!=='true';field.value=blocked?'true':'false';button.textContent=blocked?'販売再開':'ブロック';button.style.background=blocked?'#16a34a':'#dc2626';button.style.color='white';})()`}
-                        style={`padding: 6px 10px; border: none; border-radius: 4px; font-size: 0.8rem; font-weight: bold; cursor: pointer; ${
+                        style={`padding: 4px 10px; border: none; border-radius: 4px; font-size: 0.8rem; font-weight: bold; cursor: pointer; ${
                           isBlocked ? 'background: #16a34a; color: white;' : 'background: #dc2626; color: white;'
                         }`}
                       >

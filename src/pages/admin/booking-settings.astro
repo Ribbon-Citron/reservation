@@ -1,5 +1,6 @@
-
 ---
+// src/pages/admin/booking-settings.astro
+
 import { getSupabase } from '../../lib/supabase';
 
 const supabase = getSupabase();
@@ -75,69 +76,76 @@ if (!supabase) {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>予約受付設定</title>
+    <title>【管理】受付設定</title>
   </head>
-  <body>
-    <main style="max-width: 640px; margin: 40px auto; padding: 20px; font-family: sans-serif;">
-      <h1>🚫 予約受付設定</h1>
 
-      {message && <p style="color: green;">{message}</p>}
-      {errorMessage && <p style="color: red;">{errorMessage}</p>}
+  <body style="font-family: sans-serif; background-color: #f8fafc; margin: 0; padding: 2rem;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+
+      <!-- ヘッダーエリア -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div>
+          <h1 style="margin: 0; color: #0f172a; font-size: 1.5rem;">🚫 受付設定</h1>
+          <p style="margin: 0.25rem 0 0; color: #64748b; font-size: 0.9rem;">
+            予約可能最終日と予約受付の一時停止
+          </p>
+        </div>
+        <div style="text-align: right; display: flex; justify-content: flex-end; gap: 10px;">
+          <a href="/" style="padding: 4px 14px; background: #f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
+            🏡 
+          </a>
+          <a href="/admin/reservations" style="padding: 4px 14px; background:#f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
+            📊
+          </a>
+          <a href="/admin/availability" style="padding: 4px 14px; background:#f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
+            🎛️ 
+          </a>
+          <a href="/admin/scanner" style="padding: 4px 14px; background:#f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
+            📷 
+          </a>
+        </div>
+      </div>
+
+      <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 1.5rem; overflow-x: auto;">
 
       <form method="POST">
         <section style="margin-bottom: 28px;">
-          <h2>予約可能な最終日</h2>
-          <p>この日までの宿泊予約を受け付ける設定です。</p>
+          <b>予約可能な最終日</b><br />
           <input
             type="date"
             name="booking_end_date"
             value={settings.booking_end_date}
             required
           />
+          <p style="margin: 0.25rem 0 0; color: #64748b; font-size: 0.9rem;">
+          この日までの宿泊予約を受け付ける設定。</p>
         </section>
 
         <section style="margin-bottom: 28px;">
-          <h2>予約受付の一時停止</h2>
-          <p>管理者が不在などの期間に新規予約の受付を停止します。両方空欄なら停止しません。</p>
-          <p>主に今日(当日)から停止したい場合に使うことになるかも(要デバッグ)。</p>
+          <b>予約受付の一時停止</b><br />
           <label>
-            停止開始日<br />
             <input
               type="date"
               name="pause_start_date"
               value={settings.pause_start_date}
             />
           </label>
-
-          <br /><br />
-
+          &nbsp;～&nbsp;
           <label>
-            停止終了日<br />
             <input
               type="date"
               name="pause_end_date"
               value={settings.pause_end_date}
             />
           </label>
+          <p style="margin: 0.25rem 0 0; color: #64748b; font-size: 0.9rem;">
+          管理者が不在などの期間に新規予約の受付を停止します。両方空欄なら停止しません。<br />
+          主に今日(当日)から停止したい場合に使うことになるかも(運用で確認)。</p>
         </section>
-
+        <br />
         <button type="submit">設定を保存</button>
       </form>
-
-        <div style="text-align: right; display: flex; justify-content: flex-end; gap: 5px;">        
-           <a href="/" style="padding: 8px 14px; background: #f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
-            🏡 
-          </a>
-          <a href="/admin/reservations" style="padding: 8px 14px; background:#f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
-            📊 
-          </a>
-          <a href="/admin/availability" style="padding: 8px 14px; background:#f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
-            🎛️ 
-          </a>
-          <a href="/admin/scanner" style="padding: 8px 14px; background:#f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
-            📷 
-          </a>
-        </div>
-    </main>
+      </div>
+    </div>
   </body>
 </html>
