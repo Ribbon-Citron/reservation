@@ -62,27 +62,28 @@ const formatCurrency = (amount) => {
     body {
       padding: 6px !important;
           /* スマホでは表内の文字サイズを統一して縮小 */
-    tbody td,
-    tbody td div,
-    tbody td span {
-      font-size: 0.6rem !important;
-      line-height: 1.3 !important;
-    }
+      tbody td,
+      tbody td div,
+      tbody td span {
+        font-size: 0.6rem !important;
+        line-height: 1.3 !important;
+      }
     }
 
     table {
       width: 100%;
-      table-layout: auto;
+      table-layout: fixed;
       font-size: 0.6rem !important;
     }
 
     th,
     td {
-      padding: 5px 3px !important;
+      padding: 5px 2px !important;
       font-size: 0.6rem !important;
       white-space: nowrap !important;
       overflow: visible;
       text-overflow: clip;
+      box-sizing: border-box;
     }
 
     td:last-child > div {
