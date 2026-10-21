@@ -54,6 +54,7 @@ const formatCurrency = (amount) => {
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>【管理】状況一覧</title>
   </head>
   <body style="font-family: sans-serif; background-color: #f8fafc; margin: 0; padding: 2rem;">
@@ -88,8 +89,8 @@ const formatCurrency = (amount) => {
           <strong>予約データの取得エラー:</strong> {dbError}
         </div>
       )}
-      <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden;">
-        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
+        <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow-x: auto;">        
+        <table style="width: 100%; min-width: 900px; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
           <thead>
             <tr style="background: #f1f5f9; color: #475569; border-bottom: 1px solid #e2e8f0;">
               <th style="padding: 12px 16px;">宿泊者名</th>
@@ -97,14 +98,13 @@ const formatCurrency = (amount) => {
               <th style="padding: 12px 16px; white-space: nowrap;">宿泊日程 / 到着時間</th>
               <th style="padding: 12px 16px; white-space: nowrap;">人数 / 金額</th>
               <th style="padding: 12px 16px; white-space: nowrap;">支払方法</th>
-              <th style="padding: 12px 16px; white-space: nowrap;">ステータス</th>
+
               <th style="padding: 12px 16px; text-align: center; white-space: nowrap;">操作</th>
             </tr>
           </thead>
           <tbody>
             {reservations && reservations.length > 0 ? (
               reservations.map((item) => {
-                const badge = getStatusBadge(item.status);
                 return (
                   <tr style="border-bottom: 1px solid #f1f5f9;">
                     <td style="padding: 12px 16px; color: #0f172a;">
@@ -133,11 +133,6 @@ const formatCurrency = (amount) => {
                     </td>
                     <td style="padding: 12px 16px; color: #334155; font-size: 0.85rem; white-space: nowrap;">
                       {item.payment_method === 'stripe' ? '事前カード' : '現地決済'}
-                    </td>
-                    <td style="padding: 12px 16px; white-space: nowrap;">
-                      <span style={`padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; ${badge.style}`}>
-                        {badge.text}
-                      </span>
                     </td>
                     <td style="padding: 12px 16px; text-align: center; white-space: nowrap;">
                       {item.status === 'pending' ? (
@@ -180,16 +175,24 @@ const formatCurrency = (amount) => {
                             キャンセル
                           </button>
                         </div>
+                      
+                      ) : item.status === 'cancelled' ? (
+                        <span style="font-size: 0.8rem; color: #dc2626; font-weight: bold;">
+                          キャンセル済
+                        </span>
                       ) : (
-                        <span style="font-size: 0.8rem; color: #94a3b8;">{badge.text}</span>
+                        <span style="font-size: 0.8rem; color: #64748b;">
+                          操作なし
+                        </span>
                       )}
+
                     </td>
                   </tr>
                 );
               })
             ) : (
               <tr>
-                <td colspan="7" style="padding: 32px; text-align: center; color: #94a3b8;">
+                <td colspan="6" style="padding: 32px; text-align: center; color: #94a3b8;">
                   予約データがありません。
                 </td>
               </tr>
