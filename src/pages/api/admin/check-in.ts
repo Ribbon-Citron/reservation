@@ -16,7 +16,7 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // まずQRコード文字列で検索
+    // QRコード文字列で予約を検索
     const qrResult = await supabase
       .from('reservations')
       .select('*')
@@ -29,8 +29,24 @@ export const POST: APIRoute = async ({ request }) => {
 
     let reservation: any = qrResult.data;
 
-    // QRコードで見つからなければ、予約ID（UUID）で検索
+    // QRコードで見つからなければ、短い予約コードで検索
     if (!reservation) {
+      const codeResult = await supabase
+        .from('reservations')
+        .select('*')
+        .eq('reservation_code', reservationId)
+        .maybeSingle();
+
+      if (codeResult.error) {
+        throw new Error(`予約検索に失敗しました: ${codeResult.error.message}`);
+      }
+
+      reservation = codeResult.data;
+    }
+
+    // それでも見つからず、UUID形式の場合だけIDで検索
+    if (!reservation &&
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(reservationId)) {
       const idResult = await supabase
         .from('reservations')
         .select('*')
