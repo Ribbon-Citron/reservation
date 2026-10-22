@@ -17,7 +17,15 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const data = await request.json();
     const { checkIn, checkOut, guests, arrivalTime, name, gender, ageGroup, email, phone, paymentMethod } = data;
-
+    if (paymentMethod !== 'onsite') {
+      return new Response(
+        JSON.stringify({ error: '現在、現地決済のみご利用いただけます。' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
     if (!checkIn || !checkOut || !name || !email || !phone || !arrivalTime) {
       return new Response(JSON.stringify({ error: '必須項目が不足しています。' }), { status: 400 });
     }

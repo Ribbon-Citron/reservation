@@ -163,21 +163,20 @@
             <h3 style="font-size: 0.95rem; margin: 0; padding-bottom: 0.3rem; border-bottom: 2px solid #3b82f6; color: #1e293b; display: flex; align-items: center; gap: 0.4rem;">
               <span>💳</span> 4. お支払い方法
             </h3>
-            <label style="display: flex; align-items: center; gap: 0.5rem; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: not-allowed; font-size: 0.85rem; background: #f1f5f9; color: #94a3b8;">
-              <input type="radio" name="paymentMethod" value="stripe" disabled style="accent-color: #2563eb;" />
-              <div>
-                <strong>事前クレジットカード決済</strong>
-                <span style="display: block; font-size: 0.75rem; color: #94a3b8;">現在ご利用いただけません</span>
-              </div>
-            </label>
-
-            <label style="display: flex; align-items: center; gap: 0.5rem; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 0.85rem; background: #fff;">
-              <input type="radio" name="paymentMethod" value="onsite" checked style="accent-color: #2563eb;" />
-              <div>
-                <strong>現地決済 (現金 / <s>PayPay</s> / <s>QR</s>)</strong>
-                <span style="display: block; font-size: 0.75rem; color: #64748b;">チェックイン時にお支払いいただきます</span>
-              </div>
-            </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: not-allowed; font-size: 0.85rem; background: #f1f5f9; color: #94a3b8; pointer-events: none; opacity: 0.7;">
+                <input type="radio" name="paymentMethod" value="stripe" disabled style="accent-color: #2563eb;" />
+                <div>
+                  <strong>事前クレジットカード決済</strong>
+                  <span style="display: block; font-size: 0.75rem; color: #94a3b8;">現在ご利用いただけません</span>
+                </div>
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 0.85rem; background: #fff;">
+               <input type="radio" name="paymentMethod" value="onsite" checked style="accent-color: #2563eb;" />
+                <div>
+                  <strong>現地決済 (現金 / <s style="color: #94a3b8;">PayPay</s> / <s style="color: #94a3b8;">QR</s>)</strong>
+                  <span style="display: block; font-size: 0.75rem; color: #64748b;">チェックイン時にお支払いいただきます</span>
+                </div>
+              </label>
           </section>
 
           <!-- 5. キャンセル規定・同意 -->
@@ -509,8 +508,13 @@
               ageGroup: document.getElementById('ageGroup').value,
               email: document.getElementById('email').value,
               phone: document.getElementById('phone').value,
-              paymentMethod: document.querySelector('input[name="paymentMethod"]:checked').value,
+              paymentMethod: document.querySelector('input[name="paymentMethod"]:checked')?.value || 'onsite',
             };
+
+            if (reservationData.paymentMethod !== 'onsite') {
+              alert('現在、現地決済のみご利用いただけます。');
+              return;
+            }
 
             try {
               const res = await fetch('/api/reservation', {
