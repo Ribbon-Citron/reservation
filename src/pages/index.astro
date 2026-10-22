@@ -30,6 +30,14 @@
       </div>
     </header>
 
+    <!-- 日付警告モーダル -->
+    <div id="dateWarningModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.55); align-items: center; justify-content: center; z-index: 2000; padding: 1rem;">
+      <div style="width: 100%; max-width: 360px; background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center;">
+        <p id="dateWarningText" style="margin: 0 0 1.25rem; color: #0f172a; font-size: 0.95rem; line-height: 1.7;"></p>
+        <button type="button" id="closeDateWarningBtn" style="width: 100%; padding: 10px; background: #1e293b; color: white; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: bold; cursor: pointer;">確認</button>
+      </div>
+    </div>
+
     <!-- #reservation: 中段・宿泊予約リクエストフォーム -->
     <main id="reservation" style="width: 100%; max-width: 480px; margin: 2rem auto; padding: 0 0.5rem; box-sizing: border-box;">
       <div style="background: #f0f0f0; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; overflow: hidden;">
@@ -250,6 +258,24 @@
         const bookingPauseMessage = document.getElementById('bookingPauseMessage');
         let isBookingPaused = false;
         const qrModal = document.getElementById('qrModal');
+
+        const dateWarningModal = document.getElementById('dateWarningModal');
+        const dateWarningText = document.getElementById('dateWarningText');
+        const closeDateWarningBtn = document.getElementById('closeDateWarningBtn');
+
+        function showDateWarning(message) {
+          if (dateWarningText && dateWarningModal) {
+            dateWarningText.textContent = message;
+            dateWarningModal.style.display = 'flex';
+          }
+        }
+
+        if (closeDateWarningBtn && dateWarningModal) {
+          closeDateWarningBtn.addEventListener('click', () => {
+            dateWarningModal.style.display = 'none';
+          });
+        }
+
         const closeModalBtn = document.getElementById('closeModalBtn');
 
         const now = new Date();
@@ -278,7 +304,7 @@
             ].join('-');
 
             if (maxAllowedDateStr && nextDayStr > maxAllowedDateStr) {
-              alert(`予約受付は ${maxAllowedDateStr} が最終チェックアウト日です。別の日付を選択してください。`);
+              showDateWarning(`予約受付は ${maxAllowedDateStr} が最終チェックアウト日です。別の日付を選択してください。`);
               checkInInput.value = '';
               if (checkOutInput) checkOutInput.value = '';
               calculateTotal();
@@ -304,7 +330,7 @@
               checkOutInput.value &&
               checkOutInput.value > maxAllowedDateStr
             ) {
-              alert(`予約受付は ${maxAllowedDateStr} が最終チェックアウト日です。別の日付を選択してください。`);
+              showDateWarning(`予約受付は ${maxAllowedDateStr} が最終チェックアウト日です。別の日付を選択してください。`);
                 checkOutInput.value = '';
               calculateTotal();
               return;
