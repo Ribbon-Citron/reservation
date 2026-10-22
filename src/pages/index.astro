@@ -512,7 +512,7 @@
               paymentMethod: document.querySelector('input[name="paymentMethod"]:checked')?.value || 'onsite',
             };
 
-            if (reservationData.paymentMethod !== 'onsite') {
+            if (formData.paymentMethod !== 'onsite') {
               alert('現在、現地決済のみご利用いただけます。');
               return;
             }
