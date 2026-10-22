@@ -10,7 +10,7 @@
     <title>CENTER INN</title>
   </head>
   <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8fafc; margin: 0; padding: 0; color: #0f172a;">
-    
+
     <!-- #top: 宿の簡易紹介ブロック -->
     <header id="top" style="background: #1e293b; border-bottom: 1px solid #e2e8f0; padding: 2.5rem 1rem; text-align: center;">
       <div style="max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center;">
@@ -18,7 +18,7 @@
         <p style="margin: 0 0 1.25rem 0; color: #edeae5; font-size: 0.95rem;">
           ここは開発中の架空サイトです
         </p>
-        
+
     <!-- 写真1プレースホルダー部分の置き換え -->
       <div style="width: 110%; height: 220px; background: #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: center; color: #64748b;">
         <img src="room.png" alt="宿の写真" style="width: 100%; height: 100%; object-fit: cover;" />
@@ -33,7 +33,7 @@
     <!-- #reservation: 中段・宿泊予約リクエストフォーム -->
     <main id="reservation" style="width: 100%; max-width: 480px; margin: 2rem auto; padding: 0 0.5rem; box-sizing: border-box;">
       <div style="background: #f0f0f0; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; overflow: hidden;">
-        
+
         <!-- フォームヘッダー -->
         <div style="background: #1e293b; color: #e6e9e2; padding: 1.25rem 1.5rem; text-align: center;">
           <h2 style="margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: 0.05em;">🏡 宿泊予約リクエスト</h2>
@@ -222,7 +222,7 @@
         <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎉</div>
         <h2 style="margin: 0 0 0.5rem; font-size: 1.15rem; color: #0f172a;">予約リクエストを受け付けました</h2>
         <p style="margin: 0 0 1rem; font-size: 0.8rem; color: #64748b;">ご登録メールアドレスに確認メールを送信しました。</p>
-        
+
         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; text-align: left;">
           <p style="margin: 0; font-size: 0.8rem; color: #334155; line-height: 1.5;">
             ホストによる内容確認後ご予約確定のメールと<strong>チェックイン用QRコード</strong>をお送りいたします。今しばらくお待ちください。
@@ -257,7 +257,7 @@
         const monthNow = String(now.getMonth() + 1).padStart(2, '0');
         const dayNow = String(now.getDate()).padStart(2, '0');
         const todayStr = `${yearNow}-${monthNow}-${dayNow}`;
-        
+
         // const maxAllowedDate = new Date();
         // 予約可能な最終日は、APIから取得した設定値を使用
         let maxAllowedDateStr = '';
@@ -272,7 +272,7 @@
             const inDate = new Date(checkInInput.value);
             inDate.setDate(inDate.getDate() + 1);
             const nextDayStr = inDate.toISOString().split('T')[0];
-            
+
             if (checkOutInput) {
               checkOutInput.value = nextDayStr;
               checkOutInput.min = nextDayStr;
@@ -295,10 +295,11 @@
         let year = now.getFullYear();
         let month = now.getMonth();
         let monthlyAvailability = {};
+        let basePrice = 5000;
 
         function calculateTotal() {
           if (!checkInInput || !checkOutInput || !guestsSelect || !totalPriceEl) return 0;
-          
+
           const checkIn = checkInInput.value;
           const checkOut = checkOutInput.value;
           const guests = parseInt(guestsSelect.value, 10) || 1;
@@ -316,8 +317,8 @@
           while (curr < last) {
             const dStr = curr.toISOString().split('T')[0];
             const dayInfo = monthlyAvailability[dStr];
-            const nightPrice = dayInfo ? dayInfo.price : 5000;
-            
+            const nightPrice = dayInfo ? dayInfo.price : basePrice;
+
             totalSum += nightPrice * guests;
             nights++;
             curr.setDate(curr.getDate() + 1);
@@ -341,7 +342,7 @@
             if (res.ok) {
               const data = await res.json();
               monthlyAvailability = data.availability || {};
-
+              basePrice = data.basePrice ?? 5000;
               // 管理画面で設定した予約可能な最終日
               if (data.settings?.bookingEndDate) {
                 maxAllowedDateStr = data.settings.bookingEndDate;
@@ -373,7 +374,7 @@
 
           if (bookingPauseMessage) {
             bookingPauseMessage.style.display = isBookingPaused ? 'block' : 'none';
-          }            
+          }
           // 受付停止中は、予約フォーム内の入力・操作を無効化
           if (form) {
             form.querySelectorAll('input, select, textarea, button').forEach((el) => {
@@ -402,9 +403,9 @@
             const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
             const isPast = dateStr < todayStr;
             const isBeyondTwoMonths = dateStr > maxAllowedDateStr;
-            
+
             const dayInfo = monthlyAvailability[dateStr];
-            const availableCount = (isBeyondTwoMonths || isPast) ? 0 : (dayInfo ? dayInfo.available : 4); 
+            const availableCount = (isBeyondTwoMonths || isPast) ? 0 : (dayInfo ? dayInfo.available : 4);
             const isAvailable = !isPast && !isBeyondTwoMonths && availableCount > 0;
 
             const cell = document.createElement('div');

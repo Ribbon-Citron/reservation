@@ -40,7 +40,18 @@ export const GET: APIRoute = async ({ request }) => {
       console.error('resError:', resError.message);
       throw new Error(`Reservation fetch error: ${resError.message}`);
     }
+    // 基本宿泊料金を取得
+    const { data: baseSettings, error: baseSettingsError } = await supabase
+      .from('app_settings')
+      .select('base_price')
+      .eq('id', 1)
+      .maybeSingle();
 
+    if (baseSettingsError) {
+      throw new Error(`基本料金の取得エラー: ${baseSettingsError.message}`);
+    }
+
+    const DEFAULT_BASE_PRICE = baseSettings?.base_price ?? 5000;
     const DEFAULT_MAX_GUESTS = 4;
     const availabilityMap: Record<string, { available: number; maxGuests: number; price: number; isBlocked: boolean }> = {};
 
@@ -48,13 +59,13 @@ export const GET: APIRoute = async ({ request }) => {
     for (let d = 1; d <= lastDay; d++) {
       const dStr = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
       let maxGuests = DEFAULT_MAX_GUESTS;
-      let price = 5000;
+      let price = DEFAULT_BASE_PRICE;
       let isBlocked = false;
 
       const custom = availData?.find((row: any) => row.target_date === dStr);
       if (custom) {
         maxGuests = custom.max_guests ?? DEFAULT_MAX_GUESTS;
-        price = custom.price ?? 5000;
+        price = custom.price ?? DEFAULT_BASE_PRICE;
         isBlocked = custom.is_blocked ?? false;
       }
 
@@ -98,6 +109,7 @@ export const GET: APIRoute = async ({ request }) => {
     return new Response(
       JSON.stringify({
         availability: availabilityMap,
+        basePrice: DEFAULT_BASE_PRICE,
         settings: {
           bookingEndDate: settings.booking_end_date,
           pauseStartDate: settings.pause_start_date,

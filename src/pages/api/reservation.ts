@@ -104,6 +104,23 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
+    // 基本宿泊料金を取得
+    const { data: baseSettings, error: baseSettingsError } = await supabase
+      .from('app_settings')
+      .select('base_price')
+      .eq('id', 1)
+      .maybeSingle();
+
+    if (baseSettingsError) {
+      console.error('基本宿泊料金の取得エラー:', baseSettingsError);
+      return new Response(
+        JSON.stringify({ error: '基本宿泊料金を取得できません。時間をおいて再度お試しください。' }),
+        { status: 503, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const defaultBasePrice = baseSettings?.base_price ?? 5000;
+
     // DBに日別設定がない日は、デフォルト料金5,000円
     const priceMap = new Map(
       (dailyPrices || []).map((row) => [row.target_date, row.price])
@@ -115,8 +132,7 @@ export const POST: APIRoute = async ({ request }) => {
       const date = new Date(inDate);
       date.setUTCDate(date.getUTCDate() + i);
       const dateStr = date.toISOString().slice(0, 10);
-
-      const dailyPrice = priceMap.get(dateStr) ?? 5000;
+      const dailyPrice = priceMap.get(dateStr) ?? defaultBasePrice;
 
       if (!Number.isFinite(Number(dailyPrice)) || Number(dailyPrice) < 0) {
         return new Response(
