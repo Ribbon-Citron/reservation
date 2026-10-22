@@ -21,18 +21,18 @@ if (Astro.request.method === 'POST') {
     const formData = await Astro.request.formData();
     const action = formData.get('action')?.toString();
 
-    // 基本宿泊料金の保存
+    // 基本料金の保存
     if (action === 'save-base-price') {
       const priceStr = formData.get('basePrice')?.toString();
 
       if (priceStr === undefined || priceStr.trim() === '') {
-        throw new Error('基本宿泊料金を入力してください。');
+        throw new Error('基本料金を入力してください。');
       }
 
       const price = Number(priceStr);
 
       if (!Number.isInteger(price) || price < 0) {
-        throw new Error('基本宿泊料金は0円以上の整数で指定してください。');
+        throw new Error('基本料金は0円以上の整数で指定してください。');
       }
 
       const { error } = await supabase
@@ -46,7 +46,7 @@ if (Astro.request.method === 'POST') {
         throw new Error(`基本料金の保存エラー: ${error.message}`);
       }
 
-      settingsMessage = '基本宿泊料金を保存しました。';
+      settingsMessage = '基本料金を保存しました。';
       basePrice = price;
     } else {
       // 既存の日別設定の保存
@@ -187,10 +187,10 @@ const formatCurrency = (amount: number) => {
           </div>
       )}
 
-      <form method="POST" style="background: white; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+      <form method="POST" style="background: white; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
         <input type="hidden" name="action" value="save-base-price" />
-        <label for="basePrice" style="font-weight: bold; color: #0f172a;">
-          基本宿泊料金（1泊）
+        <label for="basePrice" style="font-weight: bold; color: #303030;">
+          基本料金 (1泊)
         </label>
         <input
           type="number"
@@ -200,31 +200,30 @@ const formatCurrency = (amount: number) => {
           min="0"
           step="100"
           required
-          style="width: 120px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 1rem;"
+          style="width: 60px; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.95rem; text-align: right;"
         />
         <span style="color: #64748b;">円</span>
        <button
           type="submit"
-          style="padding: 8px 16px; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;"
+          style="padding: 4px 8px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: bold; cursor: pointer;"
         >
-          基本料金を保存
+          保存
         </button>
       </form>
 
       <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow-x: auto;">
         <form method="POST" id="availability-form">
-          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
+          <table style="width: 100%; border-collapse: collapse; text-center: left; font-size: 0.95rem;">
             <thead>
               <tr style="background: #f1f5f9; border-bottom: 2px solid #e2e8f0; color: #475569;">
                 <th style="padding: 6px 8px;">日付</th>
                 <th style="padding: 6px 8px;">1泊の料金</th>
                 <th style="padding: 6px 8px;">最大人数</th>
                 <th style="padding: 6px 8px;">予約状況</th>
-                <th style="padding: 6px 8px; text-align: center; white-space: nowrap;">
-                  操作
+                <th style="padding: 6px 8px; text-align: center; white-space: nowrap;">操作
                   <button
                     type="submit"
-                    style="margin-left: 8px; padding: 2px 10px; background: #2563eb; color: white; border: none; border-radius: 4px; font-size: 0.8rem; font-weight: bold; cursor: pointer; white-space: nowrap;"
+                    style="margin-left: 8px; padding: 4px 8px; background: #2563eb; color: white; border: none; border-radius: 4px; font-size: 0.95rem; font-weight: bold; cursor: pointer; white-space: nowrap;"
                   >更新</button>
                 </th>
               </tr>
@@ -248,12 +247,12 @@ const formatCurrency = (amount: number) => {
 
                 return (
                   <tr style="border-bottom: 1px solid #f1f5f9;">
-                    <td style="padding: 12px; font-weight: bold; color: #0f172a; white-space: nowrap;">
+                    <td style="padding: 12px; text-align: center; font-weight: bold; color: #0f172a; white-space: nowrap; text-align: centert;">
                       {dateStr}
                       <input type="hidden" name="targetDate" value={dateStr} />
                       <input type="hidden" name={`isBlocked-${dateStr}`} id={`blocked-${dateStr}`} value={isBlocked ? 'true' : 'false'} />
                     </td>
-                    <td style="padding: 12px;">
+                    <td style="padding: 2px;">
                       <div style="display: flex; align-items: center; gap: 4px;">
                         <input
                           type="number"
@@ -262,12 +261,12 @@ const formatCurrency = (amount: number) => {
                           placeholder={String(basePrice)}
                           step="100"
                           min="0"
-                          style="width: 85px; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.9rem;"
+                          style="width: 60px; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.9rem; text-align: right;"
                         />
                         <span style="font-size: 0.85rem; color: #64748b;">円</span>
                       </div>
                     </td>
-                    <td style="padding: 12px;">
+                    <td style="padding: 2px;">
                       <div style="display: flex; align-items: center; gap: 4px;">
                         <input
                           type="number"
@@ -276,27 +275,27 @@ const formatCurrency = (amount: number) => {
                           min="1"
                           max="10"
                           required
-                          style="width: 55px; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.9rem; text-align: center;"
+                          style="width: 40px; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.9rem; text-align: right;"
                         />
                         <span style="font-size: 0.85rem; color: #64748b;">名</span>
                       </div>
                     </td>
-                    <td style="padding: 12px;">
+                    <td style="padding: 2px; text-align: center; white-space: nowrap;">
                       {isBlocked ? (
                         <span style="background: #f3f4f6; color: #4b5563; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;">ブロック中</span>
                       ) : isFull ? (
-                        <span style="background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;">満室 (予約 {bookedGuestsCount}名)</span>
+                        <span style="background: #fee2e2; color: #da4e4e; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;">満室 (予約 {bookedGuestsCount}名)</span>
                       ) : (
                         <span style="background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;">
                           予約 {bookedGuestsCount}名 / 残り {remainingCapacity}枠
                         </span>
                       )}
                     </td>
-                    <td style="padding: 12px; text-align: center; white-space: nowrap;">
+                    <td style="padding: 2px; text-align: center; white-space: nowrap;">
                       <button
                         type="button"
                         id={`block-button-${dateStr}`}
-                        onclick={`(function(){const field=document.getElementById('blocked-${dateStr}');const button=document.getElementById('block-button-${dateStr}');const blocked=field.value!=='true';field.value=blocked?'true':'false';button.textContent=blocked?'販売再開':'ブロック';button.style.background=blocked?'#16a34a':'#dc2626';button.style.color='white';})()`}
+                        onclick={`(function(){const field=document.getElementById('blocked-${dateStr}');const button=document.getElementById('block-button-${dateStr}');const blocked=field.value!=='true';field.value=blocked?'true':'false';button.textContent=blocked?'販売再開':'ブロック';button.style.background=blocked?'#16a34a':'#dc3636';button.style.color='white';})()`}
                         style={`padding: 4px 10px; border: none; border-radius: 4px; font-size: 0.8rem; font-weight: bold; cursor: pointer; ${
                           isBlocked ? 'background: #16a34a; color: white;' : 'background: #dc2626; color: white;'
                         }`}

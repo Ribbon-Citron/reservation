@@ -88,15 +88,15 @@ const formatCurrency = (amount) => {
           <strong>予約データの取得エラー:</strong> {dbError}
         </div>
       )}
-      <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden;">
+      <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: auto;">
         <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
           <thead>
             <tr style="background: #f1f5f9; color: #475569; border-bottom: 1px solid #e2e8f0;">
-              <th style="padding: 6px 8px;">宿泊者名</th>
-              <th style="padding: 6px 8px;">連絡先</th>
-              <th style="padding: 6px 8px; white-space: nowrap;">宿泊日程 / 到着時間</th>
-              <th style="padding: 6px 8px; white-space: nowrap;">人数 / 金額</th>
-              <th style="padding: 6px 8px; text-align: center; white-space: nowrap;">操作</th>
+              <th style="padding: 6px 8px; text-align: center;">宿泊者名</th>
+              <th style="padding: 6px 8px; text-align: center;">連絡先</th>
+              <th style="padding: 6px 8px; text-align: center; white-space: nowrap;">宿泊日程 / 到着時間</th>
+              <th style="padding: 6px 8px; text-align: center; white-space: nowrap;">人数 / 金額</th>
+              <th style="padding: 6px 8px; text-align: center; ">操作</th>
             </tr>
           </thead>
           <tbody>
@@ -124,24 +124,24 @@ const formatCurrency = (amount) => {
                         🕒 到着: {item.arrival_time || '未設定'}
                       </div>
                     </td>
-                    <td style="padding: 12px 16px; color: #334155; white-space: nowrap;">
+                    <td style="padding: 12px 16px; color: #334155; text-align: right; white-space: nowrap;">
                       <div>{item.guests_count || 1}名</div>
                       <div style="font-weight: bold; color: #0f172a;">
                         {item.payment_status === 'paid' ? '✓ ' : ''}{formatCurrency(item.total_amount)}
                       </div>
                     </td>
-                    <td style="padding: 12px 16px; text-align: center; white-space: nowrap;">
+                    <td style="padding: 12px 16px; text-align: center;">
                       {item.status === 'pending' ? (
                         <div style="display: flex; gap: 8px; justify-content: center;">
                           <button
                             onclick={`approveReservation('${item.id}')`}
-                            style="width: 110px; padding: 6px 0; background: #16a34a; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                            style="width: 80px; padding: 6px 0; background: #438a5d; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
                           >
                             承認する
                           </button>
                           <button
                             onclick={`rejectReservation('${item.id}')`}
-                            style="width: 110px; padding: 6px 0; background: #dc2626; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                            style="width: 80px; padding: 6px 0; background: #c74343; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
                           >
                             承認しない
                           </button>
@@ -150,13 +150,13 @@ const formatCurrency = (amount) => {
                         <div style="display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap;">
                           <button
                             onclick={`quickCheckIn('${item.id}')`}
-                            style="width: 130px; padding: 6px 0; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                            style="width: 100px; padding: 6px 0; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
                           >
                             チェックイン処理
                           </button>
                           <button
                             onclick={`cancelReservation('${item.id}')`}
-                            style="width: 130px; padding: 6px 0; background: #64748b; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                            style="width: 100px; padding: 6px 0; background: #64748b; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
                           >
                             キャンセルする
                           </button>
@@ -166,7 +166,7 @@ const formatCurrency = (amount) => {
                           <span style="font-size: 0.8rem; color: #16a34a; font-weight: bold;">✅ チェックイン済</span>
                           <button
                             onclick={`cancelReservation('${item.id}')`}
-                            style="width: 130px; padding: 5px 0; background: #64748b; color: white; border: none; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; text-align: center;"
+                            style="width: 100px; padding: 5px 0; background: #64748b; color: white; border: none; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; text-align: center;"
                           >
                             キャンセル
                           </button>
