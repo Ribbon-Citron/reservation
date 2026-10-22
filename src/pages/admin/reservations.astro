@@ -96,7 +96,6 @@ const formatCurrency = (amount) => {
               <th style="padding: 12px 16px;">連絡先</th>
               <th style="padding: 12px 16px; white-space: nowrap;">宿泊日程 / 到着時間</th>
               <th style="padding: 12px 16px; white-space: nowrap;">人数 / 金額</th>
-              <th style="padding: 12px 16px; white-space: nowrap;">支払方法</th>
               <th style="padding: 12px 16px; text-align: center; white-space: nowrap;">操作</th>
             </tr>
           </thead>
@@ -127,10 +126,9 @@ const formatCurrency = (amount) => {
                     </td>
                     <td style="padding: 12px 16px; color: #334155; white-space: nowrap;">
                       <div>{item.guests_count || 1}名</div>
-                      <div style="font-weight: bold; color: #0f172a;">{formatCurrency(item.total_amount)}</div>
-                    </td>
-                    <td style="padding: 12px 16px; color: #334155; font-size: 0.85rem; white-space: nowrap;">
-                      {item.payment_method === 'stripe' ? '事前カード' : '現地決済'}
+                      <div style="font-weight: bold; color: #0f172a;">
+                        {item.payment_status === 'paid' ? '✓ ' : ''}{formatCurrency(item.total_amount)}
+                      </div>
                     </td>
                     <td style="padding: 12px 16px; text-align: center; white-space: nowrap;">
                       {item.status === 'pending' ? (
