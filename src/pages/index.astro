@@ -269,9 +269,21 @@
 
         function handleCheckInChange() {
           if (checkInInput && checkInInput.value) {
-            const inDate = new Date(checkInInput.value);
+            const inDate = new Date(`${checkInInput.value}T00:00:00`);
             inDate.setDate(inDate.getDate() + 1);
-            const nextDayStr = inDate.toISOString().split('T')[0];
+            const nextDayStr = [
+              inDate.getFullYear(),
+              String(inDate.getMonth() + 1).padStart(2, '0'),
+              String(inDate.getDate()).padStart(2, '0')
+            ].join('-');
+
+            if (maxAllowedDateStr && nextDayStr > maxAllowedDateStr) {
+              alert(`予約受付は ${maxAllowedDateStr} が最終チェックアウト日です。別の日付を選択してください。`);
+              checkInInput.value = '';
+              if (checkOutInput) checkOutInput.value = '';
+              calculateTotal();
+              return;
+            }
 
             if (checkOutInput) {
               checkOutInput.value = nextDayStr;
@@ -286,7 +298,20 @@
           checkInInput.addEventListener('input', handleCheckInChange);
         }
         if (checkOutInput) {
-          checkOutInput.addEventListener('change', calculateTotal);
+          checkOutInput.addEventListener('change', () => {
+            if (
+              maxAllowedDateStr &&
+              checkOutInput.value &&
+              checkOutInput.value > maxAllowedDateStr
+            ) {
+              alert(`予約受付は ${maxAllowedDateStr} が最終チェックアウト日です。別の日付を選択してください。`);
+                checkOutInput.value = '';
+              calculateTotal();
+              return;
+            }
+
+              calculateTotal();
+          });
         }
         if (guestsSelect) {
           guestsSelect.addEventListener('change', calculateTotal);
@@ -402,7 +427,9 @@
           for (let d = 1; d <= lastDate; d++) {
             const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
             const isPast = dateStr < todayStr;
-            const isBeyondTwoMonths = dateStr > maxAllowedDateStr;
+            const isBeyondTwoMonths = maxAllowedDateStr
+              ? dateStr >= maxAllowedDateStr
+              : false;
 
             const dayInfo = monthlyAvailability[dateStr];
             const availableCount = (isBeyondTwoMonths || isPast) ? 0 : (dayInfo ? dayInfo.available : 4);
