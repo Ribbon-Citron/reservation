@@ -48,8 +48,43 @@ if (Astro.request.method === 'POST') {
 
       settingsMessage = '基本料金を保存しました。';
       basePrice = price;
+      } else if (action === 'save-booking-end-date') {
+
+      // 予約可能な最終日の保存
+      const bookingEndDate = formData.get('bookingEndDate')?.toString() || '';
+
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(bookingEndDate)) {
+        throw new Error('予約可能な最終日を指定してください。');
+      }
+
+      const parsedDate = new Date(`${bookingEndDate}T00:00:00Z`);
+      if (
+        Number.isNaN(parsedDate.getTime()) ||
+        parsedDate.toISOString().slice(0, 10) !== bookingEndDate
+      ) {
+        throw new Error('有効な日付を指定してください。');
+      }
+
+      const { error } = await supabase
+        .from('booking_settings')
+        .upsert(
+          {
+            id: 1,
+            booking_end_date: bookingEndDate,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: 'id' }
+        );
+
+      if (error) {
+        throw new Error(`予約可能な最終日の保存エラー: ${error.message}`);
+      }
+
+      settingsMessage = '予約可能な最終日を保存しました。';
     } else {
+
       // 既存の日別設定の保存
+      // 保存後の画面表示用変数は、後ほど追加します。
       const targetDates = formData
         .getAll('targetDate')
         .map((value) => value.toString());
@@ -184,7 +219,7 @@ const formatCurrency = (amount: number) => {
     <title>【管理】設定一覧</title>
   </head>
   <body style="font-family: sans-serif; background: #f8fafc; margin: 0; padding: 1rem;">
-    <div style="max-width: 1200px; margin: 0 auto;">
+    <div style="max-width: 700px; margin: 0 auto;">
       <!-- ヘッダー -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
         <div>
@@ -194,7 +229,6 @@ const formatCurrency = (amount: number) => {
         <div style="text-align: right; display: flex; justify-content: flex-end; gap: 10px;">
           <a href="/" style="padding: 4px 14px; background: #f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1rem; font-weight: bold;">🏡</a>
           <a href="/admin/reservations" style="padding: 4px 14px; background: #f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1rem; font-weight: bold;">📊</a>
-          <a href="/admin/booking-settings" style="padding: 4px 14px; background: #f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1rem; font-weight: bold;">🚫</a>
           <a href="/admin/scanner" style="padding: 4px 14px; background: #f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1rem; font-weight: bold;">📷</a>
         </div>
       </div>
@@ -211,44 +245,67 @@ const formatCurrency = (amount: number) => {
           </div>
       )}
 
-      <form method="POST" style="background: white; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-        <input type="hidden" name="action" value="save-base-price" />
-        <label for="basePrice" style="font-weight: bold; color: #303030;">
-          基本料金 (1泊)
-        </label>
-        <input
-          type="number"
-          id="basePrice"
-          name="basePrice"
-          value={basePrice}
-          min="0"
-          step="100"
-          required
-          style="width: 60px; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.95rem; text-align: right;"
-        />
-        <span style="color: #64748b;">円</span>
-       <button
-          type="submit"
-          style="padding: 4px 8px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: bold; cursor: pointer;"
-        >
-          保存
-        </button>
-      </form>
+      <div style="display: flex; align-items: stretch; gap: 12px; flex-wrap: wrap;">
+        <form method="POST" style="background: white; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+          <input type="hidden" name="action" value="save-base-price" />
+          <label for="basePrice" style="font-weight: bold; color: #303030;">
+            基本料金 (1泊)
+          </label>
+          <input
+            type="number"
+            id="basePrice"
+            name="basePrice"
+            value={basePrice}
+            min="0"
+            step="100"
+            required
+            style="width: 60px; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.95rem; text-align: right;"
+          />
+          <span style="color: #64748b;">円</span>
+         <button
+            type="submit"
+            style="padding: 4px 8px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: bold; cursor: pointer;"
+          >
+            保存
+          </button>
+        </form>
 
+        <form method="POST" style="background: white; padding: 1rem; margin-bottom: 1rem; margin-left: auto; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <input type="hidden" name="action" value="save-booking-end-date" />
+          <label for="bookingEndDate" style="font-weight: bold; color: #303030;">
+            予約可能な最終日
+          </label>
+          <input
+            type="date"
+            id="bookingEndDate"
+            name="bookingEndDate"
+            value={bookingEndDate}
+            required
+            style="padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.95rem;"
+          />
+          <button
+            type="submit"
+            style="padding: 4px 8px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: bold; cursor: pointer;"
+          >
+            保存
+          </button>
+        </form>
+      </div>
       <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow-x: auto;">
         <form method="POST" id="availability-form">
           <table style="width: 100%; border-collapse: collapse; text-center: left; font-size: 0.95rem;">
             <thead>
               <tr style="background: #f1f5f9; border-bottom: 2px solid #e2e8f0; color: #475569;">
-                <th style="padding: 6px 8px;">日付</th>
-                <th style="padding: 6px 8px;">1泊の料金</th>
-                <th style="padding: 6px 8px;">最大人数</th>
-                <th style="padding: 6px 8px;">予約状況</th>
-                <th style="padding: 6px 8px; text-align: center; white-space: nowrap;">操作
+                <th style="padding: 6px 8px; white-space: nowrap;">日付</th>
+                <th style="padding: 6px 8px; white-space: nowrap;">1泊の料金</th>
+                <th style="padding: 6px 8px; white-space: nowrap;">最大人数</th>
+                <th style="padding: 6px 8px; white-space: nowrap;">予約状況</th>
+           <!-- <th style="padding: 6px 8px; white-space: nowrap;">操作 -->
+                <th style="padding: 6px 8px; white-space: nowrap;">
                   <button
                     type="submit"
-                    style="margin-left: 8px; padding: 4px 8px; background: #2563eb; color: white; border: none; border-radius: 4px; font-size: 0.95rem; font-weight: bold; cursor: pointer; white-space: nowrap;"
-                  >更新</button>
+                    style="margin-left: 0px; padding: 4px 8px; background: #2563eb; color: white; border: none; border-radius: 4px; font-size: 0.95rem; font-weight: bold; cursor: pointer; white-space: nowrap;"
+                  >操作 更新</button>
                 </th>
               </tr>
             </thead>
@@ -276,8 +333,8 @@ const formatCurrency = (amount: number) => {
                       <input type="hidden" name="targetDate" value={dateStr} />
                       <input type="hidden" name={`isBlocked-${dateStr}`} id={`blocked-${dateStr}`} value={isBlocked ? 'true' : 'false'} />
                     </td>
-                    <td style="padding: 2px;">
-                      <div style="display: flex; align-items: center; gap: 4px;">
+                    <td style="padding: 2px; text-align: center;">
+                      <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
                         <input
                           type="number"
                           name={`price-${dateStr}`}
@@ -290,9 +347,8 @@ const formatCurrency = (amount: number) => {
                         <span style="font-size: 0.85rem; color: #64748b;">円</span>
                       </div>
                     </td>
-                    <td style="padding: 2px;">
-                      <div style="display: flex; align-items: center; gap: 4px;">
-                        <input
+                    <td style="padding: 2px; text-align: center;">
+                      <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">                        <input
                           type="number"
                           name={`maxGuests-${dateStr}`}
                           value={dailyMaxGuests}
