@@ -105,16 +105,40 @@ if (Astro.request.method === 'POST') {
   }
 }
 
-// 2. 表示する日付の範囲を生成（今日から60日分）
+// 2. 予約受付設定を取得
+let bookingEndDate = '';
+
+if (supabase) {
+  const { data: bookingSettings, error: bookingSettingsError } = await supabase
+    .from('booking_settings')
+    .select('booking_end_date')
+    .eq('id', 1)
+    .maybeSingle();
+
+  if (bookingSettingsError) {
+    dbError = `予約受付設定の取得エラー: ${bookingSettingsError.message}`;
+  } else if (bookingSettings?.booking_end_date) {
+    bookingEndDate = bookingSettings.booking_end_date;
+  }
+}
+
+// 3. 予約受付最終日まで表示する日付を生成
 const dates: string[] = [];
 const today = new Date();
-for (let i = 0; i < 60; i++) {
-  const d = new Date(today);
-  d.setDate(today.getDate() + i);
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  dates.push(`${year}-${month}-${day}`);
+today.setHours(0, 0, 0, 0);
+
+if (bookingEndDate) {
+  const endDate = new Date(`${bookingEndDate}T00:00:00`);
+  const currentDate = new Date(today);
+
+  while (currentDate <= endDate) {
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+
+    dates.push(`${year}-${month}-${day}`);
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
 }
 
 // 3. 予約データと空室設定データを一括取得
