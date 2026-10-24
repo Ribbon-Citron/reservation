@@ -108,6 +108,7 @@
                   <option value="9">9名</option>
                   <option value="10">10名</option>
                 </select>
+                <div id="guestWarning" style="display: none; color: #b91c1c; background: #fee2e2; padding: 8px; border-radius: 6px; font-size: 0.85rem; margin-top: 6px;"></div>
               </div>
               <div>
                 <label style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;">到着予定時間</label>
@@ -347,8 +348,52 @@
               calculateTotal();
           });
         }
+        const guestWarning = document.getElementById('guestWarning');
+
+        function checkGuestAvailability() {
+         if (!guestWarning || !guestsSelect || !checkInInput || !checkOutInput) return;
+
+          guestWarning.style.display = 'none';
+          guestWarning.textContent = '';
+
+          const checkIn = checkInInput.value;
+          const checkOut = checkOutInput.value;
+          const guests = parseInt(guestsSelect.value, 10) || 1;
+
+          if (!checkIn || !checkOut) return;
+
+          const curr = new Date(checkIn + 'T12:00:00');
+          const last = new Date(checkOut + 'T12:00:00');
+
+          while (curr < last) {
+            const dStr = `${curr.getFullYear()}-${String(curr.getMonth() + 1).padStart(2, '0')}-${String(curr.getDate()).padStart(2, '0')}`;
+            const dayInfo = monthlyAvailability[dStr];
+            const availableCount = dayInfo ? dayInfo.available : 4;
+
+            if (availableCount < guests) {
+              guestWarning.textContent =
+                `${dStr}は空き人数が${availableCount}名のため、${guests}名では予約できません。宿泊人数または日程を変更してください。`;
+              guestWarning.style.display = 'block';
+              return;
+            }
+
+            curr.setDate(curr.getDate() + 1);
+          }
+        }
+
         if (guestsSelect) {
-          guestsSelect.addEventListener('change', calculateTotal);
+          guestsSelect.addEventListener('change', () => {
+            calculateTotal();
+            checkGuestAvailability();
+          });
+        }
+
+        if (checkInInput) {
+          checkInInput.addEventListener('change', checkGuestAvailability);
+          }
+
+        if (checkOutInput) {
+          checkOutInput.addEventListener('change', checkGuestAvailability);
         }
 
         let year = now.getFullYear();
