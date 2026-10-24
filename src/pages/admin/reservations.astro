@@ -92,7 +92,7 @@ const formatCurrency = (amount) => {
         <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
           <thead>
             <tr style="background: #f1f5f9; color: #475569; border-bottom: 6px solid #e2e8f0;">
-              <th style="padding: 6px 8px; text-align: center; ">操作</th>
+              <th style="padding: 6px 4px; text-align: center; width: 116px; min-width: 116px;">操作</th>
               <th style="padding: 6px 8px; text-align: center; ">宿泊者名</th>
               <th style="padding: 6px 8px; text-align: center; ">宿泊日程 / 到着時間</th>
               <th style="padding: 6px 8px; text-align: center; ">人数 / 金額</th>
@@ -105,9 +105,9 @@ const formatCurrency = (amount) => {
                 return (
                   <tr style="border-bottom: 6px solid #f1f5f9;">
                     
-                    <td style="padding: 6px 8px; text-align: center;">
+                    <td style="padding: 6px 4px; text-align: center; width: 116px; min-width: 116px;">
                       {item.status === 'pending' ? (
-                        <div style="display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap;">
+                        <div style="display: flex; flex-direction: column; gap: 6px; justify-content: center; align-items: center; flex-wrap: nowrap;">
                           <button
                             onclick={`approveReservation('${item.id}')`}
                             style="width: 100px; padding: 6px 0; background: #438a5d; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
@@ -122,7 +122,7 @@ const formatCurrency = (amount) => {
                           </button>
                         </div>
                       ) : item.status === 'approved' || item.status === 'paid' ? (
-                        <div style="display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap;">
+                        <div style="display: flex; flex-direction: column; gap: 6px; justify-content: center; align-items: center; flex-wrap: nowrap;">
                           <button
                             onclick={`quickCheckIn('${item.id}')`}
                             style="width: 100px; padding: 6px 0; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
