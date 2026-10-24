@@ -84,7 +84,6 @@ if (Astro.request.method === 'POST') {
     } else {
 
       // 既存の日別設定の保存
-      // 保存後の画面表示用変数は、後ほど追加します。
       const targetDates = formData
         .getAll('targetDate')
         .map((value) => value.toString());
@@ -221,18 +220,26 @@ const formatCurrency = (amount: number) => {
     <title>PMS Availability</title>
   </head>
   <body style="font-family: sans-serif; background: #f8fafc; margin: 0; padding: 1rem;">
-    <div style="max-width: 700px; margin: 0 auto;">
+    <div style="max-width: 900px; margin: 0 auto;">
       <!-- ヘッダー -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
         <div>
           <h1 style="margin: 0; color: #0f172a; font-size: 1.5rem;">🎛️ 設定一覧</h1>
           <p style="margin: 0.25rem 0 0; color: #64748b; font-size: 0.9rem;">宿泊料金, 最大人数, ブロック(休業) の個別設定</p>
         </div>
+        
         <div style="text-align: right; display: flex; justify-content: flex-end; gap: 10px;">
-          <a href="/" style="padding: 4px 14px; background: #f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1rem; font-weight: bold;">🏡</a>
-          <a href="/admin/reservations" style="padding: 4px 14px; background: #f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1rem; font-weight: bold;">📊</a>
-          <a href="/admin/scanner" style="padding: 4px 14px; background: #f0f0f0; color: #383270; text-decoration: none; border-radius: 6px; font-size: 1rem; font-weight: bold;">📷</a>
+          <a href="/" style="padding: 4px 20px; background: #f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
+          📆
+          </a>
+          <a href="/admin/reservations" style="padding: 4px 18px; background:#f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
+          📊
+          </a>
+          <a href="/admin/scanner" style="padding: 4px 8px; background:#f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
+          ❙❙❘❙❚❙❘❚
+          </a>
         </div>
+
       </div>
 
       {dbError && (
@@ -283,7 +290,7 @@ const formatCurrency = (amount: number) => {
             name="bookingEndDate"
             value={bookingEndDate}
             required
-            style="padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.95rem;"
+            style="padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem;"
           />
           <button
             type="submit"
@@ -295,18 +302,17 @@ const formatCurrency = (amount: number) => {
       </div>
       <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow-x: auto;">
         <form method="POST" id="availability-form">
-          <table style="width: 100%; border-collapse: collapse; text-center: left; font-size: 0.95rem;">
+          <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 0.95rem;">
             <thead>
               <tr style="background: #f1f5f9; border-bottom: 2px solid #e2e8f0; color: #475569;">
                 <th style="padding: 6px 8px; white-space: nowrap;">日付</th>
                 <th style="padding: 6px 8px; white-space: nowrap;">1泊の料金</th>
                 <th style="padding: 6px 8px; white-space: nowrap;">最大人数</th>
                 <th style="padding: 6px 8px; white-space: nowrap;">予約状況</th>
-           <!-- <th style="padding: 6px 8px; white-space: nowrap;">操作 -->
                 <th style="padding: 6px 8px; white-space: nowrap;">
                   <button
                     type="submit"
-                    style="margin-left: 0px; padding: 4px 8px; background: #2563eb; color: white; border: none; border-radius: 4px; font-size: 0.95rem; font-weight: bold; cursor: pointer; white-space: nowrap;"
+                    style="margin-left: 0px; padding: 4px 8px; background: #2563eb; color: white; border: none; border-radius: 4px; font-size: 0.85rem; font-weight: bold; cursor: pointer; white-space: nowrap;"
                   >操作 更新</button>
                 </th>
               </tr>
