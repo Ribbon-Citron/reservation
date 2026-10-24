@@ -2,7 +2,7 @@
 // src/pages/index.astro
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
@@ -11,92 +11,207 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>CENTER INN</title>
   </head>
-  <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8fafc; margin: 0; padding: 0; color: #0f172a;">
-
+  <body
+    style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8fafc; margin: 0; padding: 0; color: #0f172a;"
+  >
     <!-- #top: 宿の簡易紹介ブロック -->
-    <header id="top" style="background: #1e293b; border-bottom: 1px solid #e2e8f0; padding: 2.5rem 1rem; text-align: center;">
-      <div style="max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center;">
-        <h1 style="margin: 0 0 0.5rem 0; font-size: 2.50rem; color: #a3080f;">CENTER INN</h1>
+    <header
+      id="top"
+      style="background: #1e293b; border-bottom: 1px solid #e2e8f0; padding: 2.5rem 1rem; text-align: center;"
+    >
+      <div
+        style="max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center;"
+      >
+        <h1 style="margin: 0 0 0.5rem 0; font-size: 2.50rem; color: #a3080f;">
+          CENTER INN
+        </h1>
         <p style="margin: 0 0 1.25rem 0; color: #edeae5; font-size: 0.95rem;">
           ここは開発中の架空サイトです
         </p>
 
-    <!-- 写真1プレースホルダー部分の置き換え -->
-      <div style="width: 110%; height: 220px; background: #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: center; color: #64748b;">
-        <img src="room.png" alt="宿の写真" style="width: 100%; height: 100%; object-fit: cover;" />
-      </div>
+        <!-- 写真1プレースホルダー部分の置き換え -->
+        <div
+          style="width: 110%; height: 220px; background: #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: center; color: #64748b;"
+        >
+          <img
+            src="room.png"
+            alt="宿の写真"
+            style="width: 100%; height: 100%; object-fit: cover;"
+          />
+        </div>
 
-        <p style="margin: 0; color: #e5eae0; font-size: 0.9rem; line-height: 1.6; text-align: center;">
+        <p
+          style="margin: 0; color: #e5eae0; font-size: 0.9rem; line-height: 1.6; text-align: center;"
+        >
           九州中央市のシェアスタイル素泊まり宿
         </p>
       </div>
     </header>
 
     <!-- 日付警告モーダル -->
-    <div id="dateWarningModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.55); align-items: center; justify-content: center; z-index: 2000; padding: 1rem;">
-      <div style="width: 100%; max-width: 360px; background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center;">
-        <p id="dateWarningText" style="margin: 0 0 1.25rem; color: #0f172a; font-size: 0.95rem; line-height: 1.7;"></p>
-        <button type="button" id="closeDateWarningBtn" style="width: 100%; padding: 10px; background: #1e293b; color: white; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: bold; cursor: pointer;">確認</button>
+    <div
+      id="dateWarningModal"
+      style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.55); align-items: center; justify-content: center; z-index: 2000; padding: 1rem;"
+    >
+      <div
+        style="width: 100%; max-width: 360px; background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center;"
+      >
+        <p
+          id="dateWarningText"
+          style="margin: 0 0 1.25rem; color: #0f172a; font-size: 0.95rem; line-height: 1.7;"
+        >
+        </p>
+        <button
+          type="button"
+          id="closeDateWarningBtn"
+          style="width: 100%; padding: 10px; background: #1e293b; color: white; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: bold; cursor: pointer;"
+          >確認</button
+        >
       </div>
     </div>
 
     <!-- #reservation: 中段・宿泊予約リクエストフォーム -->
-    <main id="reservation" style="width: 100%; max-width: 480px; margin: 2rem auto; padding: 0 0.5rem; box-sizing: border-box;">
-      <div style="background: #f0f0f0; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; overflow: hidden;">
-
+    <main
+      id="reservation"
+      style="width: 100%; max-width: 480px; margin: 2rem auto; padding: 0 0.5rem; box-sizing: border-box;"
+    >
+      <div
+        style="background: #f0f0f0; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; overflow: hidden;"
+      >
         <!-- フォームヘッダー -->
-        <div style="background: #1e293b; color: #e6e9e2; padding: 1.25rem 1.5rem; text-align: center;">
-          <h2 style="margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: 0.05em;">🏡 宿泊予約リクエスト</h2>
-          <p style="margin: 0.4rem 0 0; font-size: 0.8rem; color: #94a3b8;">状況確認に最大24時間頂戴いたします</p>
+        <div
+          style="background: #1e293b; color: #e6e9e2; padding: 1.25rem 1.5rem; text-align: center;"
+        >
+          <h2
+            style="margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: 0.05em;"
+          >
+            🏡 宿泊予約リクエスト
+          </h2>
+          <p style="margin: 0.4rem 0 0; font-size: 0.8rem; color: #94a3b8;">
+            状況確認に最大24時間頂戴いたします
+          </p>
         </div>
 
         <!-- 予約フォーム本体 -->
-        <form id="requestForm" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1.5rem;">
-        <div id="bookingPauseMessage" style="display: none; background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 14px; border-radius: 8px; font-weight: bold; text-align: center;">
-          現在、予約受付を一時停止しています。
-          <div style="font-size: 0.85rem; font-weight: normal; margin-top: 5px;">
-            受付再開までお待ちください。
+        <form
+          id="requestForm"
+          style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1.5rem;"
+        >
+          <div
+            id="bookingPauseMessage"
+            style="display: none; background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 14px; border-radius: 8px; font-weight: bold; text-align: center;"
+          >
+            現在、予約受付を一時停止しています。
+            <div
+              style="font-size: 0.85rem; font-weight: normal; margin-top: 5px;"
+            >
+              受付再開までお待ちください。
+            </div>
           </div>
-        </div>
           <!-- 1. 空室カレンダー (1ヶ月表示) -->
-          <section style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <button type="button" id="prevMonth" style="background: white; border: 1px solid #cbd5e1; border-radius: 6px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer;">← 前月</button>
-              <strong id="calendarMonth" style="font-size: 1rem; color: #0f172a;">---</strong>
-              <button type="button" id="nextMonth" style="background: white; border: 1px solid #cbd5e1; border-radius: 6px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer;">次月 →</button>
+          <section
+            style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem;"
+          >
+            <div
+              style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;"
+            >
+              <button
+                type="button"
+                id="prevMonth"
+                style="background: white; border: 1px solid #cbd5e1; border-radius: 6px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer;"
+                >← 前月</button
+              >
+              <strong
+                id="calendarMonth"
+                style="font-size: 1rem; color: #0f172a;">---</strong
+              >
+              <button
+                type="button"
+                id="nextMonth"
+                style="background: white; border: 1px solid #cbd5e1; border-radius: 6px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer;"
+                >次月 →</button
+              >
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 0.75rem; font-weight: bold; color: #64748b; margin-bottom: 0.4rem;">
-              <span style="color: #ef4444;">日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span style="color: #3b82f6;">土</span>
+            <div
+              style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 0.75rem; font-weight: bold; color: #64748b; margin-bottom: 0.4rem;"
+            >
+              <span style="color: #ef4444;">日</span><span>月</span><span
+                >火</span
+              ><span>水</span><span>木</span><span>金</span><span
+                style="color: #3b82f6;">土</span
+              >
             </div>
 
-            <div id="calendarGrid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; text-align: center;">
-              <div style="grid-column: span 7; text-align: center; padding: 1.5rem; font-size: 0.85rem; color: #64748b;">カレンダーを読み込み中...</div>
+            <div
+              id="calendarGrid"
+              style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; text-align: center;"
+            >
+              <div
+                style="grid-column: span 7; text-align: center; padding: 1.5rem; font-size: 0.85rem; color: #64748b;"
+              >
+                カレンダーを読み込み中...
+              </div>
             </div>
-            <p style="margin: 0.5rem 0 0; font-size: 0.75rem; color: #64748b; text-align: right;">数字: 残り定員数 / 0: 受付不可</p>
+            <p
+              style="margin: 0.5rem 0 0; font-size: 0.75rem; color: #64748b; text-align: right;"
+            >
+              数字: 残り定員数 / 0: 受付不可
+            </p>
           </section>
 
           <!-- 2. 予約内容 -->
           <section style="display: flex; flex-direction: column; gap: 0.75rem;">
-            <h3 style="font-size: 0.95rem; margin: 0; padding-bottom: 0.3rem; border-bottom: 2px solid #3b82f6; color: #1e293b; display: flex; align-items: center; gap: 0.4rem;">
+            <h3
+              style="font-size: 0.95rem; margin: 0; padding-bottom: 0.3rem; border-bottom: 2px solid #3b82f6; color: #1e293b; display: flex; align-items: center; gap: 0.4rem;"
+            >
               <span>📅</span> 2. 予約内容
             </h3>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;"
+            >
               <div>
-                <label style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;">チェックイン</label>
-                <input type="date" id="checkIn" name="checkIn" required style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; box-sizing: border-box;" />
+                <label
+                  style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;"
+                  >チェックイン</label
+                >
+                <input
+                  type="date"
+                  id="checkIn"
+                  name="checkIn"
+                  required
+                  style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; box-sizing: border-box;"
+                />
               </div>
               <div>
-                <label style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;">チェックアウト</label>
-                <input type="date" id="checkOut" name="checkOut" required style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; box-sizing: border-box;" />
+                <label
+                  style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;"
+                  >チェックアウト</label
+                >
+                <input
+                  type="date"
+                  id="checkOut"
+                  name="checkOut"
+                  required
+                  style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; box-sizing: border-box;"
+                />
               </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;"
+            >
               <div>
-                <label style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;">宿泊人数</label>
-                <select id="guests" name="guests" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; background: white;">
+                <label
+                  style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;"
+                  >宿泊人数</label
+                >
+                <select
+                  id="guests"
+                  name="guests"
+                  style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; background: white;"
+                >
                   <option value="1" selected>1名</option>
                   <option value="2">2名</option>
                   <option value="3">3名</option>
@@ -108,11 +223,23 @@
                   <option value="9">9名</option>
                   <option value="10">10名</option>
                 </select>
-                <div id="guestWarning" style="display: none; color: #b91c1c; background: #fee2e2; padding: 8px; border-radius: 6px; font-size: 0.85rem; margin-top: 6px;"></div>
+                <div
+                  id="guestWarning"
+                  style="display: none; color: #b91c1c; background: #fee2e2; padding: 8px; border-radius: 6px; font-size: 0.85rem; margin-top: 6px;"
+                >
+                </div>
               </div>
               <div>
-                <label style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;">到着予定時間</label>
-                <select id="arrivalTime" name="arrivalTime" required style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; background: white;">
+                <label
+                  style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;"
+                  >到着予定時間</label
+                >
+                <select
+                  id="arrivalTime"
+                  name="arrivalTime"
+                  required
+                  style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; background: white;"
+                >
                   <option value="" disabled selected>選択してください</option>
                   <option value="16:00〜17:00">16:00 〜 17:00</option>
                   <option value="17:00〜18:00">17:00 〜 18:00</option>
@@ -123,27 +250,55 @@
               </div>
             </div>
 
-            <div style="background: #eff6ff; padding: 10px 12px; border-radius: 8px; text-align: right; border: 1px solid #bfdbfe;">
-              <span style="font-size: 0.75rem; color: #1e40af; display: block;">概算合計（税込）</span>
-              <strong id="totalPrice" style="font-size: 1.1rem; color: #1d4ed8;">￥0</strong>
+            <div
+              style="background: #eff6ff; padding: 10px 12px; border-radius: 8px; text-align: right; border: 1px solid #bfdbfe;"
+            >
+              <span style="font-size: 0.75rem; color: #1e40af; display: block;"
+                >概算合計（税込）</span
+              >
+              <strong id="totalPrice" style="font-size: 1.1rem; color: #1d4ed8;"
+                >￥0</strong
+              >
             </div>
           </section>
 
           <!-- 3. 宿泊者情報 -->
           <section style="display: flex; flex-direction: column; gap: 0.75rem;">
-            <h3 style="font-size: 0.95rem; margin: 0; padding-bottom: 0.3rem; border-bottom: 2px solid #3b82f6; color: #1e293b; display: flex; align-items: center; gap: 0.4rem;">
+            <h3
+              style="font-size: 0.95rem; margin: 0; padding-bottom: 0.3rem; border-bottom: 2px solid #3b82f6; color: #1e293b; display: flex; align-items: center; gap: 0.4rem;"
+            >
               <span>👤</span> 3. 宿泊者情報
             </h3>
 
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;">お名前（フルネーム）</label>
-              <input type="text" id="name" name="name" required placeholder="山田 太郎" style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; box-sizing: border-box;" />
+              <label
+                style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;"
+                >お名前（フルネーム）</label
+              >
+              <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                placeholder="山田 太郎"
+                style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; box-sizing: border-box;"
+              />
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;"
+            >
               <div>
-                <label style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;">性別</label>
-                <select id="gender" name="gender" required style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; background: white;">
+                <label
+                  style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;"
+                  >性別</label
+                >
+                <select
+                  id="gender"
+                  name="gender"
+                  required
+                  style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; background: white;"
+                >
                   <option value="" disabled selected>選択してください</option>
                   <option value="男性">男性</option>
                   <option value="女性">女性</option>
@@ -151,8 +306,16 @@
                 </select>
               </div>
               <div>
-                <label style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;">年代</label>
-                <select id="ageGroup" name="ageGroup" required style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; background: white;">
+                <label
+                  style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;"
+                  >年代</label
+                >
+                <select
+                  id="ageGroup"
+                  name="ageGroup"
+                  required
+                  style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; background: white;"
+                >
                   <option value="" disabled selected>選択してください</option>
                   <option value="10代">10代</option>
                   <option value="20代">20代</option>
@@ -165,88 +328,179 @@
             </div>
 
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;">メールアドレス</label>
-              <input type="email" id="email" name="email" required placeholder="example@email.com" style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; box-sizing: border-box;" />
+              <label
+                style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;"
+                >メールアドレス</label
+              >
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                placeholder="example@email.com"
+                style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; box-sizing: border-box;"
+              />
             </div>
 
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;">電話番号（当日連絡先）</label>
-              <input type="tel" id="phone" name="phone" required placeholder="090-0000-0000" style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; box-sizing: border-box;" />
+              <label
+                style="display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;"
+                >電話番号（当日連絡先）</label
+              >
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                required
+                placeholder="090-0000-0000"
+                style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; box-sizing: border-box;"
+              />
             </div>
           </section>
 
           <!-- 4. 支払方法 -->
           <section style="display: flex; flex-direction: column; gap: 0.75rem;">
-            <h3 style="font-size: 0.95rem; margin: 0; padding-bottom: 0.3rem; border-bottom: 2px solid #3b82f6; color: #1e293b; display: flex; align-items: center; gap: 0.4rem;">
+            <h3
+              style="font-size: 0.95rem; margin: 0; padding-bottom: 0.3rem; border-bottom: 2px solid #3b82f6; color: #1e293b; display: flex; align-items: center; gap: 0.4rem;"
+            >
               <span>💳</span> 4. お支払い方法
             </h3>
-              <label style="display: flex; align-items: center; gap: 0.5rem; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: not-allowed; font-size: 0.85rem; background: #f1f5f9; color: #94a3b8; pointer-events: none; opacity: 0.7;">
-                <input type="radio" name="paymentMethod" value="stripe" disabled style="accent-color: #2563eb;" />
-                <div>
-                  <strong>事前クレジットカード決済</strong>
-                  <span style="display: block; font-size: 0.75rem; color: #94a3b8;">現在ご利用いただけません</span>
-                </div>
-              </label>
-              <label style="display: flex; align-items: center; gap: 0.5rem; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 0.85rem; background: #fff;">
-               <input type="radio" name="paymentMethod" value="onsite" checked style="accent-color: #2563eb;" />
-                <div>
-                  <strong>現地決済 (現金 / <s style="color: #94a3b8;">PayPay</s> / <s style="color: #94a3b8;">QR</s>)</strong>
-                  <span style="display: block; font-size: 0.75rem; color: #64748b;">チェックイン時にお支払いいただきます</span>
-                </div>
-              </label>
+            <label
+              style="display: flex; align-items: center; gap: 0.5rem; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: not-allowed; font-size: 0.85rem; background: #f1f5f9; color: #94a3b8; pointer-events: none; opacity: 0.7;"
+            >
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="stripe"
+                disabled
+                style="accent-color: #2563eb;"
+              />
+              <div>
+                <strong>事前クレジットカード決済</strong>
+                <span
+                  style="display: block; font-size: 0.75rem; color: #94a3b8;"
+                  >現在ご利用いただけません</span
+                >
+              </div>
+            </label>
+            <label
+              style="display: flex; align-items: center; gap: 0.5rem; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 0.85rem; background: #fff;"
+            >
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="onsite"
+                checked
+                style="accent-color: #2563eb;"
+              />
+              <div>
+                <strong
+                  >現地決済 (現金 / <s style="color: #94a3b8;">PayPay</s> / <s
+                    style="color: #94a3b8;">QR</s
+                  >)</strong
+                >
+                <span
+                  style="display: block; font-size: 0.75rem; color: #64748b;"
+                  >チェックイン時にお支払いいただきます</span
+                >
+              </div>
+            </label>
           </section>
 
           <!-- 5. キャンセル規定・同意 -->
-          <section style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem;">
-            <h4 style="font-size: 0.8rem; margin: 0 0 0.4rem; color: #475569;">📜 キャンセル規定・注意事項</h4>
-            <ul style="margin: 0 0 0.75rem 0; padding-left: 1.2rem; font-size: 0.75rem; color: #64748b; display: flex; flex-direction: column; gap: 0.2rem;">
+          <section
+            style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem;"
+          >
+            <h4 style="font-size: 0.8rem; margin: 0 0 0.4rem; color: #475569;">
+              📜 キャンセル規定・注意事項
+            </h4>
+            <ul
+              style="margin: 0 0 0.75rem 0; padding-left: 1.2rem; font-size: 0.75rem; color: #64748b; display: flex; flex-direction: column; gap: 0.2rem;"
+            >
               <li>チェックイン3日前まで: キャンセル料 無料</li>
               <li>前日〜当日・不泊: 100%</li>
               <li>状況確認に最大24時間頂戴いたします</li>
             </ul>
 
-            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; font-weight: bold; color: #0f172a; cursor: pointer; padding-top: 0.4rem; border-top: 1px dashed #cbd5e1;">
-              <input type="checkbox" id="agreeTerms" required style="width: 16px; height: 16px; accent-color: #2563eb;" />
+            <label
+              style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; font-weight: bold; color: #0f172a; cursor: pointer; padding-top: 0.4rem; border-top: 1px dashed #cbd5e1;"
+            >
+              <input
+                type="checkbox"
+                id="agreeTerms"
+                required
+                style="width: 16px; height: 16px; accent-color: #2563eb;"
+              />
               キャンセル規定・注意事項に同意します
             </label>
           </section>
 
           <!-- 6. 送信ボタン -->
           <section style="margin-top: 0.5rem;">
-            <button type="submit" id="submitBtn" style="width: 100%; padding: 14px; background: #2563eb; color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);">
+            <button
+              type="submit"
+              id="submitBtn"
+              style="width: 100%; padding: 14px; background: #2563eb; color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);"
+            >
               予約リクエストを送信する
             </button>
           </section>
-
         </form>
-
       </div>
     </main>
 
     <!-- #info: 最下部・アクセス・お問い合わせ (センター配置) -->
-    <footer id="info" style="background: #1e293b; color: #f8fafc; padding: 2.5rem 1rem; margin-top: 3rem; text-align: center;">
-      <div style="max-width: 480px; margin: 0 auto; font-size: 0.9rem; line-height: 2;">
-        <h3 style="margin: 0 0 0.75rem 0; font-size: 1rem; color: #cbd5e1; border-bottom: 1px solid #334155; padding-bottom: 0.4rem;">
+    <footer
+      id="info"
+      style="background: #1e293b; color: #f8fafc; padding: 2.5rem 1rem; margin-top: 3rem; text-align: center;"
+    >
+      <div
+        style="max-width: 480px; margin: 0 auto; font-size: 0.9rem; line-height: 2;"
+      >
+        <h3
+          style="margin: 0 0 0.75rem 0; font-size: 1rem; color: #cbd5e1; border-bottom: 1px solid #334155; padding-bottom: 0.4rem;"
+        >
           アクセス・お問い合わせ
         </h3>
-        <div>🏠宮森県 九州中央市 弟屈 0-0-00</div><div>📞090-9999-9999&emsp;📩centerinn@fmail.gom</div>
+        <div>🏠宮森県 九州中央市 弟屈 0-0-00</div><div>
+          📞090-9999-9999&emsp;📩centerinn@fmail.gom
+        </div>
       </div>
     </footer>
 
     <!-- 完了モーダル -->
-    <div id="qrModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); align-items: center; justify-content: center; z-index: 1000; padding: 1rem;">
-      <div style="background: white; border-radius: 16px; padding: 1.5rem; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
+    <div
+      id="qrModal"
+      style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); align-items: center; justify-content: center; z-index: 1000; padding: 1rem;"
+    >
+      <div
+        style="background: white; border-radius: 16px; padding: 1.5rem; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);"
+      >
         <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎉</div>
-        <h2 style="margin: 0 0 0.5rem; font-size: 1.15rem; color: #0f172a;">予約リクエストを受け付けました</h2>
-        <p style="margin: 0 0 1rem; font-size: 0.8rem; color: #64748b;">ご登録メールアドレスに確認メールを送信しました。</p>
+        <h2 style="margin: 0 0 0.5rem; font-size: 1.15rem; color: #0f172a;">
+          予約リクエストを受け付けました
+        </h2>
+        <p style="margin: 0 0 1rem; font-size: 0.8rem; color: #64748b;">
+          ご登録メールアドレスに確認メールを送信しました。
+        </p>
 
-        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; text-align: left;">
-          <p style="margin: 0; font-size: 0.8rem; color: #334155; line-height: 1.5;">
-            ホストによる内容確認後ご予約確定のメールと<strong>チェックイン用QRコード</strong>をお送りいたします。今しばらくお待ちください。
+        <div
+          style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; text-align: left;"
+        >
+          <p
+            style="margin: 0; font-size: 0.8rem; color: #334155; line-height: 1.5;"
+          >
+            ホストによる内容確認後ご予約確定のメールと<strong
+              >チェックイン用QRコード</strong
+            >をお送りいたします。今しばらくお待ちください。
           </p>
         </div>
 
-        <button type="button" id="closeModalBtn" style="width: 100%; padding: 10px; background: #0f172a; color: white; border: none; border-radius: 8px; font-size: 0.85rem; font-weight: bold; cursor: pointer;">
+        <button
+          type="button"
+          id="closeModalBtn"
+          style="width: 100%; padding: 10px; background: #0f172a; color: white; border: none; border-radius: 8px; font-size: 0.85rem; font-weight: bold; cursor: pointer;"
+        >
           閉じる
         </button>
       </div>
@@ -254,48 +508,52 @@
 
     <!-- JavaScript -->
     <script is:inline>
-      document.addEventListener('DOMContentLoaded', () => {
-        const grid = document.getElementById('calendarGrid');
-        const monthText = document.getElementById('calendarMonth');
-        const checkInInput = document.getElementById('checkIn');
-        const checkOutInput = document.getElementById('checkOut');
-        const guestsSelect = document.getElementById('guests');
-        const arrivalTimeSelect = document.getElementById('arrivalTime');
-        const totalPriceEl = document.getElementById('totalPrice');
-        const form = document.getElementById('requestForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const bookingPauseMessage = document.getElementById('bookingPauseMessage');
+      document.addEventListener("DOMContentLoaded", () => {
+        const grid = document.getElementById("calendarGrid");
+        const monthText = document.getElementById("calendarMonth");
+        const checkInInput = document.getElementById("checkIn");
+        const checkOutInput = document.getElementById("checkOut");
+        const guestsSelect = document.getElementById("guests");
+        const arrivalTimeSelect = document.getElementById("arrivalTime");
+        const totalPriceEl = document.getElementById("totalPrice");
+        const form = document.getElementById("requestForm");
+        const submitBtn = document.getElementById("submitBtn");
+        const bookingPauseMessage = document.getElementById(
+          "bookingPauseMessage",
+        );
         let isBookingPaused = false;
-        const qrModal = document.getElementById('qrModal');
+        const qrModal = document.getElementById("qrModal");
 
-        const dateWarningModal = document.getElementById('dateWarningModal');
-        const dateWarningText = document.getElementById('dateWarningText');
-        const closeDateWarningBtn = document.getElementById('closeDateWarningBtn');
+        const dateWarningModal = document.getElementById("dateWarningModal");
+        const dateWarningText = document.getElementById("dateWarningText");
+        const closeDateWarningBtn = document.getElementById(
+          "closeDateWarningBtn",
+        );
 
         function showDateWarning(message) {
           if (dateWarningText && dateWarningModal) {
             dateWarningText.textContent = message;
-            dateWarningModal.style.display = 'flex';
+            dateWarningModal.style.display = "flex";
           }
         }
 
         if (closeDateWarningBtn && dateWarningModal) {
-          closeDateWarningBtn.addEventListener('click', () => {
-            dateWarningModal.style.display = 'none';
+          closeDateWarningBtn.addEventListener("click", () => {
+            dateWarningModal.style.display = "none";
           });
         }
 
-        const closeModalBtn = document.getElementById('closeModalBtn');
+        const closeModalBtn = document.getElementById("closeModalBtn");
 
         const now = new Date();
         const yearNow = now.getFullYear();
-        const monthNow = String(now.getMonth() + 1).padStart(2, '0');
-        const dayNow = String(now.getDate()).padStart(2, '0');
+        const monthNow = String(now.getMonth() + 1).padStart(2, "0");
+        const dayNow = String(now.getDate()).padStart(2, "0");
         const todayStr = `${yearNow}-${monthNow}-${dayNow}`;
 
         // const maxAllowedDate = new Date();
         // 予約可能な最終日は、APIから取得した設定値を使用
-        let maxAllowedDateStr = '';
+        let maxAllowedDateStr = "";
 
         if (checkInInput) {
           checkInInput.min = todayStr;
@@ -308,15 +566,18 @@
             inDate.setDate(inDate.getDate() + 1);
             const nextDayStr = [
               inDate.getFullYear(),
-              String(inDate.getMonth() + 1).padStart(2, '0'),
-              String(inDate.getDate()).padStart(2, '0')
-            ].join('-');
+              String(inDate.getMonth() + 1).padStart(2, "0"),
+              String(inDate.getDate()).padStart(2, "0"),
+            ].join("-");
 
             if (maxAllowedDateStr && nextDayStr > maxAllowedDateStr) {
-              showDateWarning(`予約受付は ${maxAllowedDateStr} が最終チェックアウト日です。別の日付を選択してください。`);
-              checkInInput.value = '';
-              if (checkOutInput) checkOutInput.value = '';
+              showDateWarning(
+                `予約受付は ${maxAllowedDateStr} が最終チェックアウト日です。別の日付を選択してください。`,
+              );
+              checkInInput.value = "";
+              if (checkOutInput) checkOutInput.value = "";
               calculateTotal();
+              checkGuestAvailability();
               return;
             }
 
@@ -326,35 +587,44 @@
             }
           }
           calculateTotal();
+          checkGuestAvailability();
         }
 
         if (checkInInput) {
-          checkInInput.addEventListener('change', handleCheckInChange);
-          checkInInput.addEventListener('input', handleCheckInChange);
+          checkInInput.addEventListener("change", handleCheckInChange);
+          checkInInput.addEventListener("input", handleCheckInChange);
         }
         if (checkOutInput) {
-          checkOutInput.addEventListener('change', () => {
+          checkOutInput.addEventListener("change", () => {
             if (
               maxAllowedDateStr &&
               checkOutInput.value &&
               checkOutInput.value > maxAllowedDateStr
             ) {
-              showDateWarning(`予約受付は ${maxAllowedDateStr} が最終チェックアウト日です。別の日付を選択してください。`);
-                checkOutInput.value = '';
+              showDateWarning(
+                `予約受付は ${maxAllowedDateStr} が最終チェックアウト日です。別の日付を選択してください。`,
+              );
+              checkOutInput.value = "";
               calculateTotal();
               return;
             }
 
-              calculateTotal();
+            calculateTotal();
           });
         }
-        const guestWarning = document.getElementById('guestWarning');
-
+        const guestWarning = document.getElementById("guestWarning");
+        function getAvailabilityForDate(dateStr) {
+          const date = new Date(dateStr + "T12:00:00");
+          const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+          const availability = availabilityCache[key];
+          return availability ? availability[dateStr] : undefined;
+        }
         function checkGuestAvailability() {
-         if (!guestWarning || !guestsSelect || !checkInInput || !checkOutInput) return;
+          if (!guestWarning || !guestsSelect || !checkInInput || !checkOutInput)
+            return;
 
-          guestWarning.style.display = 'none';
-          guestWarning.textContent = '';
+          guestWarning.style.display = "none";
+          guestWarning.textContent = "";
 
           const checkIn = checkInInput.value;
           const checkOut = checkOutInput.value;
@@ -362,18 +632,24 @@
 
           if (!checkIn || !checkOut) return;
 
-          const curr = new Date(checkIn + 'T12:00:00');
-          const last = new Date(checkOut + 'T12:00:00');
+          const curr = new Date(checkIn + "T12:00:00");
+          const last = new Date(checkOut + "T12:00:00");
 
           while (curr < last) {
-            const dStr = `${curr.getFullYear()}-${String(curr.getMonth() + 1).padStart(2, '0')}-${String(curr.getDate()).padStart(2, '0')}`;
-            const dayInfo = monthlyAvailability[dStr];
-            const availableCount = dayInfo ? dayInfo.available : 4;
+            const dStr = `${curr.getFullYear()}-${String(curr.getMonth() + 1).padStart(2, "0")}-${String(curr.getDate()).padStart(2, "0")}`;
+            const dayInfo = getAvailabilityForDate(dStr);
+
+            if (!dayInfo) {
+              guestWarning.textContent = `${dStr}の空き情報を取得できません。カレンダーを確認してから、もう一度お試しください。`;
+              guestWarning.style.display = "block";
+              return;
+            }
+
+            const availableCount = dayInfo.available;
 
             if (availableCount < guests) {
-              guestWarning.textContent =
-                `${dStr}は空き人数が${availableCount}名のため、${guests}名では予約できません。宿泊人数または日程を変更してください。`;
-              guestWarning.style.display = 'block';
+              guestWarning.textContent = `${dStr}は空き人数が${availableCount}名のため、${guests}名では予約できません。宿泊人数または日程を変更してください。`;
+              guestWarning.style.display = "block";
               return;
             }
 
@@ -382,34 +658,42 @@
         }
 
         if (guestsSelect) {
-          guestsSelect.addEventListener('change', () => {
+          guestsSelect.addEventListener("change", () => {
             calculateTotal();
             checkGuestAvailability();
           });
         }
 
         if (checkInInput) {
-          checkInInput.addEventListener('change', checkGuestAvailability);
-          }
+          checkInInput.addEventListener("change", () => {
+            calculateTotal();
+            checkGuestAvailability();
+          });
+        }
 
         if (checkOutInput) {
-          checkOutInput.addEventListener('change', checkGuestAvailability);
+          checkOutInput.addEventListener("change", () => {
+            calculateTotal();
+            checkGuestAvailability();
+          });
         }
 
         let year = now.getFullYear();
         let month = now.getMonth();
         let monthlyAvailability = {};
+        const availabilityCache = {};
         let basePrice = 5000;
 
         function calculateTotal() {
-          if (!checkInInput || !checkOutInput || !guestsSelect || !totalPriceEl) return 0;
+          if (!checkInInput || !checkOutInput || !guestsSelect || !totalPriceEl)
+            return 0;
 
           const checkIn = checkInInput.value;
           const checkOut = checkOutInput.value;
           const guests = parseInt(guestsSelect.value, 10) || 1;
 
           if (!checkIn || !checkOut) {
-            totalPriceEl.textContent = '￥0';
+            totalPriceEl.textContent = "￥0";
             return 0;
           }
 
@@ -419,7 +703,7 @@
           let nights = 0;
 
           while (curr < last) {
-            const dStr = curr.toISOString().split('T')[0];
+            const dStr = curr.toISOString().split("T")[0];
             const dayInfo = monthlyAvailability[dStr];
             const nightPrice = dayInfo ? dayInfo.price : basePrice;
 
@@ -429,7 +713,7 @@
           }
 
           if (nights <= 0) {
-            totalPriceEl.textContent = '日程エラー';
+            totalPriceEl.textContent = "日程エラー";
             return 0;
           }
 
@@ -439,13 +723,19 @@
 
         async function fetchAndRenderCalendar() {
           if (monthText) monthText.textContent = `${year}年 ${month + 1}月`;
-          if (grid) grid.innerHTML = `<div style="grid-column: span 7; text-align: center; padding: 1rem; font-size: 0.8rem; color: #64748b;">読み込み中...</div>`;
+          if (grid)
+            grid.innerHTML = `<div style="grid-column: span 7; text-align: center; padding: 1rem; font-size: 0.8rem; color: #64748b;">読み込み中...</div>`;
 
           try {
-            const res = await fetch(`/api/check-availability?year=${year}&month=${month + 1}`);
+            const res = await fetch(
+              `/api/check-availability?year=${year}&month=${month + 1}`,
+            );
             if (res.ok) {
               const data = await res.json();
               monthlyAvailability = data.availability || {};
+              availabilityCache[
+                `${year}-${String(month + 1).padStart(2, "0")}`
+              ] = monthlyAvailability;
               basePrice = data.basePrice ?? 5000;
               // 管理画面で設定した予約可能な最終日
               if (data.settings?.bookingEndDate) {
@@ -459,8 +749,8 @@
               const pauseStart = data.settings?.pauseStartDate;
               const pauseEnd = data.settings?.pauseEndDate;
 
-              const jstToday = new Intl.DateTimeFormat('sv-SE', {
-                timeZone: 'Asia/Tokyo'
+              const jstToday = new Intl.DateTimeFormat("sv-SE", {
+                timeZone: "Asia/Tokyo",
               }).format(new Date());
 
               isBookingPaused = !!(
@@ -468,68 +758,77 @@
                 pauseEnd &&
                 jstToday >= pauseStart &&
                 jstToday <= pauseEnd
-          );
+              );
 
-          if (submitBtn) {
-            submitBtn.disabled = isBookingPaused;
-            submitBtn.style.opacity = isBookingPaused ? '0.5' : '1';
-            submitBtn.style.cursor = isBookingPaused ? 'not-allowed' : 'pointer';
-          }
-
-          if (bookingPauseMessage) {
-            bookingPauseMessage.style.display = isBookingPaused ? 'block' : 'none';
-          }
-          // 受付停止中は、予約フォーム内の入力・操作を無効化
-          if (form) {
-            form.querySelectorAll('input, select, textarea, button').forEach((el) => {
-              if (el.id !== 'closeModalBtn') {
-                el.disabled = isBookingPaused;
+              if (submitBtn) {
+                submitBtn.disabled = isBookingPaused;
+                submitBtn.style.opacity = isBookingPaused ? "0.5" : "1";
+                submitBtn.style.cursor = isBookingPaused
+                  ? "not-allowed"
+                  : "pointer";
               }
-            });
-          }
+
+              if (bookingPauseMessage) {
+                bookingPauseMessage.style.display = isBookingPaused
+                  ? "block"
+                  : "none";
+              }
+              // 受付停止中は、予約フォーム内の入力・操作を無効化
+              if (form) {
+                form
+                  .querySelectorAll("input, select, textarea, button")
+                  .forEach((el) => {
+                    if (el.id !== "closeModalBtn") {
+                      el.disabled = isBookingPaused;
+                    }
+                  });
+              }
             } else {
-              console.error('availability API error:', res.status);
+              console.error("availability API error:", res.status);
             }
           } catch (e) {
-            console.error('availability fetch error:', e);
+            console.error("availability fetch error:", e);
           }
 
           if (!grid) return;
-          grid.innerHTML = '';
+          grid.innerHTML = "";
           const firstDay = new Date(year, month, 1).getDay();
           const lastDate = new Date(year, month + 1, 0).getDate();
 
           for (let i = 0; i < firstDay; i++) {
-            grid.appendChild(document.createElement('div'));
+            grid.appendChild(document.createElement("div"));
           }
 
           for (let d = 1; d <= lastDate; d++) {
-            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
             const isPast = dateStr < todayStr;
             const isBeyondTwoMonths = maxAllowedDateStr
               ? dateStr >= maxAllowedDateStr
               : false;
 
             const dayInfo = monthlyAvailability[dateStr];
-            const availableCount = (isBeyondTwoMonths || isPast) ? 0 : (dayInfo ? dayInfo.available : 4);
-            const isAvailable = !isPast && !isBeyondTwoMonths && availableCount > 0;
+            const availableCount =
+              isBeyondTwoMonths || isPast ? 0 : dayInfo ? dayInfo.available : 4;
+            const isAvailable =
+              !isPast && !isBeyondTwoMonths && availableCount > 0;
 
-            const cell = document.createElement('div');
-            cell.style.cssText = 'padding: 6px 2px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.75rem; background: #fff;';
+            const cell = document.createElement("div");
+            cell.style.cssText =
+              "padding: 6px 2px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.75rem; background: #fff;";
 
             if (isAvailable) {
-              cell.style.cursor = 'pointer';
-              cell.style.background = '#f8fafc';
+              cell.style.cursor = "pointer";
+              cell.style.background = "#f8fafc";
               cell.innerHTML = `<div>${d}</div><div style="color: #16a34a; font-weight: bold;">${availableCount}</div>`;
-              cell.addEventListener('click', () => {
+              cell.addEventListener("click", () => {
                 if (checkInInput && checkOutInput) {
                   checkInInput.value = dateStr;
                   handleCheckInChange();
                 }
               });
             } else {
-              cell.style.background = '#f1f5f9';
-              cell.style.color = '#94a3b8';
+              cell.style.background = "#f1f5f9";
+              cell.style.color = "#94a3b8";
               cell.innerHTML = `<div>${d}</div><div style="color: #94a3b8; font-weight: bold;">0</div>`;
             }
 
@@ -541,31 +840,37 @@
 
         fetchAndRenderCalendar();
 
-        const prevBtn = document.getElementById('prevMonth');
-        const nextBtn = document.getElementById('nextMonth');
+        const prevBtn = document.getElementById("prevMonth");
+        const nextBtn = document.getElementById("nextMonth");
 
         if (prevBtn) {
           prevBtn.onclick = () => {
             month--;
-            if (month < 0) { month = 11; year--; }
+            if (month < 0) {
+              month = 11;
+              year--;
+            }
             fetchAndRenderCalendar();
           };
         }
         if (nextBtn) {
           nextBtn.onclick = () => {
             month++;
-            if (month > 11) { month = 0; year++; }
+            if (month > 11) {
+              month = 0;
+              year++;
+            }
             fetchAndRenderCalendar();
           };
         }
 
         if (form) {
-          form.addEventListener('submit', async (e) => {
+          form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            const agree = document.getElementById('agreeTerms').checked;
+            const agree = document.getElementById("agreeTerms").checked;
             if (!agree) {
-              alert('キャンセル規定および注意事項への同意が必要です。');
+              alert("キャンセル規定および注意事項への同意が必要です。");
               return;
             }
 
@@ -575,7 +880,7 @@
             const arrivalTime = arrivalTimeSelect.value;
 
             if (checkIn < todayStr) {
-              alert('過去の日付はご指定いただけません。');
+              alert("過去の日付はご指定いただけません。");
               return;
             }
 
@@ -584,25 +889,32 @@
             let hasConflict = false;
 
             while (curr < last) {
-              const dStr = curr.toISOString().split('T')[0];
-              const dayInfo = monthlyAvailability[dStr];
-              const availableCount = dayInfo ? dayInfo.available : 4;
+              const dStr = curr.toISOString().split("T")[0];
+              const dayInfo = getAvailabilityForDate(dStr);
 
-              if (dStr < todayStr || dStr > maxAllowedDateStr || availableCount < requestedGuests) {
+              if (
+                !dayInfo ||
+                dStr < todayStr ||
+                dStr > maxAllowedDateStr ||
+                dayInfo.available < requestedGuests
+              ) {
                 hasConflict = true;
                 break;
               }
+
               curr.setDate(curr.getDate() + 1);
             }
 
             if (hasConflict) {
-              alert('ご指定の期間に過去の日付、2ヶ月先以降の日付、満室、またはご希望人数分の空きがない日が含まれています。');
+              alert(
+                "ご指定の期間に過去の日付、2ヶ月先以降の日付、満室、またはご希望人数分の空きがない日が含まれています。",
+              );
               return;
             }
 
             if (submitBtn) {
               submitBtn.disabled = true;
-              submitBtn.textContent = '送信中...';
+              submitBtn.textContent = "送信中...";
             }
 
             const formData = {
@@ -610,43 +922,50 @@
               checkOut: checkOut,
               guests: requestedGuests,
               arrivalTime: arrivalTime,
-              name: document.getElementById('name').value,
-              gender: document.getElementById('gender').value,
-              ageGroup: document.getElementById('ageGroup').value,
-              email: document.getElementById('email').value,
-              phone: document.getElementById('phone').value,
-              paymentMethod: document.querySelector('input[name="paymentMethod"]:checked')?.value || 'onsite',
+              name: document.getElementById("name").value,
+              gender: document.getElementById("gender").value,
+              ageGroup: document.getElementById("ageGroup").value,
+              email: document.getElementById("email").value,
+              phone: document.getElementById("phone").value,
+              paymentMethod:
+                document.querySelector('input[name="paymentMethod"]:checked')
+                  ?.value || "onsite",
             };
 
-            if (formData.paymentMethod !== 'onsite') {
-              alert('現在、現地決済のみご利用いただけます。');
+            if (formData.paymentMethod !== "onsite") {
+              alert("現在、現地決済のみご利用いただけます。");
               return;
             }
 
             try {
-              const res = await fetch('/api/reservation', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+              const res = await fetch("/api/reservation", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
               });
 
               const result = await res.json();
 
               if (res.ok) {
-                if (qrModal) qrModal.style.display = 'flex';
+                if (qrModal) qrModal.style.display = "flex";
               } else {
-                alert('エラーが発生しました: ' + (result.error || '予約を処理できませんでした。'));
+                alert(
+                  "エラーが発生しました: " +
+                    (result.error || "予約を処理できませんでした。"),
+                );
                 if (submitBtn) {
                   submitBtn.disabled = false;
-                  submitBtn.textContent = '予約リクエストを送信する';
+                  submitBtn.textContent = "予約リクエストを送信する";
                 }
               }
             } catch (err) {
-              console.error('Submit error:', err);
-              alert('通信エラーが発生しました。時間をおいて再度お試しください。');
+              console.error("Submit error:", err);
+              alert(
+                "通信エラーが発生しました。時間をおいて再度お試しください。",
+              );
               if (submitBtn) {
                 submitBtn.disabled = false;
-                submitBtn.textContent = '予約リクエストを送信する';
+                submitBtn.textContent = "予約リクエストを送信する";
               }
             }
           });
