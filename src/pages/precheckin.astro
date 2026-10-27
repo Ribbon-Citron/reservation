@@ -1,0 +1,196 @@
+---
+export const prerender = false;
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <title>宿泊者事前登録</title>
+    <style>
+      :global(*) { box-sizing: border-box; }
+      :global(body) {
+        margin: 0;
+        padding: 24px 16px;
+        background: #f1f5f9;
+        color: #1e293b;
+        font-family: sans-serif;
+      }
+      main {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 24px;
+        background: white;
+        border-radius: 12px;
+      }
+      h1 { font-size: 1.5rem; margin-top: 0; }
+      .notice {
+        padding: 12px;
+        background: #eff6ff;
+        border-radius: 8px;
+        line-height: 1.7;
+      }
+      .guest {
+        margin-top: 20px;
+        padding: 18px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+      }
+      .guest h2 { font-size: 1.1rem; margin-top: 0; }
+      label { display: block; margin-top: 14px; font-weight: bold; }
+      input {
+        display: block;
+        width: 100%;
+        margin-top: 6px;
+        padding: 11px;
+        border: 1px solid #94a3b8;
+        border-radius: 6px;
+        font: inherit;
+      }
+      button {
+        width: 100%;
+        margin-top: 24px;
+        padding: 14px;
+        border: 0;
+        border-radius: 8px;
+        background: #1d4ed8;
+        color: white;
+        font-size: 1rem;
+        font-weight: bold;
+      }
+      #message { margin-top: 16px; line-height: 1.6; }
+      @media (max-width: 480px) {
+        main { padding: 18px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>宿泊者事前登録</h1>
+      <p class="notice">
+        ご予約の宿泊者全員について、以下の情報をご入力ください。
+        オンライン登録は本人確認の完了を意味しません。
+        本人確認は現地で行います。
+      </p>
+
+      <p id="loading">登録リンクを確認しています…</p>
+      <form id="precheckin-form" hidden>
+        <div id="guest-fields"></div>
+        <button type="submit">事前登録を送信</button>
+      </form>
+      <p id="message" role="status" aria-live="polite"></p>
+    </main>
+
+    <script>
+      const form = document.querySelector('#precheckin-form');
+      const fields = document.querySelector('#guest-fields');
+      const loading = document.querySelector('#loading');
+      const message = document.querySelector('#message');
+      const token = new URLSearchParams(window.location.search).get('token') || '';
+
+      const labels = [
+        ['guest_name', '氏名', 'text'],
+        ['guest_address', '住所', 'text'],
+        ['guest_contact', '連絡先（電話番号など）', 'tel'],
+        ['guest_occupation', '職業', 'text'],
+        ['nationality', '国籍', 'text'],
+        ['passport_number', 'パスポート番号', 'text']
+      ];
+
+      async function initialize() {
+        try {
+          const response = await fetch(
+            '/api/precheckin-validate?token=' + encodeURIComponent(token),
+            { cache: 'no-store' }
+          );
+          const result = await response.json();
+
+          if (!response.ok || !result.valid) {
+            throw new Error(result.error || '登録リンクが無効か、有効期限が切れています。');
+          }
+
+          for (let i = 0; i < result.guestsCount; i++) {
+            const section = document.createElement('section');
+            section.className = 'guest';
+
+            const heading = document.createElement('h2');
+            heading.textContent = i === 0
+              ? '代表者（1人目）'
+              : '宿泊者 ' + (i + 1) + '人目';
+            section.appendChild(heading);
+
+            for (const [name, labelText, type] of labels) {
+              const label = document.createElement('label');
+              label.textContent = labelText;
+
+              const input = document.createElement('input');
+              input.name = name;
+              input.type = type;
+              input.required = true;
+              input.maxLength = name === 'guest_address' ? 500 : 200;
+              input.autocomplete = 'off';
+
+              label.appendChild(input);
+              section.appendChild(label);
+            }
+
+            fields.appendChild(section);
+          }
+
+          loading.hidden = true;
+          form.hidden = false;
+        } catch (error) {
+          loading.textContent = '';
+          message.textContent = error instanceof Error
+            ? error.message
+            : '登録リンクを確認できませんでした。';
+        }
+      }
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const submitButton = form.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        message.textContent = '事前登録を送信しています…';
+
+        try {
+          const sections = Array.from(fields.querySelectorAll('.guest'));
+          const guests = sections.map((section) => {
+            const guest = {};
+            for (const [name] of labels) {
+              const input = section.querySelector(`[name="${name}"]`);
+              guest[name] = input.value.trim();
+            }
+            return guest;
+          });
+
+          const response = await fetch('/api/precheckin-submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            cache: 'no-store',
+            body: JSON.stringify({ token, guests })
+          });
+
+          const result = await response.json();
+
+          if (!response.ok || !result.success) {
+            throw new Error(result.error || '登録を保存できませんでした。');
+          }
+
+          message.textContent = '事前登録を受け付けました。本人確認は現地で行います。';
+          form.hidden = true;
+        } catch (error) {
+          message.textContent = error instanceof Error
+            ? error.message
+            : '送信に失敗しました。時間をおいて再度お試しください。';
+          submitButton.disabled = false;
+        }
+      });
+
+      initialize();
+    </script>
+  </body>
+</html>

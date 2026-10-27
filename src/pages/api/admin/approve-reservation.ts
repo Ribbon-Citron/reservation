@@ -1,10 +1,16 @@
 import type { APIRoute } from 'astro';
 import { supabase } from '../../../lib/supabase';
 import { Resend } from 'resend';
+import { createPrecheckinToken } from '../../../lib/precheckin-token';
+import { isAdminAuthorized, adminUnauthorizedResponse } from '../../../lib/admin-auth';
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 
 export const POST: APIRoute = async ({ request }) => {
+  if (!isAdminAuthorized(request)) {
+    return adminUnauthorizedResponse();
+  }
+
   try {
     const { reservationId } = await request.json();
 
@@ -22,34 +28,99 @@ export const POST: APIRoute = async ({ request }) => {
     if (fetchError || !reservation) {
       return new Response(JSON.stringify({ error: '該当する予約が見つかりませんでした。' }), { status: 404 });
     }
+    // 承認済み予約の再承認を防ぐ
+    if (reservation.status === 'approved') {
+      return new Response(
+        JSON.stringify({
+          error: 'この予約はすでに承認済みです。再承認はできません。'
+        }),
+        {
+          status: 409,
+          headers: { 'Content-Type': 'application/json; charset=utf-8' }
+        }
+      );
+    }
+    // 承認前にメールアドレスを確認
+    if (!reservation.guest_email?.trim()) {
+      return new Response(
+        JSON.stringify({
+          error: 'メールアドレスが登録されていないため、予約を承認できません。'
+        }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json; charset=utf-8' }
+        }
+      );
+    }
+    // 2. 事前登録トークンを生成し、予約承認と同時に保存
+    if (!reservation.check_in_date) {
+      return new Response(
+        JSON.stringify({ error: 'チェックイン日が設定されていないため、予約を承認できません。' }),
+        { status: 400, headers: { 'Content-Type': 'application/json; charset=utf-8' } }
+      );
+    }
 
-    // 2. ステータスを 'approved' に更新
+    const { token, tokenHash } = await createPrecheckinToken();
+
+    // チェックイン翌日の日本時間23:59:59.999をUTCで保存
+    const expiryDate = new Date(
+      Date.UTC(
+        Number(reservation.check_in_date.slice(0, 4)),
+        Number(reservation.check_in_date.slice(5, 7)) - 1,
+        Number(reservation.check_in_date.slice(8, 10)) + 1,
+        14, 59, 59, 999
+      )
+    );
+    const tokenExpiresAt = expiryDate.toISOString();
+
     const { error: updateError } = await supabase
       .from('reservations')
-      .update({ status: 'approved' })
+      .update({
+        status: 'approved',
+        precheckin_token_hash: tokenHash,
+        precheckin_token_expires_at: tokenExpiresAt,
+        precheckin_token_used_at: null
+      })
       .eq('id', reservationId);
 
     if (updateError) throw updateError;
 
     // 3. QRコード・キャンセル案内付き予約確定メールを送信 (Resend)
-    if (reservation.guest_email) {
-      const qrData = reservation.reservation_code || reservation.id;
-      const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(qrData)}`;
-      
-      // あらかじめ表示用のコード文字列を安全に準備
-      const dispCode = reservation.reservation_code || '---';
-      const checkInDate = reservation.check_in_date || '';
-      const checkOutDate = reservation.check_out_date || '';
-      const guestCount = reservation.guests_count || 1;
-      const arrivalTime = reservation.arrival_time || '15:00以降';
-      const guestName = reservation.guest_name || 'ゲスト';
+    if (!reservation.guest_email) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          approved: true,
+          error: '予約は承認されましたが、メールアドレスが登録されていないため、事前登録リンクを送信できません。'
+        }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json; charset=utf-8' }
+        }
+      );
+    }
 
-      try {
-        await resend.emails.send({
-          from: 'PMS 宿泊予約 <onboarding@resend.dev>',
-          to: [reservation.guest_email],
-          subject: '【予約確定】ご宿泊予約が確定いたしました',
-          html: `
+    const qrData = reservation.reservation_code || reservation.id;
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(qrData)}`;
+
+    // あらかじめ表示用のコード文字列を安全に準備
+    const dispCode = reservation.reservation_code || '---';
+    const checkInDate = reservation.check_in_date || '';
+    const checkOutDate = reservation.check_out_date || '';
+    const guestCount = reservation.guests_count || 1;
+    const arrivalTime = reservation.arrival_time || '15:00以降';
+    const guestName = reservation.guest_name || 'ゲスト';
+
+    const precheckinUrl = new URL('/precheckin', request.url);
+    precheckinUrl.searchParams.set('token', token);
+    const precheckinUrlString = precheckinUrl.toString();
+
+    try {
+      const { data: emailData, error: emailError } = await resend.emails.send({
+        from: 'PMS 宿泊予約 <onboarding@resend.dev>',
+        to: [reservation.guest_email],
+        subject: '【予約確定】ご宿泊予約が確定いたしました',
+        html: `
             <div style="font-family: sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
               <h2 style="color: #0f172a; border-bottom: 2px solid #2563eb; padding-bottom: 8px; margin-top: 0;">ご予約確定のお知らせ</h2>
               
@@ -65,6 +136,16 @@ export const POST: APIRoute = async ({ request }) => {
                 <p style="margin: 4px 0;"><strong>宿泊日程：</strong> ${checkInDate} 〜 ${checkOutDate}</p>
                 <p style="margin: 4px 0;"><strong>宿泊人数：</strong> ${guestCount}名</p>
                 <p style="margin: 4px 0;"><strong>チェックイン予定時間：</strong> ${arrivalTime}</p>
+              </div>
+
+              <div style="margin: 20px 0; padding: 16px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px;">
+                <h3 style="margin: 0 0 8px; color: #1d4ed8;">ご宿泊者情報の事前登録のお願い</h3>
+                <p>チェックインを円滑に行うため、ご宿泊される皆様の情報を事前にご登録ください。</p>
+                <p style="text-align: center; margin: 20px 0;">
+                  <a href="${precheckinUrlString}" style="display: inline-block; padding: 12px 24px; background: #2563eb; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: bold;">宿泊者情報を事前登録する</a>
+                </p>
+                <p style="font-size: 0.85rem; color: #475569;">登録期限：チェックイン日の翌日23:59まで</p>
+                <p style="font-size: 0.85rem; color: #475569;">オンライン登録は本人確認に代わるものではありません。本人確認はチェックイン時に行います。</p>
               </div>
 
               <div style="text-align: center; margin: 24px 0; padding: 20px; background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 8px;">
@@ -85,10 +166,38 @@ export const POST: APIRoute = async ({ request }) => {
               </p>
             </div>
           `
-        });
-      } catch (emailErr) {
-        console.error('確定メール送信エラー:', emailErr);
+      });
+
+      if (emailError || !emailData?.id) {
+        console.error('確定メール送信エラー:', emailError);
+
+        return new Response(
+          JSON.stringify({
+            success: false,
+            approved: true,
+            error: '予約は承認されましたが、確定メールの送信を確認できませんでした。送信状況を確認してください。'
+          }),
+          {
+            status: 500,
+            headers: { 'Content-Type': 'application/json; charset=utf-8' }
+          }
+        );
       }
+
+    } catch (emailErr) {
+      console.error('確定メール送信エラー:', emailErr);
+
+      return new Response(
+        JSON.stringify({
+          success: false,
+          approved: true,
+          error: '予約は承認されましたが、確定メールの送信に失敗しました。メールの送信状況を確認してください。'
+        }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json; charset=utf-8' }
+        }
+      );
     }
 
     return new Response(JSON.stringify({ success: true }), {

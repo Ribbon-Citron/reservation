@@ -1,20 +1,20 @@
 ---
 // src/pages/admin/reservations.astro
 
-import { supabase } from '../../lib/supabase';
+import { supabase } from "../../lib/supabase";
 
 let reservations: any[] = [];
 let dbError: string | null = null;
 
 try {
   if (!supabase) {
-    throw new Error('Supabaseクライアントが初期化されていません');
+    throw new Error("Supabaseクライアントが初期化されていません");
   }
 
   const { data, error } = await supabase
-    .from('reservations')
-    .select('*')
-    .order('created_at', { ascending: false });
+    .from("reservations")
+    .select("*")
+    .order("created_at", { ascending: false });
 
   if (error) {
     throw new Error(error.message);
@@ -22,33 +22,47 @@ try {
 
   reservations = data || [];
 } catch (e: any) {
-  console.error('予約一覧の取得エラー:', e);
-  dbError = e?.message || '予期せぬエラーが発生しました';
+  console.error("予約一覧の取得エラー:", e);
+  dbError = e?.message || "予期せぬエラーが発生しました";
 }
 
 const getStatusBadge = (status: string) => {
   switch (status) {
-    case 'approved':
-      return { text: '予約確定', style: 'background: #dcfce7; color: #15803d;' };
-    case 'pending':
-      return { text: '承認待ち', style: 'background: #fef9c3; color: #a16207;' };
-    case 'paid':
-      return { text: '決済完了', style: 'background: #e0f2fe; color: #0369a1;' };
-    case 'cancelled':
-      return { text: 'キャンセル', style: 'background: #fee2e2; color: #b91c1c;' };
+    case "approved":
+      return {
+        text: "予約確定",
+        style: "background: #dcfce7; color: #15803d;",
+      };
+    case "pending":
+      return {
+        text: "承認待ち",
+        style: "background: #fef9c3; color: #a16207;",
+      };
+    case "paid":
+      return {
+        text: "決済完了",
+        style: "background: #e0f2fe; color: #0369a1;",
+      };
+    case "cancelled":
+      return {
+        text: "キャンセル",
+        style: "background: #fee2e2; color: #b91c1c;",
+      };
     default:
-      return { text: status || '未設定', style: 'background: #f3f4f6; color: #374151;' };
+      return {
+        text: status || "未設定",
+        style: "background: #f3f4f6; color: #374151;",
+      };
   }
 };
 
 const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('ja-JP', {
-    style: 'currency',
-    currency: 'JPY',
+  return new Intl.NumberFormat("ja-JP", {
+    style: "currency",
+    currency: "JPY",
     maximumFractionDigits: 0,
   }).format(amount ?? 0);
 };
-
 ---
 
 <html lang="ja">
@@ -58,148 +72,207 @@ const formatCurrency = (amount) => {
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>PMS Reservations</title>
   </head>
-  <body style="font-family: sans-serif; background-color: #f8fafc; margin: 0; padding: 1rem;">
+  <body
+    style="font-family: sans-serif; background-color: #f8fafc; margin: 0; padding: 1rem;"
+  >
     <div style="max-width: 900px; margin: 0 auto;">
-
       <!-- ヘッダーエリア -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;"
+      >
         <div>
-          <h1 style="margin: 0; color: #0f172a; font-size: 1.5rem;">📊 状況一覧</h1>
+          <h1 style="margin: 0; color: #0f172a; font-size: 1.5rem;">
+            📊 状況一覧
+          </h1>
           <p style="margin: 0.25rem 0 0; color: #64748b; font-size: 0.9rem;">
             ゲストからのリクエスト確認・予約承認
           </p>
         </div>
-        <div style="text-align: right; display: flex; justify-content: flex-end; gap: 10px;">
-          <a href="/" style="padding: 4px 20px; background: #f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
-          📆
+        <div
+          style="text-align: right; display: flex; justify-content: flex-end; gap: 10px;"
+        >
+          <a
+            href="/"
+            style="padding: 4px 20px; background: #f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;"
+          >
+            📆
           </a>
-          <a href="/admin/availability" style="padding: 4px 18px; background:#f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
-          ⚙️
+          <a
+            href="/admin/availability"
+            style="padding: 4px 18px; background:#f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;"
+          >
+            ⚙️
           </a>
-          <a href="/admin/scanner" style="padding: 4px 8px; background:#f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;">
-          ❙❙❘❙❚❙❘❚
+          <a
+            href="/admin/scanner"
+            style="padding: 4px 8px; background:#f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;"
+          >
+            ❙❙❘❙❚❙❘❚
           </a>
         </div>
       </div>
 
       <!-- 予約データテーブル -->
-      {dbError && (
-        <div style="background:#fee2e2; color:#991b1b; padding:1rem; margin-bottom:1rem;">
-          <strong>予約データの取得エラー:</strong> {dbError}
-        </div>
-      )}
-      <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: auto;">
-        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
+      {
+        dbError && (
+          <div style="background:#fee2e2; color:#991b1b; padding:1rem; margin-bottom:1rem;">
+            <strong>予約データの取得エラー:</strong> {dbError}
+          </div>
+        )
+      }
+      <div
+        style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: auto;"
+      >
+        <table
+          style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;"
+        >
           <thead>
-            <tr style="background: #f1f5f9; color: #475569; border-bottom: 6px solid #e2e8f0;">
-              <th style="padding: 6px 4px; text-align: center; width: 116px; min-width: 116px;">操作</th>
+            <tr
+              style="background: #f1f5f9; color: #475569; border-bottom: 6px solid #e2e8f0;"
+            >
+              <th
+                style="padding: 6px 4px; text-align: center; width: 116px; min-width: 116px;"
+                >操作</th
+              >
               <th style="padding: 6px 8px; text-align: center; ">宿泊者名</th>
-              <th style="padding: 6px 8px; text-align: center; ">宿泊日程 到着時間</th>
+              <th style="padding: 6px 8px; text-align: center; "
+                >宿泊日程 到着時間</th
+              >
               <th style="padding: 6px 8px; text-align: center; ">人数 金額</th>
               <th style="padding: 6px 8px; text-align: center; ">連絡先</th>
             </tr>
           </thead>
           <tbody>
-            {reservations && reservations.length > 0 ? (
-              reservations.map((item) => {
-                return (
-                  <tr style="border-bottom: 6px solid #f1f5f9;">
-                    
-                    <td style="padding: 6px 4px; text-align: center; width: 116px; min-width: 116px;">
-                      {item.status === 'pending' ? (
-                        <div style="display: flex; flex-direction: column; gap: 6px; justify-content: center; align-items: center; flex-wrap: nowrap;">
-                          <button
-                            onclick={`approveReservation('${item.id}')`}
-                            style="width: 100px; padding: 6px 0; background: #438a5d; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
-                          >
-                            Approve
-                          </button>
-                          <button
-                            onclick={`rejectReservation('${item.id}')`}
-                            style="width: 100px; padding: 6px 0; background: #c74343; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
-                          >
-                            Reject
-                          </button>
+            {
+              reservations && reservations.length > 0 ? (
+                reservations.map((item) => {
+                  return (
+                    <tr style="border-bottom: 6px solid #f1f5f9;">
+                      <td style="padding: 6px 4px; text-align: center; width: 116px; min-width: 116px;">
+                        {item.status === "pending" ? (
+                          <div style="display: flex; flex-direction: column; gap: 6px; justify-content: center; align-items: center; flex-wrap: nowrap;">
+                            <button
+                              onclick={`approveReservation('${item.id}')`}
+                              style="width: 100px; padding: 6px 0; background: #438a5d; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                            >
+                              Approve
+                            </button>
+                            <button
+                              onclick={`rejectReservation('${item.id}')`}
+                              style="width: 100px; padding: 6px 0; background: #c74343; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                            >
+                              Reject
+                            </button>
+                          </div>
+                        ) : item.status === "approved" ||
+                          item.status === "paid" ? (
+                          <div style="display: flex; flex-direction: column; gap: 6px; justify-content: center; align-items: center; flex-wrap: nowrap;">
+                            <button
+                              onclick={`quickCheckIn('${item.id}')`}
+                              style="width: 100px; padding: 6px 0; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                            >
+                              Check-In
+                            </button>
+
+                            {item.status === "approved" && (
+                              <button
+                                onclick={`resendConfirmationEmail('${item.id}')`}
+                                style="width: 100px; padding: 6px 0; background: #7c3aed; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                              >
+                                メール再送
+                              </button>
+                            )}
+
+                            <button
+                              onclick={`cancelReservation('${item.id}')`}
+                              style="width: 100px; padding: 6px 0; background: #64748b; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : item.status === "checked_in" ? (
+                          <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; justify-content: center;">
+                            <span style="font-size: 0.8rem; color: #16a34a; font-weight: bold;">
+                              ✅ Checked-In&nbsp;
+                            </span>
+                            <button
+                              onclick={`cancelReservation('${item.id}')`}
+                              style="width: 100px; padding: 6px 0; background: #64748b; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : item.status === "cancelled" ? (
+                          <span style="font-size: 0.8rem; color: #dc2626; font-weight: bold;">
+                            Cancelled
+                          </span>
+                        ) : (
+                          <span style="font-size: 0.8rem; color: #64748b;">
+                            No Action
+                          </span>
+                        )}
+                      </td>
+
+                      <td style="padding: 6px 8px; color: #0f172a;">
+                        <div style="max-width: 12em; word-break: break-all; font-weight: bold; font-size: 1rem; margin-bottom: 4px;">
+                          {item.guest_name}
                         </div>
-                      ) : item.status === 'approved' || item.status === 'paid' ? (
-                        <div style="display: flex; flex-direction: column; gap: 6px; justify-content: center; align-items: center; flex-wrap: nowrap;">
-                          <button
-                            onclick={`quickCheckIn('${item.id}')`}
-                            style="width: 100px; padding: 6px 0; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
-                          >
-                            Check-In
-                          </button>
-                          <button
-                            onclick={`cancelReservation('${item.id}')`}
-                            style="width: 100px; padding: 6px 0; background: #64748b; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
-                          >
-                            Cancel
-                          </button>
+                        <button
+                          onclick={`openReservationGuestEditor('${item.id}')`}
+                          style="margin: 4px 0; padding: 5px 8px; background: #0f766e; color: white; border: none; border-radius: 5px; font-size: 0.75rem; font-weight: bold; cursor: pointer;"
+                        >
+                          宿泊者情報
+                        </button>
+                        {item.reservation_code ? (
+                          <span style="display: inline-block; background: #f1f5f9; color: #0369a1; border: 1px solid #cbd5e1; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-family: monospace; font-weight: bold; letter-spacing: 1px;">
+                            ID: {item.reservation_code}
+                          </span>
+                        ) : (
+                          <span style="font-size: 0.75rem; color: #94a3b8;">
+                            コードなし
+                          </span>
+                        )}
+                      </td>
+
+                      <td style="padding: 6px 8px; color: #334155; font-size: 0.85rem; white-space: nowrap;">
+                        <div>
+                          {item.check_in_date} 〜 {item.check_out_date}
                         </div>
-                      ) : item.status === 'checked_in' ? (
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; justify-content: center;">
-                          <span style="font-size: 0.8rem; color: #16a34a; font-weight: bold;">✅ Checked-In&nbsp;</span>
-                          <button
-                            onclick={`cancelReservation('${item.id}')`}
-                            style="width: 100px; padding: 6px 0; background: #64748b; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
-                          >
-                            Cancel
-                          </button>
+                        <div style="color: #2563eb; font-weight: bold; margin-top: 2px;">
+                          🕒 到着: {item.arrival_time || "未設定"}
                         </div>
-                      
-                      ) : item.status === 'cancelled' ? (
-                        <span style="font-size: 0.8rem; color: #dc2626; font-weight: bold;">
-                          Cancelled
-                        </span>
-                      ) : (
-                        <span style="font-size: 0.8rem; color: #64748b;">
-                          No Action
-                        </span>
-                      )}
-                    </td>
+                      </td>
 
-                    <td style="padding: 6px 8px; color: #0f172a;">
-                      <div style="max-width: 12em; word-break: break-all; font-weight: bold; font-size: 1rem; margin-bottom: 4px;">{item.guest_name}</div>
-                      {item.reservation_code ? (
-                        <span style="display: inline-block; background: #f1f5f9; color: #0369a1; border: 1px solid #cbd5e1; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-family: monospace; font-weight: bold; letter-spacing: 1px;">
-                          ID: {item.reservation_code}
-                        </span>
-                      ) : (
-                        <span style="font-size: 0.75rem; color: #94a3b8;">コードなし</span>
-                      )}
-                    </td>
+                      <td style="padding: 6px 8px; color: #334155; text-align: right; white-space: nowrap;">
+                        <div>{item.guests_count || 1}名</div>
+                        <div style="font-weight: bold; color: #0f172a;">
+                          {item.payment_status === "paid" ? "✓ " : ""}
+                          {formatCurrency(item.total_amount)}
+                        </div>
+                      </td>
 
-                    <td style="padding: 6px 8px; color: #334155; font-size: 0.85rem; white-space: nowrap;">
-                      <div>{item.check_in_date} 〜 {item.check_out_date}</div>
-                      <div style="color: #2563eb; font-weight: bold; margin-top: 2px;">
-                        🕒 到着: {item.arrival_time || '未設定'}
-                      </div>
-                    </td>
-
-                    <td style="padding: 6px 8px; color: #334155; text-align: right; white-space: nowrap;">
-                      <div>{item.guests_count || 1}名</div>
-                      <div style="font-weight: bold; color: #0f172a;">
-                        {item.payment_status === 'paid' ? '✓ ' : ''}{formatCurrency(item.total_amount)}
-                      </div>
-                    </td>
-
-                    <td style="padding: 6px 8px; color: #334155; font-size: 0.85rem;">
-                      <div style="max-width: 22em; word-break: break-all;">{item.guest_email}</div>
-                      <div style="max-width: 7em; word-break: break-all;">
-                        {item.guest_phone || '電話番号なし'}
-                      </div>
-                    </td>
-
-                  </tr>
-                );
-              })
-            ) : (
-              <tr>
-                <td colspan="6" style="padding: 32px; text-align: center; color: #94a3b8;">
-                  予約データがありません。
-                </td>
-              </tr>
-            )}
+                      <td style="padding: 6px 8px; color: #334155; font-size: 0.85rem;">
+                        <div style="max-width: 22em; word-break: break-all;">
+                          {item.guest_email}
+                        </div>
+                        <div style="max-width: 7em; word-break: break-all;">
+                          {item.guest_phone || "電話番号なし"}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td
+                    colspan="6"
+                    style="padding: 32px; text-align: center; color: #94a3b8;"
+                  >
+                    予約データがありません。
+                  </td>
+                </tr>
+              )
+            }
           </tbody>
         </table>
       </div>
@@ -208,105 +281,398 @@ const formatCurrency = (amount) => {
     <!-- 管理画面アクション用スクリプト -->
     <script is:inline>
       async function approveReservation(reservationId) {
-        if (!confirm('この予約リクエストを承認し、ゲストに確定メールを送信しますか？')) {
+        if (
+          !confirm(
+            "この予約リクエストを承認し、ゲストに確定メールを送信しますか？",
+          )
+        ) {
           return;
         }
 
         try {
-          const res = await fetch('/api/admin/approve-reservation', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ reservationId })
+          const res = await fetch("/api/admin/approve-reservation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ reservationId }),
           });
 
           const result = await res.json();
 
           if (res.ok) {
-            alert('予約を承認し、確定メールを送信しました！');
+            alert("予約を承認し、確定メールを送信しました！");
             location.reload();
           } else {
-            alert('エラー: ' + (result.error || '処理に失敗しました。'));
+            if (result.approved === true) {
+              alert(
+                "予約は承認済みですが、確定メールの送信を確認できませんでした。\n" +
+                  (result.error || "メールの送信状況を確認してください。"),
+              );
+            } else {
+              alert("エラー: " + (result.error || "処理に失敗しました。"));
+            }
           }
         } catch (err) {
-          console.error('Approve error:', err);
-          alert('通信エラーが発生しました。');
+          console.error("Approve error:", err);
+          alert("通信エラーが発生しました。");
+        }
+      }
+
+      async function resendConfirmationEmail(reservationId) {
+        if (
+          !confirm(
+            "確定メールを再送しますか？\n\n" +
+              "・事前登録が未完了で、登録期限内の予約が対象です。\n" +
+              "・再送すると、以前の事前登録リンクは無効になります。",
+          )
+        ) {
+          return;
+        }
+
+        try {
+          const res = await fetch("/api/admin/resend-confirmation-email", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ reservationId }),
+          });
+
+          const result = await res.json();
+
+          if (res.ok && result.success) {
+            alert("確定メールを再送しました。");
+          } else {
+            alert(
+              "メールを再送できませんでした。\n" +
+                (result.error || "予約状態や登録期限を確認してください。"),
+            );
+          }
+        } catch (err) {
+          console.error("Resend confirmation email error:", err);
+          alert("通信エラーが発生しました。");
         }
       }
 
       async function rejectReservation(reservationId) {
-        if (!confirm('この予約リクエストを【却下（キャンセル）】し、ゲストにお断りメールを送信しますか？')) {
+        if (
+          !confirm(
+            "この予約リクエストを【却下（キャンセル）】し、ゲストにお断りメールを送信しますか？",
+          )
+        ) {
           return;
         }
 
         try {
-          const res = await fetch('/api/admin/reject-reservation', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ reservationId })
+          const res = await fetch("/api/admin/reject-reservation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ reservationId }),
           });
 
           const result = await res.json();
 
           if (res.ok) {
-            alert('予約を却下し、お断りメールを送信しました。');
+            alert("予約を却下し、お断りメールを送信しました。");
             location.reload();
           } else {
-            alert('エラー: ' + (result.error || '処理に失敗しました。'));
+            alert("エラー: " + (result.error || "処理に失敗しました。"));
           }
         } catch (err) {
-          console.error('Reject error:', err);
-          alert('通信エラーが発生しました。');
+          console.error("Reject error:", err);
+          alert("通信エラーが発生しました。");
         }
       }
 
       async function cancelReservation(reservationId) {
-        if (!confirm('この予約を【キャンセル】扱いとし、宿泊枠を再開放してゲストにメールを送信しますか？')) {
+        if (
+          !confirm(
+            "この予約を【キャンセル】扱いとし、宿泊枠を再開放してゲストにメールを送信しますか？",
+          )
+        ) {
           return;
         }
 
         try {
-          const res = await fetch('/api/admin/cancel-reservation', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ reservationId })
+          const res = await fetch("/api/admin/cancel-reservation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ reservationId }),
           });
 
           const result = await res.json();
 
           if (res.ok) {
-            alert('予約をキャンセルし、在庫を再開放しました。');
+            alert("予約をキャンセルし、在庫を再開放しました。");
             location.reload();
           } else {
-            alert('エラー: ' + (result.error || '処理に失敗しました。'));
+            alert("エラー: " + (result.error || "処理に失敗しました。"));
           }
         } catch (err) {
-          console.error('Cancel error:', err);
-          alert('通信エラーが発生しました。');
+          console.error("Cancel error:", err);
+          alert("通信エラーが発生しました。");
         }
       }
 
       async function quickCheckIn(reservationId) {
-        if (!confirm('この予約をチェックイン済みに変更しますか？')) return;
+        if (!confirm("この予約をチェックイン済みに変更しますか？")) return;
 
         try {
-          const res = await fetch('/api/admin/check-in', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ reservationId })
+          const res = await fetch("/api/admin/check-in", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ reservationId }),
           });
 
           const data = await res.json();
           if (res.ok) {
-            alert(data.alreadyCheckedIn ? 'すでにチェックイン済みです。' : 'チェックイン処理が完了しました！');
+            alert(
+              data.alreadyCheckedIn
+                ? "すでにチェックイン済みです。"
+                : "チェックイン処理が完了しました！",
+            );
             location.reload();
           } else {
-            alert('エラー: ' + (data.error || '処理に失敗しました。'));
+            alert("エラー: " + (data.error || "処理に失敗しました。"));
           }
         } catch (err) {
           console.error(err);
-          alert('通信エラーが発生しました。');
+          alert("通信エラーが発生しました。");
+        }
+      }
+
+      let guestEditorReservationId = "";
+      let guestEditorGuestCount = 0;
+
+      function closeGuestEditor() {
+        document.getElementById("guestEditor").style.display = "none";
+        document.getElementById("guestEditorFields").innerHTML = "";
+        document.getElementById("guestEditorMessage").textContent = "";
+      }
+
+      async function openReservationGuestEditor(reservationId) {
+        const message = document.getElementById("guestEditorMessage");
+        const fields = document.getElementById("guestEditorFields");
+        const panel = document.getElementById("guestEditor");
+
+        message.textContent = "宿泊者情報を読み込んでいます…";
+        fields.innerHTML = "";
+        panel.style.display = "block";
+        guestEditorReservationId = reservationId;
+
+        try {
+          const res = await fetch(
+            `/api/admin/reservation-guests?reservationId=${encodeURIComponent(reservationId)}`,
+            { cache: "no-store" }
+          );
+          const data = await res.json();
+
+          if (!res.ok) {
+            message.textContent = data.error || "宿泊者情報を取得できませんでした。";
+            return;
+          }
+
+          const reservation = data.reservation;
+          const guests = data.guests || [];
+          guestEditorGuestCount = Math.max(
+            1,
+            Math.min(20, Number(reservation.guests_count) || 1)
+          );
+
+          if (guests.length > guestEditorGuestCount) {
+            message.textContent = "既存の宿泊者データが予約人数を超えています。管理者による確認が必要です。";
+            return;
+          }
+
+          document.getElementById("guestEditorReservation").textContent =
+            `予約番号：${reservation.reservation_code || "不明"} ／ 予約者：${reservation.guest_name || "不明"} ／ 予約人数：${guestEditorGuestCount}名`;
+
+          const labels = [
+            ["guest_name", "氏名", 200],
+            ["guest_address", "住所", 500],
+            ["guest_contact", "連絡先", 200],
+            ["guest_occupation", "職業", 200],
+            ["nationality", "国籍", 200],
+            ["passport_number", "パスポート番号", 200]
+          ];
+
+          fields.innerHTML = "";
+
+          for (let i = 0; i < guestEditorGuestCount; i++) {
+            const guest = guests[i] || {};
+            const verified = guest.identity_status === "verified";
+            const section = document.createElement("section");
+            section.style.cssText = "border:1px solid #cbd5e1;border-radius:8px;padding:14px;margin-top:14px;";
+
+            const heading = document.createElement("h3");
+            heading.textContent = `宿泊者 ${i + 1}${i === 0 ? "（代表者）" : ""}${verified ? "（本人確認済み・編集不可）" : ""}`;
+            heading.style.marginTop = "0";
+            section.appendChild(heading);
+
+            const status = document.createElement("p");
+            const identityLabel = guest.identity_status === "verified" ? "確認済み" : "未確認";
+            status.textContent = `登録状況：${guest.precheckin_completed_at || guest.guest_register_completed_at ? "登録済み" : "未登録"} ／ 本人確認：${identityLabel}`;
+            status.style.color = "#334155";
+            const identityStatusColor = guest.identity_status === "verified" ? "#15803d" : "#f07800";
+            status.innerHTML = "";
+            const registrationText = document.createElement("span");
+            registrationText.textContent = `登録状況：${guest.precheckin_completed_at || guest.guest_register_completed_at ? "登録済み" : "未登録"}`;
+            const identityText = document.createElement("span");
+            identityText.textContent = ` ／ 本人確認：${identityLabel}`;
+            identityText.style.color = identityStatusColor;
+            identityText.style.fontWeight = "bold";
+            status.append(registrationText, identityText);
+            section.appendChild(status);
+
+            for (const [key, label, maxLength] of labels) {
+              const wrapper = document.createElement("div");
+              wrapper.style.marginBottom = "10px";
+
+              const fieldLabel = document.createElement("label");
+              fieldLabel.textContent = label + "（必須）";
+              fieldLabel.style.cssText = "display:block;font-weight:600;margin-bottom:4px;";
+              fieldLabel.htmlFor = `guest-${i}-${key}`;
+
+              const input = document.createElement("input");
+              input.id = `guest-${i}-${key}`;
+              input.dataset.guestIndex = String(i);
+              input.dataset.field = key;
+              input.type = "text";
+              input.value = guest[key] || "";
+              input.maxLength = maxLength;
+              input.required = true;
+              input.autocomplete = "off";
+              input.disabled = verified;
+              input.style.cssText = "box-sizing:border-box;width:100%;padding:9px;border:1px solid #94a3b8;border-radius:5px;";
+
+              wrapper.appendChild(fieldLabel);
+              wrapper.appendChild(input);
+              section.appendChild(wrapper);
+            }
+
+            if (!verified && guest.id) {
+              const verifyButton = document.createElement("button");
+              verifyButton.type = "button";
+              verifyButton.textContent = "対面確認済みとして記録";
+              verifyButton.style.cssText = "background:#1d4ed8;color:white;border:0;border-radius:6px;padding:10px 14px;font-weight:bold;cursor:pointer;margin-top:8px;";
+              verifyButton.addEventListener("click", () => {
+                verifyReservationGuest(guest.id, guest.guest_name || `宿泊者 ${i + 1}`);
+              });
+              section.appendChild(verifyButton);
+            }
+
+            fields.appendChild(section);
+          }
+
+          message.textContent = "必須項目を入力し、保存してください。保存しても本人確認済みにはなりません。";
+        } catch (err) {
+          console.error("宿泊者情報取得エラー:", err);
+          message.textContent = "通信エラーが発生しました。";
+        }
+      }
+
+async function verifyReservationGuest(guestId, guestName) {
+        const message = document.getElementById("guestEditorMessage");
+
+        const confirmed = confirm(
+          `宿泊者「${guestName}」について、本人確認書類を対面で確認し、本人と一致することを確認しましたか？\n\n実際に確認済みの場合のみ「OK」を押してください。`
+        );
+
+        if (!confirmed) return;
+
+        message.textContent = "本人確認を記録しています…";
+
+        try {
+          const res = await fetch("/api/admin/verify-guest", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            cache: "no-store",
+            body: JSON.stringify({
+              reservationId: guestEditorReservationId,
+              guestId,
+              confirmed: true
+            })
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            message.textContent = data.error || "本人確認を記録できませんでした。";
+            return;
+          }
+
+          message.textContent = data.message || "本人確認を記録しました。";
+          await openReservationGuestEditor(guestEditorReservationId);
+        } catch (err) {
+          console.error("本人確認記録エラー:", err);
+          message.textContent = "通信エラーが発生しました。";
+        }
+      }
+
+      async function saveReservationGuests() {
+        const message = document.getElementById("guestEditorMessage");
+        const button = document.querySelector("#guestEditor button[onclick='saveReservationGuests()']");
+
+        const guests = Array.from({ length: guestEditorGuestCount }, (_, i) => {
+          const guest = {};
+          for (const key of [
+            "guest_name",
+            "guest_address",
+            "guest_contact",
+            "guest_occupation",
+            "nationality",
+            "passport_number"
+          ]) {
+            const input = document.getElementById(`guest-${i}-${key}`);
+            guest[key] = input ? input.value : "";
+          }
+          return guest;
+        });
+
+        if (guests.some(guest => Object.values(guest).some(value => !value.trim()))) {
+          message.textContent = "宿泊者全員の必須項目を入力してください。";
+          return;
+        }
+
+        if (button) button.disabled = true;
+        message.textContent = "保存しています…";
+
+        try {
+          const res = await fetch("/api/admin/save-reservation-guests", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            cache: "no-store",
+            body: JSON.stringify({
+              reservationId: guestEditorReservationId,
+              guests
+            })
+          });
+          const data = await res.json();
+
+          if (!res.ok) {
+            message.textContent = data.error || "保存できませんでした。";
+            return;
+          }
+
+          message.textContent = data.message || "保存しました。";
+          alert("宿泊者情報を保存しました。");
+          closeGuestEditor();
+        } catch (err) {
+          console.error("宿泊者情報保存エラー:", err);
+          message.textContent = "通信エラーが発生しました。";
+        } finally {
+          if (button) button.disabled = false;
         }
       }
     </script>
+      <div id="guestEditor" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(15,23,42,.65); overflow-y:auto; padding:20px;">
+        <div style="max-width:850px; margin:20px auto; background:#fff; border-radius:12px; padding:20px;">
+          <h2 style="margin-top:0;">宿泊者情報の登録・編集</h2>
+          <p id="guestEditorReservation" style="color:#475569;"></p>
+          <div id="guestEditorFields"></div>
+          <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;">
+            <button type="button" onclick="saveReservationGuests()" style="background:#0f766e;color:white;border:0;border-radius:6px;padding:10px 18px;font-weight:bold;cursor:pointer;">保存</button>
+            <button type="button" onclick="closeGuestEditor()" style="background:#e2e8f0;color:#0f172a;border:0;border-radius:6px;padding:10px 18px;cursor:pointer;">閉じる</button>
+          </div>
+          <p id="guestEditorMessage" role="status" style="margin-bottom:0;"></p>
+        </div>
+      </div>
   </body>
 </html>

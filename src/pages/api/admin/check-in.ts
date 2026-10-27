@@ -1,18 +1,39 @@
 
 import type { APIRoute } from 'astro';
 import { supabase } from '../../../lib/supabase';
+import {
+  isAdminAuthorized,
+  adminUnauthorizedResponse,
+} from '../../../lib/admin-auth';
+
+const headers = {
+  'Content-Type': 'application/json; charset=utf-8',
+  'Cache-Control': 'no-store',
+};
 
 export const POST: APIRoute = async ({ request }) => {
+  if (!isAdminAuthorized(request)) {
+    return adminUnauthorizedResponse();
+  }
+
   try {
-    const { reservationId } = await request.json();
+    if (!supabase) {
+      return new Response(
+        JSON.stringify({ error: 'データベースに接続できません。' }),
+        { status: 500, headers }
+      );
+    }
+
+    const body = await request.json();
+    const reservationId =
+      typeof body?.reservationId === 'string'
+        ? body.reservationId.trim()
+        : '';
 
     if (!reservationId) {
       return new Response(
         JSON.stringify({ error: '予約IDが指定されていません。' }),
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' }
-        }
+        { status: 400, headers }
       );
     }
 
@@ -29,7 +50,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     let reservation: any = qrResult.data;
 
-    // QRコードで見つからなければ、短い予約コードで検索
+    // QRコードで見つからなければ予約コードで検索
     if (!reservation) {
       const codeResult = await supabase
         .from('reservations')
@@ -45,8 +66,10 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // それでも見つからず、UUID形式の場合だけIDで検索
-    if (!reservation &&
-        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(reservationId)) {
+    if (
+      !reservation &&
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(reservationId)
+    ) {
       const idResult = await supabase
         .from('reservations')
         .select('*')
@@ -63,67 +86,62 @@ export const POST: APIRoute = async ({ request }) => {
     if (!reservation) {
       return new Response(
         JSON.stringify({ error: '該当する予約が見つかりませんでした。' }),
-        {
-          status: 404,
-          headers: { 'Content-Type': 'application/json' }
-        }
+        { status: 404, headers }
       );
     }
 
-    // チェックイン状態と支払状態を更新
-    const updates: { status?: string; payment_status?: string } = {};
+    // 本人確認全員分と支払済み状態をDB関数側で検証してからチェックイン
+    const { data: result, error: rpcError } = await supabase.rpc(
+      'complete_admin_checkin',
+      { p_reservation_id: reservation.id }
+    );
 
-    if (reservation.status !== 'checked_in') {
-      updates.status = 'checked_in';
+    if (rpcError) {
+      console.error('チェックイン判定関数エラー:', rpcError.message);
+      return new Response(
+        JSON.stringify({
+          error: 'チェックイン処理に失敗しました。データベース関数の設定を確認してください。',
+        }),
+        { status: 500, headers }
+      );
     }
 
-    // 現地決済は、実際に代金を受領した後にチェックイン処理を行う運用
-    if (
-      reservation.payment_method !== 'stripe' &&
-      reservation.payment_status !== 'paid'
-    ) {
-      updates.payment_status = 'paid';
+    if (!result?.success) {
+      return new Response(
+        JSON.stringify({
+          error: result?.error || 'チェックインできませんでした。',
+        }),
+        { status: 409, headers }
+      );
     }
 
-    let updatedReservation = reservation;
+    // DBで更新された最新の予約情報を取得
+    const { data: updatedReservation, error: refreshError } = await supabase
+      .from('reservations')
+      .select('*')
+      .eq('id', reservation.id)
+      .single();
 
-    if (Object.keys(updates).length > 0) {
-      const { data, error } = await supabase
-        .from('reservations')
-        .update(updates)
-        .eq('id', reservation.id)
-        .select()
-        .single();
-
-      if (error) {
-        throw new Error(`更新に失敗しました: ${error.message}`);
-      }
-
-      updatedReservation = data;
+    if (refreshError) {
+      throw new Error(`更新後の予約取得に失敗しました: ${refreshError.message}`);
     }
 
     return new Response(
       JSON.stringify({
         success: true,
-        alreadyCheckedIn: reservation.status === 'checked_in',
-        reservation: updatedReservation
+        alreadyCheckedIn: result.alreadyCheckedIn === true,
+        reservation: updatedReservation,
       }),
-      {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      }
+      { status: 200, headers }
     );
   } catch (err: any) {
     console.error('Check-in error:', err);
 
     return new Response(
       JSON.stringify({
-        error: err.message || '予期せぬエラーが発生しました。'
+        error: 'チェックイン処理中にエラーが発生しました。',
       }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
+      { status: 500, headers }
     );
   }
 };
