@@ -103,7 +103,7 @@ export const POST: APIRoute = async ({ request }) => {
     const { data: existing, error: existingError } = await supabase
       .from('reservation_guests')
       .select(
-        'id, identity_status, is_primary_guest, guest_name, guest_address, guest_contact, guest_occupation, nationality, passport_number'
+        'id, is_primary_guest, guest_name, guest_address, guest_contact, guest_occupation, nationality, passport_number'
       )
       .eq('reservation_id', reservationId)
       .order('created_at', { ascending: true })
@@ -122,54 +122,17 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    if (
-      currentGuests.some(
-        (guest) =>
-          guest.identity_status === 'verified' &&
-          (
-            !guest.guest_name ||
-            !guest.guest_address ||
-            !guest.guest_contact ||
-            !guest.guest_occupation ||
-            !guest.nationality ||
-            !guest.passport_number
-          )
-      )
-    ) {
-      return fail(
-        '本人確認済みの宿泊者に未入力項目があります。個別に確認してください。',
-        409
-      );
-    }
-
     const now = new Date().toISOString();
 
     for (let i = 0; i < expectedCount; i++) {
       const input = cleanedGuests[i];
       const current = currentGuests[i];
-
-      if (current?.identity_status === 'verified') {
-        const unchanged = requiredFields.every(
-          (field) => (current[field] || '').trim() === input[field]
-        );
-
-        if (!unchanged) {
-          return fail(
-            '本人確認済みの宿泊者情報は、この画面から変更できません。',
-            409
-          );
-        }
-
-        continue;
-      }
-
       const values = {
         reservation_id: reservationId,
         is_primary_guest: i === 0,
         ...input,
         precheckin_completed_at: now,
         guest_register_completed_at: now,
-        identity_status: 'pending',
         updated_at: now
       };
 
