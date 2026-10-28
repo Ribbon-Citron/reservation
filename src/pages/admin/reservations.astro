@@ -173,16 +173,6 @@ const formatCurrency = (amount) => {
                             >
                               Check-In
                             </button>
-
-                            {item.status === "approved" && (
-                              <button
-                                onclick={`resendConfirmationEmail('${item.id}')`}
-                                style="width: 100px; padding: 6px 0; background: #7c3aed; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
-                              >
-                                メール再送
-                              </button>
-                            )}
-
                             <button
                               onclick={`cancelReservation('${item.id}')`}
                               style="width: 100px; padding: 6px 0; background: #64748b; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
@@ -317,40 +307,6 @@ const formatCurrency = (amount) => {
         }
       }
 
-      async function resendConfirmationEmail(reservationId) {
-        if (
-          !confirm(
-            "確定メールを再送しますか？\n\n" +
-              "・事前登録が未完了で、登録期限内の予約が対象です。\n" +
-              "・再送すると、以前の事前登録リンクは無効になります。",
-          )
-        ) {
-          return;
-        }
-
-        try {
-          const res = await fetch("/api/admin/resend-confirmation-email", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ reservationId }),
-          });
-
-          const result = await res.json();
-
-          if (res.ok && result.success) {
-            alert("確定メールを再送しました。");
-          } else {
-            alert(
-              "メールを再送できませんでした。\n" +
-                (result.error || "予約状態や登録期限を確認してください。"),
-            );
-          }
-        } catch (err) {
-          console.error("Resend confirmation email error:", err);
-          alert("通信エラーが発生しました。");
-        }
-      }
-
       async function rejectReservation(reservationId) {
         if (
           !confirm(
@@ -438,8 +394,68 @@ const formatCurrency = (amount) => {
         }
       }
 
+
       let guestEditorReservationId = "";
       let guestEditorGuestCount = 0;
+
+      const adminGuestFields = [
+        ["guest_name", "氏名", 200],
+        ["guest_address", "住所", 500],
+        ["guest_contact", "連絡先", 200],
+        ["guest_occupation", "職業", 200],
+        ["nationality", "国籍", 200],
+        ["passport_number", "パスポート番号", 200],
+      ];
+
+      function updateAdminGuestFields(index) {
+        const section = document.getElementById(`guest-section-${index}`);
+        if (!section) return;
+
+        const domestic = section.querySelector('[data-role="japan-resident"]');
+        const nationality = document.getElementById(`guest-${index}-nationality`);
+        const passport = document.getElementById(`guest-${index}-passport_number`);
+        const address = document.getElementById(`guest-${index}-guest_address`);
+        const sameAddress = section.querySelector('[data-role="same-address"]');
+
+        if (domestic && domestic.checked) {
+          nationality.value = "";
+          passport.value = "";
+          nationality.disabled = true;
+          passport.disabled = true;
+          nationality.required = false;
+          passport.required = false;
+        } else {
+          nationality.disabled = false;
+          passport.disabled = false;
+          nationality.required = true;
+          passport.required = true;
+        }
+
+        const isSameAddress = index > 0 && sameAddress && sameAddress.checked;
+
+        if (isSameAddress) {
+          const primaryAddress = document.getElementById("guest-0-guest_address");
+          address.value = primaryAddress ? primaryAddress.value : "";
+          address.disabled = true;
+        } else {
+          address.disabled = false;
+        }
+
+        const nationalityLabel = section.querySelector('[data-label-for="nationality"]');
+        const passportLabel = section.querySelector('[data-label-for="passport_number"]');
+
+        if (nationalityLabel) {
+          nationalityLabel.textContent = domestic.checked ? "国籍（国内住所のため入力不要）" : "国籍（必須）";
+        }
+        if (passportLabel) {
+          passportLabel.textContent = domestic.checked ? "パスポート番号（国内住所のため入力不要）" : "パスポート番号（必須）";
+        }
+
+        const addressLabel = section.querySelector('[data-label-for="guest_address"]');
+        if (addressLabel) {
+          addressLabel.textContent = isSameAddress ? "住所（代表者と同じ）" : "住所（必須）";
+        }
+      }
 
       function closeGuestEditor() {
         document.getElementById("guestEditor").style.display = "none";
@@ -465,13 +481,13 @@ const formatCurrency = (amount) => {
           const data = await res.json();
 
           if (!res.ok) {
-            message.textContent =
-              data.error || "宿泊者情報を取得できませんでした。";
+            message.textContent = data.error || "宿泊者情報を取得できませんでした。";
             return;
           }
 
           const reservation = data.reservation;
           const guests = data.guests || [];
+
           guestEditorGuestCount = Math.max(
             1,
             Math.min(20, Number(reservation.guests_count) || 1),
@@ -486,20 +502,10 @@ const formatCurrency = (amount) => {
           document.getElementById("guestEditorReservation").textContent =
             `予約番号：${reservation.reservation_code || "不明"} ／ 予約者：${reservation.guest_name || "不明"} ／ 予約人数：${guestEditorGuestCount}名`;
 
-          const labels = [
-            ["guest_name", "氏名", 200],
-            ["guest_address", "住所", 500],
-            ["guest_contact", "連絡先", 200],
-            ["guest_occupation", "職業", 200],
-            ["nationality", "国籍", 200],
-            ["passport_number", "パスポート番号", 200],
-          ];
-
-          fields.innerHTML = "";
-
           for (let i = 0; i < guestEditorGuestCount; i++) {
             const guest = guests[i] || {};
             const section = document.createElement("section");
+            section.id = `guest-section-${i}`;
             section.style.cssText =
               "border:1px solid #cbd5e1;border-radius:8px;padding:14px;margin-top:14px;";
 
@@ -508,15 +514,65 @@ const formatCurrency = (amount) => {
             heading.style.marginTop = "0";
             section.appendChild(heading);
 
-            for (const [key, label, maxLength] of labels) {
+            if (i > 0) {
+              const sameWrapper = document.createElement("div");
+              sameWrapper.style.marginBottom = "12px";
+
+              const sameLabel = document.createElement("label");
+              sameLabel.style.cssText = "display:flex;gap:8px;align-items:center;";
+
+              const sameCheckbox = document.createElement("input");
+              sameCheckbox.type = "checkbox";
+              sameCheckbox.dataset.role = "same-address";
+              sameCheckbox.checked = false;
+              sameCheckbox.addEventListener("change", () => updateAdminGuestFields(i));
+
+              sameLabel.appendChild(sameCheckbox);
+              sameLabel.append("代表者と同じ住所");
+              sameWrapper.appendChild(sameLabel);
+              section.appendChild(sameWrapper);
+            }
+
+            const domesticWrapper = document.createElement("div");
+            domesticWrapper.style.cssText = "margin-bottom:12px;";
+
+            const domesticLabel = document.createElement("label");
+            domesticLabel.style.cssText = "display:flex;gap:8px;align-items:center;font-weight:600;";
+
+            const domesticCheckbox = document.createElement("input");
+            domesticCheckbox.type = "checkbox";
+            domesticCheckbox.dataset.role = "japan-resident";
+
+            // 国籍・パスポートが両方空欄の既存データは国内住所ありとして初期表示
+            domesticCheckbox.checked =
+              !String(guest.nationality || "").trim() &&
+              !String(guest.passport_number || "").trim();
+
+            domesticCheckbox.addEventListener("change", () => updateAdminGuestFields(i));
+
+            domesticLabel.appendChild(domesticCheckbox);
+            domesticLabel.append("日本国内に住所がある");
+            domesticWrapper.appendChild(domesticLabel);
+
+            const domesticHint = document.createElement("p");
+            domesticHint.textContent =
+              "チェックすると、国籍・パスポート番号は入力不要になります。";
+            domesticHint.style.cssText = "font-size:0.85rem;color:#64748b;margin:5px 0 0;";
+            domesticWrapper.appendChild(domesticHint);
+            section.appendChild(domesticWrapper);
+
+            for (const [key, label, maxLength] of adminGuestFields) {
               const wrapper = document.createElement("div");
               wrapper.style.marginBottom = "10px";
 
               const fieldLabel = document.createElement("label");
-              fieldLabel.textContent = label + "（必須）";
-              fieldLabel.style.cssText =
-                "display:block;font-weight:600;margin-bottom:4px;";
+              fieldLabel.style.cssText = "display:block;font-weight:600;margin-bottom:4px;";
               fieldLabel.htmlFor = `guest-${i}-${key}`;
+              fieldLabel.dataset.labelFor = key;
+              fieldLabel.textContent =
+                key === "nationality" || key === "passport_number"
+                  ? `${label}（必須）`
+                  : `${label}（必須）`;
 
               const input = document.createElement("input");
               input.id = `guest-${i}-${key}`;
@@ -525,20 +581,30 @@ const formatCurrency = (amount) => {
               input.type = "text";
               input.value = guest[key] || "";
               input.maxLength = maxLength;
-              input.required = true;
+              input.required =
+                key !== "nationality" && key !== "passport_number";
               input.autocomplete = "off";
               input.style.cssText =
                 "box-sizing:border-box;width:100%;padding:9px;border:1px solid #94a3b8;border-radius:5px;";
+
+              if (key === "guest_address" && i === 0) {
+                input.addEventListener("input", () => {
+                  for (let j = 1; j < guestEditorGuestCount; j++) {
+                    updateAdminGuestFields(j);
+                  }
+                });
+              }
 
               wrapper.appendChild(fieldLabel);
               wrapper.appendChild(input);
               section.appendChild(wrapper);
             }
+
             fields.appendChild(section);
+            updateAdminGuestFields(i);
           }
 
-          message.textContent =
-            "必須項目を入力し、保存してください。";
+          message.textContent = "必須項目を入力し、保存してください。";
         } catch (err) {
           console.error("宿泊者情報取得エラー:", err);
           message.textContent = "通信エラーが発生しました。";
@@ -552,7 +618,10 @@ const formatCurrency = (amount) => {
         );
 
         const guests = Array.from({ length: guestEditorGuestCount }, (_, i) => {
-          const guest = {};
+          const section = document.getElementById(`guest-section-${i}`);
+          const domestic = section.querySelector('[data-role="japan-resident"]').checked;
+          const guest = { japan_resident: domestic };
+
           for (const key of [
             "guest_name",
             "guest_address",
@@ -562,17 +631,29 @@ const formatCurrency = (amount) => {
             "passport_number",
           ]) {
             const input = document.getElementById(`guest-${i}-${key}`);
-            guest[key] = input ? input.value : "";
+            guest[key] = input ? input.value.trim() : "";
           }
+
+          if (domestic) {
+            guest.nationality = "";
+            guest.passport_number = "";
+          }
+
           return guest;
         });
 
         if (
           guests.some((guest) =>
-            Object.values(guest).some((value) => !value.trim()),
+            ["guest_name", "guest_address", "guest_contact", "guest_occupation"]
+              .some((key) => !guest[key]),
+          ) ||
+          guests.some((guest) =>
+            !guest.japan_resident &&
+            (!guest.nationality || !guest.passport_number),
           )
         ) {
-          message.textContent = "宿泊者全員の必須項目を入力してください。";
+          message.textContent =
+            "氏名・住所・連絡先・職業を入力してください。国内住所がない場合は国籍・パスポート番号も必須です。";
           return;
         }
 
@@ -589,6 +670,7 @@ const formatCurrency = (amount) => {
               guests,
             }),
           });
+
           const data = await res.json();
 
           if (!res.ok) {
@@ -606,6 +688,7 @@ const formatCurrency = (amount) => {
           if (button) button.disabled = false;
         }
       }
+
     </script>
     <div
       id="guestEditor"

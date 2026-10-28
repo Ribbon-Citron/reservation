@@ -1,3 +1,4 @@
+
 import type { APIRoute } from 'astro';
 import { supabase } from '../../../lib/supabase';
 import {
@@ -20,9 +21,7 @@ const requiredFields = [
   'guest_name',
   'guest_address',
   'guest_contact',
-  'guest_occupation',
-  'nationality',
-  'passport_number'
+  'guest_occupation'
 ] as const;
 
 export const POST: APIRoute = async ({ request }) => {
@@ -55,13 +54,18 @@ export const POST: APIRoute = async ({ request }) => {
         return fail('宿泊者情報の形式が正しくありません。', 400);
       }
 
+      if (typeof guest.japan_resident !== 'boolean') {
+        return fail('国内住所の設定が正しくありません。', 400);
+      }
+
+      const domestic = guest.japan_resident;
       const cleaned: Record<string, string> = {};
 
       for (const field of requiredFields) {
         const value = guest[field];
 
         if (typeof value !== 'string' || !value.trim()) {
-          return fail('宿泊者全員の必須項目を入力してください。', 400);
+          return fail('氏名・住所・連絡先・職業は必須です。', 400);
         }
 
         const text = value.trim();
@@ -74,6 +78,30 @@ export const POST: APIRoute = async ({ request }) => {
         cleaned[field] = text;
       }
 
+      for (const field of ['nationality', 'passport_number'] as const) {
+        const value = guest[field];
+
+        if (typeof value !== 'string') {
+          return fail('国籍・パスポート番号の入力形式が正しくありません。', 400);
+        }
+
+        const text = value.trim();
+
+        if (text.length > 200) {
+          return fail('入力文字数が上限を超えています。', 400);
+        }
+
+        if (!domestic && !text) {
+          return fail(
+            '国内住所がない場合は、国籍とパスポート番号が必須です。',
+            400
+          );
+        }
+
+        cleaned[field] = domestic ? '' : text;
+      }
+
+      // japan_resident はDB列に追加せず、検証にだけ使用する
       cleanedGuests.push(cleaned);
     }
 
@@ -127,6 +155,7 @@ export const POST: APIRoute = async ({ request }) => {
     for (let i = 0; i < expectedCount; i++) {
       const input = cleanedGuests[i];
       const current = currentGuests[i];
+
       const values = {
         reservation_id: reservationId,
         is_primary_guest: i === 0,
@@ -155,6 +184,16 @@ export const POST: APIRoute = async ({ request }) => {
           throw error;
         }
       }
+    }
+
+    // 代表者の氏名を予約情報にも反映する
+    const { error: updateReservationError } = await supabase
+      .from('reservations')
+      .update({ guest_name: cleanedGuests[0].guest_name })
+      .eq('id', reservationId);
+
+    if (updateReservationError) {
+      throw updateReservationError;
     }
 
     return new Response(
