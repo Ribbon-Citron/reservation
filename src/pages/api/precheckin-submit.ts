@@ -1,3 +1,4 @@
+
 import type { APIRoute } from 'astro';
 import { supabase } from '../../lib/supabase';
 import { hashPrecheckinToken } from '../../lib/precheckin-token';
@@ -36,25 +37,28 @@ export const POST: APIRoute = async ({ request }) => {
       'guest_name',
       'guest_address',
       'guest_contact',
-      'guest_occupation',
-      'nationality',
-      'passport_number'
+      'guest_occupation'
     ] as const;
 
-    const cleanedGuests: Array<Record<string, string>> = [];
+    const cleanedGuests: Array<Record<string, string | boolean>> = [];
 
     for (const guest of guests) {
       if (!guest || typeof guest !== 'object' || Array.isArray(guest)) {
         return fail('宿泊者情報の形式が正しくありません。', 400);
       }
 
-      const cleaned: Record<string, string> = {};
+      if (typeof guest.japan_resident !== 'boolean') {
+        return fail('日本国内の住所について選択してください。', 400);
+      }
+
+      const cleaned: Record<string, string | boolean> = {};
+      const japanResident = guest.japan_resident;
 
       for (const field of requiredFields) {
         const value = guest[field];
 
         if (typeof value !== 'string' || !value.trim()) {
-          return fail('宿泊者全員の必須項目を入力してください。', 400);
+          return fail('氏名・住所・連絡先・職業は必須項目です。', 400);
         }
 
         const text = value.trim();
@@ -67,19 +71,39 @@ export const POST: APIRoute = async ({ request }) => {
         cleaned[field] = text;
       }
 
+      for (const field of ['nationality', 'passport_number'] as const) {
+        const value = guest[field];
+
+        if (typeof value !== 'string') {
+          return fail('国籍・パスポート番号の入力形式が正しくありません。', 400);
+        }
+
+        const text = value.trim();
+
+        if (!japanResident && !text) {
+          return fail('日本国内に住所がない場合は、国籍・パスポート番号を入力してください。', 400);
+        }
+
+        if (text.length > 200) {
+          return fail('入力文字数が上限を超えています。', 400);
+        }
+
+        cleaned[field] = japanResident ? '' : text;
+      }
+
+      cleaned.japan_resident = japanResident;
       cleanedGuests.push(cleaned);
     }
 
     const tokenHash = await hashPrecheckinToken(token);
 
-    // DB関数内で予約・有効期限・人数を再検証し、全員分を一括保存する
+    // DB関数内で予約・有効期限・人数・宿泊者情報を再検証し、一括保存する
     const { data, error } = await supabase.rpc('save_precheckin_guests', {
       p_token_hash: tokenHash,
       p_guests: cleanedGuests
     });
 
     if (error) {
-      // 個人情報や入力値はログに記録しない
       console.error('事前登録保存処理でエラーが発生しました。');
       return fail(
         '登録リンクが無効か、有効期限切れ、または保存できない状態です。入力内容をご確認ください。',
@@ -99,7 +123,6 @@ export const POST: APIRoute = async ({ request }) => {
       { status: 200, headers: responseHeaders }
     );
   } catch {
-    // 個人情報や入力値、例外の詳細はログに記録しない
     console.error('事前登録APIでエラーが発生しました。');
     return fail('保存中にエラーが発生しました。再度お試しください。', 500);
   }

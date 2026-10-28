@@ -10,7 +10,9 @@ export const prerender = false;
     <meta name="referrer" content="no-referrer" />
     <title>宿泊者事前登録</title>
     <style>
-      :global(*) { box-sizing: border-box; }
+      :global(*) {
+        box-sizing: border-box;
+      }
       :global(body) {
         margin: 0;
         padding: 24px 16px;
@@ -25,7 +27,10 @@ export const prerender = false;
         background: white;
         border-radius: 12px;
       }
-      h1 { font-size: 1.5rem; margin-top: 0; }
+      h1 {
+        font-size: 1.5rem;
+        margin-top: 0;
+      }
       .notice {
         padding: 12px;
         background: #eff6ff;
@@ -38,9 +43,42 @@ export const prerender = false;
         border: 1px solid #cbd5e1;
         border-radius: 8px;
       }
-      .guest h2 { font-size: 1.1rem; margin-top: 0; }
-      label { display: block; margin-top: 14px; font-weight: bold; }
-      input {
+      .guest h2 {
+        font-size: 1.1rem;
+        margin-top: 0;
+      }
+      /* 通常の入力項目は、ラベルと入力欄を縦に配置 */
+      label:not(.choice) {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+        margin-top: 14px;
+        font-weight: bold;
+      }
+
+      /* チェック欄は横並びのまま維持 */
+      label.choice {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        margin-top: 14px;
+        font-weight: normal;
+      }
+
+      /* 入力欄の余白 */
+      input:not([type="checkbox"]):not([type="radio"]) {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        margin-top: 0;
+        padding: 11px;
+        border: 1px solid #94a3b8;
+        border-radius: 6px;
+        font: inherit;
+      }
+      input:not([type="checkbox"]):not([type="radio"]) {
         display: block;
         width: 100%;
         margin-top: 6px;
@@ -48,6 +86,27 @@ export const prerender = false;
         border: 1px solid #94a3b8;
         border-radius: 6px;
         font: inherit;
+      }
+      .choice {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 14px;
+        font-weight: normal;
+      }
+      .choice input {
+        width: auto;
+        margin: 0;
+      }
+      .hint {
+        margin: 6px 0 0;
+        color: #475569;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+      input:disabled {
+        background: #e2e8f0;
+        color: #64748b;
       }
       button {
         width: 100%;
@@ -59,10 +118,40 @@ export const prerender = false;
         color: white;
         font-size: 1rem;
         font-weight: bold;
+        cursor: pointer;
       }
-      #message { margin-top: 16px; line-height: 1.6; }
+      button:disabled {
+        opacity: 0.6;
+        cursor: wait;
+      }
+      #message {
+        margin-top: 16px;
+        line-height: 1.6;
+      }
       @media (max-width: 480px) {
-        main { padding: 18px; }
+        main {
+          padding: 18px;
+        }
+      }
+
+      .form-field {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .form-field label {
+        display: block;
+        margin-top: 14px;
+        font-weight: bold;
+      }
+
+      .form-field input:not([type="checkbox"]):not([type="radio"]) {
+        display: block;
+        width: 100%;
+        margin-top: 6px;
       }
     </style>
   </head>
@@ -84,56 +173,159 @@ export const prerender = false;
     </main>
 
     <script>
-      const form = document.querySelector('#precheckin-form');
-      const fields = document.querySelector('#guest-fields');
-      const loading = document.querySelector('#loading');
-      const message = document.querySelector('#message');
-      const token = new URLSearchParams(window.location.search).get('token') || '';
+      const form = document.querySelector("#precheckin-form");
+      const fields = document.querySelector("#guest-fields");
+      const loading = document.querySelector("#loading");
+      const message = document.querySelector("#message");
+      const token =
+        new URLSearchParams(window.location.search).get("token") || "";
 
       const labels = [
-        ['guest_name', '氏名', 'text'],
-        ['guest_address', '住所', 'text'],
-        ['guest_contact', '連絡先（電話番号など）', 'tel'],
-        ['guest_occupation', '職業', 'text'],
-        ['nationality', '国籍', 'text'],
-        ['passport_number', 'パスポート番号', 'text']
+        ["guest_name", "氏名", "text"],
+        ["guest_address", "住所", "text"],
+        ["guest_contact", "連絡先（電話番号など）", "tel"],
+        ["guest_occupation", "職業", "text"],
+        ["nationality", "国籍", "text"],
+        ["passport_number", "パスポート番号", "text"],
       ];
+
+      function updateGuestFields(section, isPrimary) {
+        const japanResident = section.querySelector('[name="japan_resident"]');
+        const address = section.querySelector('[name="guest_address"]');
+        const nationality = section.querySelector('[name="nationality"]');
+        const passport = section.querySelector('[name="passport_number"]');
+        const sameAddress = section.querySelector('[name="same_address"]');
+
+        nationality.disabled = japanResident.checked;
+        passport.disabled = japanResident.checked;
+        nationality.required = !japanResident.checked;
+        passport.required = !japanResident.checked;
+
+        if (japanResident.checked) {
+          nationality.value = "";
+          passport.value = "";
+        }
+
+        if (!isPrimary && sameAddress.checked) {
+          const primaryAddress = fields.querySelector(
+            '.guest:first-child [name="guest_address"]',
+          );
+          address.value = primaryAddress ? primaryAddress.value : "";
+          address.readOnly = true;
+        } else {
+          address.readOnly = false;
+        }
+      }
 
       async function initialize() {
         try {
           const response = await fetch(
-            '/api/precheckin-validate?token=' + encodeURIComponent(token),
-            { cache: 'no-store' }
+            "/api/precheckin-validate?token=" + encodeURIComponent(token),
+            { cache: "no-store" },
           );
           const result = await response.json();
 
           if (!response.ok || !result.valid) {
-            throw new Error(result.error || '登録リンクが無効か、有効期限が切れています。');
+            throw new Error(
+              result.error || "登録リンクが無効か、有効期限が切れています。",
+            );
           }
 
           for (let i = 0; i < result.guestsCount; i++) {
-            const section = document.createElement('section');
-            section.className = 'guest';
+            const section = document.createElement("section");
+            section.className = "guest";
 
-            const heading = document.createElement('h2');
-            heading.textContent = i === 0
-              ? '代表者（1人目）'
-              : '宿泊者 ' + (i + 1) + '人目';
+            const heading = document.createElement("h2");
+            heading.textContent =
+              i === 0 ? "代表者（1人目）" : "宿泊者 " + (i + 1) + "人目";
             section.appendChild(heading);
 
+            if (i > 0) {
+              const sameAddressLabel = document.createElement("label");
+              sameAddressLabel.className = "choice";
+
+              const sameAddress = document.createElement("input");
+              sameAddress.type = "checkbox";
+              sameAddress.name = "same_address";
+
+              sameAddressLabel.appendChild(sameAddress);
+              sameAddressLabel.append("代表者と同じ住所にする");
+              section.appendChild(sameAddressLabel);
+
+              sameAddress.addEventListener("change", () => {
+                updateGuestFields(section, false);
+              });
+            }
             for (const [name, labelText, type] of labels) {
-              const label = document.createElement('label');
+              const field = document.createElement("div");
+              field.className = "form-field";
+
+              const label = document.createElement("label");
               label.textContent = labelText;
 
-              const input = document.createElement('input');
+              const input = document.createElement("input");
               input.name = name;
               input.type = type;
-              input.required = true;
-              input.maxLength = name === 'guest_address' ? 500 : 200;
-              input.autocomplete = 'off';
+              input.required = !["nationality", "passport_number"].includes(
+                name,
+              );
+              input.maxLength = name === "guest_address" ? 500 : 200;
+              input.autocomplete = "off";
 
-              label.appendChild(input);
-              section.appendChild(label);
+              if (name === "guest_address" && i > 0) {
+                input.addEventListener("input", () => {
+                  const sameAddress = section.querySelector(
+                    '[name="same_address"]',
+                  );
+                  if (sameAddress?.checked) sameAddress.checked = false;
+                });
+              }
+
+              label.htmlFor = name + "_" + i;
+              input.id = name + "_" + i;
+
+              field.appendChild(label);
+              field.appendChild(input);
+              section.appendChild(field);
+
+              if (name === "guest_address" && i === 0) {
+                input.addEventListener("input", () => {
+                  for (const guestSection of fields.querySelectorAll(
+                    ".guest",
+                  )) {
+                    if (guestSection === section) continue;
+                    const sameAddress = guestSection.querySelector(
+                      '[name="same_address"]',
+                    );
+                    if (sameAddress?.checked) {
+                      updateGuestFields(guestSection, false);
+                    }
+                  }
+                });
+              }
+
+              if (name === "nationality") {
+                const residenceLabel = document.createElement("label");
+                residenceLabel.className = "choice";
+
+                const residence = document.createElement("input");
+                residence.type = "checkbox";
+                residence.name = "japan_resident";
+
+                residenceLabel.appendChild(residence);
+                residenceLabel.append("日本国内に住所がある");
+                section.insertBefore(residenceLabel, field);
+
+                const hint = document.createElement("p");
+                hint.className = "hint";
+                hint.textContent =
+                  "日本国内に住所がある場合はチェックしてください。国籍・パスポート欄は空欄になります。";
+                section.insertBefore(hint, field);
+
+                residence.addEventListener("change", () => {
+                  updateGuestFields(section, i === 0);
+                });
+              }
             }
 
             fields.appendChild(section);
@@ -142,50 +334,59 @@ export const prerender = false;
           loading.hidden = true;
           form.hidden = false;
         } catch (error) {
-          loading.textContent = '';
-          message.textContent = error instanceof Error
-            ? error.message
-            : '登録リンクを確認できませんでした。';
+          loading.textContent = "";
+          message.textContent =
+            error instanceof Error
+              ? error.message
+              : "登録リンクを確認できませんでした。";
         }
       }
 
-      form.addEventListener('submit', async (event) => {
+      form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         const submitButton = form.querySelector('button[type="submit"]');
         submitButton.disabled = true;
-        message.textContent = '事前登録を送信しています…';
+        message.textContent = "事前登録を送信しています…";
 
         try {
-          const sections = Array.from(fields.querySelectorAll('.guest'));
+          const sections = Array.from(fields.querySelectorAll(".guest"));
           const guests = sections.map((section) => {
             const guest = {};
+
             for (const [name] of labels) {
               const input = section.querySelector(`[name="${name}"]`);
-              guest[name] = input.value.trim();
+              guest[name] = input.disabled ? "" : input.value.trim();
             }
+
+            guest.japan_resident = section.querySelector(
+              '[name="japan_resident"]',
+            ).checked;
+
             return guest;
           });
 
-          const response = await fetch('/api/precheckin-submit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            cache: 'no-store',
-            body: JSON.stringify({ token, guests })
+          const response = await fetch("/api/precheckin-submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            cache: "no-store",
+            body: JSON.stringify({ token, guests }),
           });
 
           const result = await response.json();
 
           if (!response.ok || !result.success) {
-            throw new Error(result.error || '登録を保存できませんでした。');
+            throw new Error(result.error || "登録を保存できませんでした。");
           }
 
-          message.textContent = '事前登録を受け付けました。本人確認は現地で行います。';
+          message.textContent =
+            "事前登録を受け付けました。本人確認は現地で行います。";
           form.hidden = true;
         } catch (error) {
-          message.textContent = error instanceof Error
-            ? error.message
-            : '送信に失敗しました。時間をおいて再度お試しください。';
+          message.textContent =
+            error instanceof Error
+              ? error.message
+              : "送信に失敗しました。時間をおいて再度お試しください。";
           submitButton.disabled = false;
         }
       });
