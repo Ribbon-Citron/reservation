@@ -19,9 +19,11 @@ const uuidPattern =
 
 const requiredFields = [
   'guest_name',
+  'gender',
+  'age_group',
   'guest_address',
-  'guest_contact',
-  'guest_occupation'
+  'guest_phone',
+  'guest_email'
 ] as const;
 
 export const POST: APIRoute = async ({ request }) => {
@@ -65,7 +67,10 @@ export const POST: APIRoute = async ({ request }) => {
         const value = guest[field];
 
         if (typeof value !== 'string' || !value.trim()) {
-          return fail('氏名・住所・連絡先・職業は必須です。', 400);
+          return fail(
+            '氏名・性別・年代・住所・電話番号・メールアドレスを入力してください。',
+            400
+          );
         }
 
         const text = value.trim();
@@ -78,11 +83,21 @@ export const POST: APIRoute = async ({ request }) => {
         cleaned[field] = text;
       }
 
+      // メールアドレスの基本形式を確認
+      if (
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleaned.guest_email)
+      ) {
+        return fail('メールアドレスの形式が正しくありません。', 400);
+      }
+
       for (const field of ['nationality', 'passport_number'] as const) {
         const value = guest[field];
 
         if (typeof value !== 'string') {
-          return fail('国籍・パスポート番号の入力形式が正しくありません。', 400);
+          return fail(
+            '国籍・パスポート番号の入力形式が正しくありません。',
+            400
+          );
         }
 
         const text = value.trim();
@@ -101,7 +116,21 @@ export const POST: APIRoute = async ({ request }) => {
         cleaned[field] = domestic ? '' : text;
       }
 
-      // japan_resident はDB列に追加せず、検証にだけ使用する
+      // 職業は任意項目として扱う。既存DB列は維持する。
+      const occupation =
+        typeof guest.guest_occupation === 'string'
+          ? guest.guest_occupation.trim()
+          : '';
+
+      if (occupation.length > 200) {
+        return fail('職業の入力文字数が上限を超えています。', 400);
+      }
+
+      cleaned.guest_occupation = occupation;
+
+      // 旧連絡先列には電話番号を保持し、既存画面との互換性を保つ
+      cleaned.guest_contact = cleaned.guest_phone;
+
       cleanedGuests.push(cleaned);
     }
 
@@ -130,9 +159,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const { data: existing, error: existingError } = await supabase
       .from('reservation_guests')
-      .select(
-        'id, is_primary_guest, guest_name, guest_address, guest_contact, guest_occupation, nationality, passport_number'
-      )
+      .select('id, is_primary_guest')
       .eq('reservation_id', reservationId)
       .order('created_at', { ascending: true })
       .order('id', { ascending: true });
@@ -186,7 +213,7 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
-    // 代表者の氏名を予約情報にも反映する
+    // 代表者の氏名を予約情報にも反映
     const { error: updateReservationError } = await supabase
       .from('reservations')
       .update({ guest_name: cleanedGuests[0].guest_name })
@@ -199,12 +226,12 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(
       JSON.stringify({
         success: true,
-        message: '宿泊者情報を保存しました。本人確認は未完了のままです。'
+        message: '宿泊者情報を保存しました。'
       }),
       { status: 200, headers }
     );
-  } catch {
-    console.error('管理者による宿泊者情報保存処理でエラーが発生しました。');
+  } catch (error) {
+    console.error('管理者による宿泊者情報保存処理でエラーが発生しました。', error);
     return fail('宿泊者情報を保存できませんでした。', 500);
   }
 };
