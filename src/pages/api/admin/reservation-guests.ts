@@ -54,7 +54,7 @@ export const GET: APIRoute = async ({ request }) => {
     const { data: guests, error: guestsError } = await supabase
       .from('reservation_guests')
       .select(
-        'id, is_primary_guest, guest_name, gender, age_group, guest_address, guest_contact, guest_phone, guest_email, guest_occupation, nationality, passport_number, precheckin_completed_at, terms_accepted_at, identity_status, identity_verified_at, identity_verification_method, guest_register_completed_at'
+        'id, is_primary_guest, guest_name, gender, age_group, guest_address, guest_contact, guest_phone, guest_email, guest_occupation, nationality, passport_number, precheckin_completed_at, terms_accepted_at, guest_register_completed_at'
       )
       .eq('reservation_id', reservationId)
       .order('is_primary_guest', { ascending: false })
