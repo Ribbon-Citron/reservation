@@ -394,30 +394,107 @@ const formatCurrency = (amount) => {
         }
       }
 
-
       let guestEditorReservationId = "";
       let guestEditorGuestCount = 0;
 
-      const adminGuestFields = [
-        ["guest_name", "氏名", 200],
-        ["guest_address", "住所", 500],
-        ["guest_contact", "連絡先", 200],
-        ["guest_occupation", "職業", 200],
-        ["nationality", "国籍", 200],
-        ["passport_number", "パスポート番号", 200],
+      const adminGuestRows = [
+        [
+          ["guest_name", "氏名", 200, "text"],
+          ["gender", "性別", 30, "select"],
+          ["age_group", "年代", 30, "select"],
+        ],
+        [["guest_address", "住所", 500, "text"]],
+        [
+          ["guest_phone", "電話番号", 50, "tel"],
+          ["guest_email", "メールアドレス", 254, "email"],
+        ],
+        [
+          ["nationality", "国籍", 200, "text"],
+          ["passport_number", "パスポート番号", 200, "text"],
+        ],
       ];
+
+      function createGuestInput(index, key, label, maxLength, type, guest) {
+        const wrapper = document.createElement("div");
+        wrapper.style.cssText = "min-width:0;margin-bottom:4px;";
+
+        const fieldLabel = document.createElement("label");
+        fieldLabel.htmlFor = `guest-${index}-${key}`;
+        fieldLabel.dataset.labelFor = key;
+        fieldLabel.textContent = label;
+        fieldLabel.style.cssText =
+          "display:block;font-weight:600;margin-bottom:4px;";
+
+        let input;
+
+        if (type === "select") {
+          input = document.createElement("select");
+          input.style.cssText =
+            "box-sizing:border-box;width:100%;padding:9px;border:1px solid #94a3b8;border-radius:5px;background:white;";
+
+          const choices =
+            key === "gender"
+              ? ["男性", "女性", "回答しない/その他"]
+              : ["10代以下", "20代", "30代", "40代", "50代", "60代以上"];
+
+          const placeholder = document.createElement("option");
+          placeholder.value = "";
+          placeholder.textContent = "選択してください";
+          input.appendChild(placeholder);
+
+          for (const choice of choices) {
+            const option = document.createElement("option");
+            option.value = choice;
+            option.textContent = choice;
+            input.appendChild(option);
+          }
+
+          input.value = guest[key] || "";
+        } else {
+          input = document.createElement("input");
+          input.type = type;
+          input.value = guest[key] || "";
+          input.maxLength = maxLength;
+          input.autocomplete = "off";
+          input.style.cssText =
+            "box-sizing:border-box;width:100%;padding:9px;border:1px solid #94a3b8;border-radius:5px;";
+        }
+
+        input.id = `guest-${index}-${key}`;
+        input.dataset.guestIndex = String(index);
+        input.dataset.field = key;
+
+        if (key === "guest_email") {
+          input.autocomplete = "email";
+        } else if (key === "guest_phone") {
+          input.autocomplete = "tel";
+        } else if (key === "guest_name") {
+          input.autocomplete = index === 0 ? "name" : "off";
+        } else if (key === "guest_address") {
+          input.autocomplete = index === 0 ? "street-address" : "off";
+        }
+
+        wrapper.appendChild(fieldLabel);
+        wrapper.appendChild(input);
+
+        return wrapper;
+      }
 
       function updateAdminGuestFields(index) {
         const section = document.getElementById(`guest-section-${index}`);
         if (!section) return;
 
         const domestic = section.querySelector('[data-role="japan-resident"]');
-        const nationality = document.getElementById(`guest-${index}-nationality`);
-        const passport = document.getElementById(`guest-${index}-passport_number`);
+        const nationality = document.getElementById(
+          `guest-${index}-nationality`,
+        );
+        const passport = document.getElementById(
+          `guest-${index}-passport_number`,
+        );
         const address = document.getElementById(`guest-${index}-guest_address`);
         const sameAddress = section.querySelector('[data-role="same-address"]');
 
-        if (domestic && domestic.checked) {
+        if (domestic.checked) {
           nationality.value = "";
           passport.value = "";
           nationality.disabled = true;
@@ -434,26 +511,41 @@ const formatCurrency = (amount) => {
         const isSameAddress = index > 0 && sameAddress && sameAddress.checked;
 
         if (isSameAddress) {
-          const primaryAddress = document.getElementById("guest-0-guest_address");
+          const primaryAddress = document.getElementById(
+            "guest-0-guest_address",
+          );
           address.value = primaryAddress ? primaryAddress.value : "";
           address.disabled = true;
         } else {
           address.disabled = false;
         }
 
-        const nationalityLabel = section.querySelector('[data-label-for="nationality"]');
-        const passportLabel = section.querySelector('[data-label-for="passport_number"]');
+        const nationalityLabel = section.querySelector(
+          '[data-label-for="nationality"]',
+        );
+        const passportLabel = section.querySelector(
+          '[data-label-for="passport_number"]',
+        );
+        const addressLabel = section.querySelector(
+          '[data-label-for="guest_address"]',
+        );
 
         if (nationalityLabel) {
-          nationalityLabel.textContent = domestic.checked ? "国籍（国内住所のため入力不要）" : "国籍（必須）";
-        }
-        if (passportLabel) {
-          passportLabel.textContent = domestic.checked ? "パスポート番号（国内住所のため入力不要）" : "パスポート番号（必須）";
+          nationalityLabel.textContent = domestic.checked
+            ? "国籍（入力不要）"
+            : "国籍";
         }
 
-        const addressLabel = section.querySelector('[data-label-for="guest_address"]');
+        if (passportLabel) {
+          passportLabel.textContent = domestic.checked
+            ? "パスポート番号（入力不要）"
+            : "パスポート番号";
+        }
+
         if (addressLabel) {
-          addressLabel.textContent = isSameAddress ? "住所（代表者と同じ）" : "住所（必須）";
+          addressLabel.textContent = isSameAddress
+            ? "住所（代表者と同じ）"
+            : "住所";
         }
       }
 
@@ -481,7 +573,8 @@ const formatCurrency = (amount) => {
           const data = await res.json();
 
           if (!res.ok) {
-            message.textContent = data.error || "宿泊者情報を取得できませんでした。";
+            message.textContent =
+              data.error || "宿泊者情報を取得できませんでした。";
             return;
           }
 
@@ -503,7 +596,26 @@ const formatCurrency = (amount) => {
             `予約番号：${reservation.reservation_code || "不明"} ／ 予約者：${reservation.guest_name || "不明"} ／ 予約人数：${guestEditorGuestCount}名`;
 
           for (let i = 0; i < guestEditorGuestCount; i++) {
-            const guest = guests[i] || {};
+            const savedGuest = guests[i] || {};
+
+            const guest =
+              i === 0
+                ? {
+                    ...savedGuest,
+                    guest_name:
+                      savedGuest.guest_name || reservation.guest_name || "",
+                    gender: savedGuest.gender || reservation.guest_gender || "",
+                    age_group:
+                      savedGuest.age_group || reservation.guest_age_group || "",
+                    guest_phone:
+                      savedGuest.guest_phone || reservation.guest_phone || "",
+                    guest_email:
+                      savedGuest.guest_email || reservation.guest_email || "",
+                    guest_address: savedGuest.guest_address || "",
+                    nationality: savedGuest.nationality || "",
+                    passport_number: savedGuest.passport_number || "",
+                  }
+                : savedGuest;
             const section = document.createElement("section");
             section.id = `guest-section-${i}`;
             section.style.cssText =
@@ -515,96 +627,100 @@ const formatCurrency = (amount) => {
             section.appendChild(heading);
 
             if (i > 0) {
-              const sameWrapper = document.createElement("div");
-              sameWrapper.style.marginBottom = "12px";
-
               const sameLabel = document.createElement("label");
-              sameLabel.style.cssText = "display:flex;gap:8px;align-items:center;";
+              sameLabel.style.cssText =
+                "display:flex;gap:8px;align-items:center;margin-bottom:12px;";
 
               const sameCheckbox = document.createElement("input");
               sameCheckbox.type = "checkbox";
               sameCheckbox.dataset.role = "same-address";
               sameCheckbox.checked = false;
-              sameCheckbox.addEventListener("change", () => updateAdminGuestFields(i));
+              sameCheckbox.addEventListener("change", () =>
+                updateAdminGuestFields(i),
+              );
 
               sameLabel.appendChild(sameCheckbox);
               sameLabel.append("代表者と同じ住所");
-              sameWrapper.appendChild(sameLabel);
-              section.appendChild(sameWrapper);
+              section.appendChild(sameLabel);
             }
 
-            const domesticWrapper = document.createElement("div");
-            domesticWrapper.style.cssText = "margin-bottom:12px;";
-
             const domesticLabel = document.createElement("label");
-            domesticLabel.style.cssText = "display:flex;gap:8px;align-items:center;font-weight:600;";
+            domesticLabel.style.cssText =
+              "display:flex;gap:8px;align-items:center;font-weight:600;margin-bottom:4px;";
 
             const domesticCheckbox = document.createElement("input");
             domesticCheckbox.type = "checkbox";
             domesticCheckbox.dataset.role = "japan-resident";
 
-            // 国籍・パスポートが両方空欄の既存データは国内住所ありとして初期表示
+            // 国内住所の選択はDBに保存しないため、再編集時は空欄から推定する
             domesticCheckbox.checked =
               !String(guest.nationality || "").trim() &&
               !String(guest.passport_number || "").trim();
 
-            domesticCheckbox.addEventListener("change", () => updateAdminGuestFields(i));
+            domesticCheckbox.addEventListener("change", () =>
+              updateAdminGuestFields(i),
+            );
 
             domesticLabel.appendChild(domesticCheckbox);
             domesticLabel.append("日本国内に住所がある");
-            domesticWrapper.appendChild(domesticLabel);
+            section.appendChild(domesticLabel);
 
-            const domesticHint = document.createElement("p");
-            domesticHint.textContent =
+            const hint = document.createElement("p");
+            hint.textContent =
               "チェックすると、国籍・パスポート番号は入力不要になります。";
-            domesticHint.style.cssText = "font-size:0.85rem;color:#64748b;margin:5px 0 0;";
-            domesticWrapper.appendChild(domesticHint);
-            section.appendChild(domesticWrapper);
+            hint.style.cssText =
+              "font-size:0.85rem;color:#64748b;margin:4px 0 12px;";
+            section.appendChild(hint);
 
-            for (const [key, label, maxLength] of adminGuestFields) {
-              const wrapper = document.createElement("div");
-              wrapper.style.marginBottom = "10px";
+            for (
+              let rowIndex = 0;
+              rowIndex < adminGuestRows.length;
+              rowIndex++
+            ) {
+              const row = document.createElement("div");
+              row.style.cssText =
+                "display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:10px;";
 
-              const fieldLabel = document.createElement("label");
-              fieldLabel.style.cssText = "display:block;font-weight:600;margin-bottom:4px;";
-              fieldLabel.htmlFor = `guest-${i}-${key}`;
-              fieldLabel.dataset.labelFor = key;
-              fieldLabel.textContent =
-                key === "nationality" || key === "passport_number"
-                  ? `${label}（必須）`
-                  : `${label}（必須）`;
-
-              const input = document.createElement("input");
-              input.id = `guest-${i}-${key}`;
-              input.dataset.guestIndex = String(i);
-              input.dataset.field = key;
-              input.type = "text";
-              input.value = guest[key] || "";
-              input.maxLength = maxLength;
-              input.required =
-                key !== "nationality" && key !== "passport_number";
-              input.autocomplete = "off";
-              input.style.cssText =
-                "box-sizing:border-box;width:100%;padding:9px;border:1px solid #94a3b8;border-radius:5px;";
-
-              if (key === "guest_address" && i === 0) {
-                input.addEventListener("input", () => {
-                  for (let j = 1; j < guestEditorGuestCount; j++) {
-                    updateAdminGuestFields(j);
-                  }
-                });
+              if (rowIndex === 1) {
+                row.style.gridTemplateColumns = "minmax(0,1fr)";
+              } else if (rowIndex === 2 || rowIndex === 3) {
+                row.style.gridTemplateColumns = "repeat(2,minmax(0,1fr))";
               }
 
-              wrapper.appendChild(fieldLabel);
-              wrapper.appendChild(input);
-              section.appendChild(wrapper);
+              for (const [key, label, maxLength, type] of adminGuestRows[
+                rowIndex
+              ]) {
+                const wrapper = createGuestInput(
+                  i,
+                  key,
+                  label,
+                  maxLength,
+                  type,
+                  guest,
+                );
+                row.appendChild(wrapper);
+              }
+
+              section.appendChild(row);
             }
 
             fields.appendChild(section);
+
+            const primaryAddress = document.getElementById(
+              `guest-0-guest_address`,
+            );
+            if (i === 0 && primaryAddress) {
+              primaryAddress.addEventListener("input", () => {
+                for (let j = 1; j < guestEditorGuestCount; j++) {
+                  updateAdminGuestFields(j);
+                }
+              });
+            }
+
             updateAdminGuestFields(i);
           }
 
-          message.textContent = "必須項目を入力し、保存してください。";
+          message.textContent = "必要項目を入力して保存してください。";
         } catch (err) {
           console.error("宿泊者情報取得エラー:", err);
           message.textContent = "通信エラーが発生しました。";
@@ -617,16 +733,29 @@ const formatCurrency = (amount) => {
           "#guestEditor button[onclick='saveReservationGuests()']",
         );
 
-        const guests = Array.from({ length: guestEditorGuestCount }, (_, i) => {
+        const guests = [];
+
+        for (let i = 0; i < guestEditorGuestCount; i++) {
           const section = document.getElementById(`guest-section-${i}`);
-          const domestic = section.querySelector('[data-role="japan-resident"]').checked;
-          const guest = { japan_resident: domestic };
+          const domestic = section.querySelector(
+            '[data-role="japan-resident"]',
+          );
+          const sameAddress = section.querySelector(
+            '[data-role="same-address"]',
+          );
+
+          const guest = {
+            japan_resident: domestic.checked,
+            guest_occupation: "",
+          };
 
           for (const key of [
             "guest_name",
+            "gender",
+            "age_group",
             "guest_address",
-            "guest_contact",
-            "guest_occupation",
+            "guest_phone",
+            "guest_email",
             "nationality",
             "passport_number",
           ]) {
@@ -634,27 +763,54 @@ const formatCurrency = (amount) => {
             guest[key] = input ? input.value.trim() : "";
           }
 
-          if (domestic) {
+          if (sameAddress && sameAddress.checked) {
+            const primaryAddress = document.getElementById(
+              "guest-0-guest_address",
+            );
+            guest.guest_address = primaryAddress
+              ? primaryAddress.value.trim()
+              : "";
+          }
+
+          if (domestic.checked) {
             guest.nationality = "";
             guest.passport_number = "";
           }
 
-          return guest;
-        });
+          guests.push(guest);
+        }
 
-        if (
-          guests.some((guest) =>
-            ["guest_name", "guest_address", "guest_contact", "guest_occupation"]
-              .some((key) => !guest[key]),
-          ) ||
-          guests.some((guest) =>
+        // エラーメッセージを初期化
+        message.style.color = "red";
+        message.textContent = "";
+
+        for (let i = 0; i < guests.length; i++) {
+          const guest = guests[i];
+
+          if (
+            !guest.guest_name ||
+            !guest.gender ||
+            !guest.age_group ||
+            !guest.guest_address ||
+            !guest.guest_phone ||
+            !guest.guest_email
+          ) {
+            message.textContent = "未記入項目があります。";
+            return;
+          }
+
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guest.guest_email)) {
+            message.textContent = `宿泊者 ${i + 1} のメールアドレスの形式を確認してください。`;
+            return;
+          }
+
+          if (
             !guest.japan_resident &&
-            (!guest.nationality || !guest.passport_number),
-          )
-        ) {
-          message.textContent =
-            "氏名・住所・連絡先・職業を入力してください。国内住所がない場合は国籍・パスポート番号も必須です。";
-          return;
+            (!guest.nationality || !guest.passport_number)
+          ) {
+            message.textContent = `宿泊者 ${i + 1} は、国内住所がないため国籍とパスポート番号が必要です。`;
+            return;
+          }
         }
 
         if (button) button.disabled = true;
@@ -688,7 +844,6 @@ const formatCurrency = (amount) => {
           if (button) button.disabled = false;
         }
       }
-
     </script>
     <div
       id="guestEditor"
