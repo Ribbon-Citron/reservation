@@ -36,8 +36,8 @@ export const POST: APIRoute = async ({ request }) => {
     const requiredFields = [
       'guest_name',
       'guest_address',
-      'guest_contact',
-      'guest_occupation'
+      'guest_phone',
+      'guest_email',
     ] as const;
 
     const cleanedGuests: Array<Record<string, string | boolean>> = [];
@@ -58,7 +58,7 @@ export const POST: APIRoute = async ({ request }) => {
         const value = guest[field];
 
         if (typeof value !== 'string' || !value.trim()) {
-          return fail('氏名・住所・連絡先・職業は必須項目です。', 400);
+          return fail('氏名・住所・電話番号・メールアドレスは必須項目です。', 400);
         }
 
         const text = value.trim();
@@ -70,7 +70,10 @@ export const POST: APIRoute = async ({ request }) => {
 
         cleaned[field] = text;
       }
-
+      const email = cleaned.guest_email as string;
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return fail('メールアドレスの形式が正しくありません。', 400);
+      }
       for (const field of ['nationality', 'passport_number'] as const) {
         const value = guest[field];
 

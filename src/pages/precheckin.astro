@@ -180,14 +180,14 @@ export const prerender = false;
       const token =
         new URLSearchParams(window.location.search).get("token") || "";
 
-      const labels = [
-        ["guest_name", "氏名", "text"],
-        ["guest_address", "住所", "text"],
-        ["guest_contact", "連絡先（電話番号など）", "tel"],
-        ["guest_occupation", "職業", "text"],
-        ["nationality", "国籍", "text"],
-        ["passport_number", "パスポート番号", "text"],
-      ];
+const labels = [
+  ["guest_name", "氏名", "text"],
+  ["guest_address", "住所", "text"],
+  ["guest_phone", "電話番号", "tel"],
+  ["guest_email", "メールアドレス", "email"],
+  ["nationality", "国籍", "text"],
+  ["passport_number", "パスポート番号", "text"],
+];
 
       function updateGuestFields(section, isPrimary) {
         const japanResident = section.querySelector('[name="japan_resident"]');
