@@ -240,6 +240,7 @@ export const prerender = false;
 
           for (let i = 0; i < result.guestsCount; i++) {
             const section = document.createElement("section");
+            const savedGuest = result.savedGuests?.[i];
             section.className = "guest";
 
             const heading = document.createElement("h2");
@@ -298,22 +299,28 @@ export const prerender = false;
                 input.autocomplete = "off";
               }
               // 予約時に入力された代表者情報を初期表示
-              if (i === 0 && result.primaryGuest) {
-                const primary = result.primaryGuest;
+              // 保存済みの宿泊者情報を優先して表示
+              const savedGuest = result.savedGuests?.[i];
 
-                const values = {
-                  guest_name: primary.guest_name,
-                  gender: primary.gender,
-                  age_group: primary.age_group,
-                  guest_phone: primary.guest_phone,
-                  guest_email: primary.guest_email,
-                };
+              const values = savedGuest
+                ? {
+                    guest_name: savedGuest.guest_name,
+                    gender: savedGuest.gender,
+                    age_group: savedGuest.age_group,
+                    guest_address: savedGuest.guest_address,
+                    guest_phone: savedGuest.guest_phone,
+                    guest_email: savedGuest.guest_email,
+                    nationality: savedGuest.nationality,
+                    passport_number: savedGuest.passport_number,
+                  }
+                : i === 0
+                  ? result.primaryGuest
+                  : null;
 
-                const value = values[name];
+              const value = values?.[name];
 
-                if (value && (type !== "select" || options.includes(value))) {
-                  input.value = value;
-                }
+              if (value && (type !== "select" || options.includes(value))) {
+                input.value = value;
               }
               if (name === "guest_address" && i > 0) {
                 input.addEventListener("input", () => {
@@ -354,6 +361,7 @@ export const prerender = false;
                 const residence = document.createElement("input");
                 residence.type = "checkbox";
                 residence.name = "japan_resident";
+                residence.checked = !!savedGuest && !savedGuest.nationality && !savedGuest.passport_number;
 
                 residenceLabel.appendChild(residence);
                 residenceLabel.append("日本国内に住所がある");
@@ -372,6 +380,7 @@ export const prerender = false;
             }
 
             fields.appendChild(section);
+            updateGuestFields(section, i === 0);
           }
 
           loading.hidden = true;

@@ -40,13 +40,23 @@ export const GET: APIRoute = async ({ request }) => {
       !reservation ||
       reservation.status !== 'approved' ||
       !reservation.precheckin_token_expires_at ||
-      new Date(reservation.precheckin_token_expires_at).getTime() < Date.now() ||
-      reservation.precheckin_token_used_at
+      new Date(reservation.precheckin_token_expires_at).getTime() < Date.now()
     ) {
       return new Response(
         JSON.stringify({ valid: false, error: 'リンクが無効か、有効期限が切れています。' }),
         { status: 400, headers }
       );
+    }
+
+    const { data: savedGuests, error: guestsError } = await supabase
+      .from('reservation_guests')
+      .select('guest_name, gender, age_group, guest_address, guest_phone, guest_email, nationality, passport_number, is_primary_guest')
+      .eq('reservation_id', reservation.id)
+      .order('created_at', { ascending: true })
+      .order('id', { ascending: true });
+
+    if (guestsError) {
+      throw guestsError;
     }
 
     return new Response(
@@ -60,7 +70,8 @@ export const GET: APIRoute = async ({ request }) => {
           age_group: reservation.guest_age_group || '',
           guest_phone: reservation.guest_phone || '',
           guest_email: reservation.guest_email || ''
-        }
+        },
+        savedGuests: savedGuests || []
       }),
       { status: 200, headers }
     );
