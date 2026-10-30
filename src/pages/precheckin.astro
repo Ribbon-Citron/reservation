@@ -456,6 +456,7 @@ export const prerender = false;
           message.appendChild(guidance);
 
           document.querySelector("#close-page").hidden = false;
+          submitButton.disabled = false;
         } catch (error) {
           message.textContent =
             error instanceof Error
