@@ -165,11 +165,14 @@ export const prerender = false;
       </p>
 
       <p id="loading">登録リンクを確認しています…</p>
+      <p id="message" role="status" aria-live="polite"></p>
       <form id="precheckin-form" hidden>
         <div id="guest-fields"></div>
         <button type="submit">事前登録を送信</button>
       </form>
-      <p id="message" role="status" aria-live="polite"></p>
+      <button type="button" id="close-page" hidden>
+        終了（ページを閉じる）
+      </button>
     </main>
 
     <script>
@@ -361,7 +364,10 @@ export const prerender = false;
                 const residence = document.createElement("input");
                 residence.type = "checkbox";
                 residence.name = "japan_resident";
-                residence.checked = !!savedGuest && !savedGuest.nationality && !savedGuest.passport_number;
+                residence.checked =
+                  !!savedGuest &&
+                  !savedGuest.nationality &&
+                  !savedGuest.passport_number;
 
                 residenceLabel.appendChild(residence);
                 residenceLabel.append("日本国内に住所がある");
@@ -431,8 +437,25 @@ export const prerender = false;
             throw new Error(result.error || "登録を保存できませんでした。");
           }
 
-          message.textContent = "宿泊者情報の事前登録が完了しました。";
-          form.hidden = true;
+          message.replaceChildren();
+
+          const completed = document.createElement("strong");
+          completed.textContent = "宿泊者情報の事前登録が完了しました。";
+          message.appendChild(completed);
+
+          const guidance = document.createElement("p");
+          guidance.textContent = "予約確定メールの";
+
+          const link = document.createElement("a");
+          link.href = window.location.href;
+          link.textContent = "宿泊者情報を事前登録する";
+          link.style.fontWeight = "bold";
+
+          guidance.appendChild(link);
+          guidance.append("から再編集ができます。");
+          message.appendChild(guidance);
+
+          document.querySelector("#close-page").hidden = false;
         } catch (error) {
           message.textContent =
             error instanceof Error
