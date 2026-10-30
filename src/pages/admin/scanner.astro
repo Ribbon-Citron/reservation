@@ -89,7 +89,7 @@
     <script>
       let html5QrCode;
 
-      function onScanSuccess(decodedText, decodedResult) {
+      async function onScanSuccess(decodedText, decodedResult) {
         console.log(`Code matched = ${decodedText}`, decodedResult);
 
         if (html5QrCode) {
@@ -107,12 +107,35 @@
         resultContainer.style.background = "#dbeafe";
         resultTitle.style.color = "#1d4ed8";
         resultTitle.innerText = "📷 QRコードを読み取りました";
-        resultDetails.innerText =
-          `読み取りコード: ${decodedText}\n` +
-          "予約内容・お支払い・本人確認を受付で確認してください。" +
-          "確認後、予約管理画面の「チェックイン」ボタンを押してください。";
-
+        resultDetails.innerText = "予約情報を確認しています…";
         restartBtn.style.display = "inline-block";
+
+        try {
+          const response = await fetch("/api/admin/lookup-reservation", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ reservationId: decodedText }),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "予約情報を取得できませんでした。");
+          }
+
+          resultDetails.innerText =
+            `予約ID：${data.reservation.reservation_code || data.reservation.id}\n` +
+            `予約者名：${data.reservation.guest_name || "未登録"}\n\n` +
+            "予約内容, お支払い, 本人確認 を受付で確認してください。" +
+            "確認後、状況一覧の「Check-In」ボタンを押してください。";
+        } catch (err) {
+          console.error("Reservation lookup error:", err);
+          resultDetails.innerText =
+            `読み取りコード：${decodedText}\n` +
+            `予約情報の取得に失敗しました。\n${err.message}`;
+        }
       }
 
       function restartScanner() {
