@@ -456,6 +456,19 @@ export const prerender = false;
           message.appendChild(guidance);
 
           document.querySelector("#close-page").hidden = false;
+          document
+            .querySelector("#close-page")
+            ?.addEventListener("click", () => {
+              window.close();
+
+              setTimeout(() => {
+                if (!window.closed) {
+                  alert(
+                    "このタブは自動で閉じられません。ブラウザのタブを手動で閉じてください。",
+                  );
+                }
+              }, 300);
+            });
           submitButton.disabled = false;
         } catch (error) {
           message.textContent =
