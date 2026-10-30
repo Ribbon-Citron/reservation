@@ -17,7 +17,6 @@ export const GET: APIRoute = async ({ request }) => {
     const url = new URL(request.url);
     const token = url.searchParams.get('token') || '';
 
-    // 32バイトのトークンは16進数64文字
     if (!/^[a-f0-9]{64}$/i.test(token)) {
       return new Response(
         JSON.stringify({ valid: false, error: 'リンクが無効か、有効期限が切れています。' }),
@@ -29,7 +28,7 @@ export const GET: APIRoute = async ({ request }) => {
 
     const { data: reservation, error } = await supabase
       .from('reservations')
-      .select('id, status, guests_count, check_in_date, precheckin_token_expires_at, precheckin_token_used_at')
+      .select('id, status, guests_count, check_in_date, guest_name, guest_gender, guest_age_group, guest_phone, guest_email, precheckin_token_expires_at, precheckin_token_used_at')
       .eq('precheckin_token_hash', tokenHash)
       .maybeSingle();
 
@@ -54,7 +53,14 @@ export const GET: APIRoute = async ({ request }) => {
       JSON.stringify({
         valid: true,
         guestsCount: Math.max(1, Math.min(20, Number(reservation.guests_count) || 1)),
-        checkInDate: reservation.check_in_date
+        checkInDate: reservation.check_in_date,
+        primaryGuest: {
+          guest_name: reservation.guest_name || '',
+          gender: reservation.guest_gender || '',
+          age_group: reservation.guest_age_group || '',
+          guest_phone: reservation.guest_phone || '',
+          guest_email: reservation.guest_email || ''
+        }
       }),
       { status: 200, headers }
     );

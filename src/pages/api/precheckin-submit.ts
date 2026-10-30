@@ -35,10 +35,22 @@ export const POST: APIRoute = async ({ request }) => {
 
     const requiredFields = [
       'guest_name',
+      'gender',
+      'age_group',
       'guest_address',
       'guest_phone',
       'guest_email',
     ] as const;
+
+    const allowedGenders = ['男性', '女性', '回答しない/その他'];
+    const allowedAgeGroups = [
+      '10代以下',
+      '20代',
+      '30代',
+      '40代',
+      '50代',
+      '60代以上',
+    ];
 
     const cleanedGuests: Array<Record<string, string | boolean>> = [];
 
@@ -58,7 +70,7 @@ export const POST: APIRoute = async ({ request }) => {
         const value = guest[field];
 
         if (typeof value !== 'string' || !value.trim()) {
-          return fail('氏名・住所・電話番号・メールアドレスは必須項目です。', 400);
+          return fail('氏名・性別・年代・住所・電話番号・メールアドレスは必須項目です。', 400);
         }
 
         const text = value.trim();
@@ -69,6 +81,13 @@ export const POST: APIRoute = async ({ request }) => {
         }
 
         cleaned[field] = text;
+        if (field === 'gender' && !allowedGenders.includes(text)) {
+          return fail('性別の選択内容が正しくありません。', 400);
+        }
+
+        if (field === 'age_group' && !allowedAgeGroups.includes(text)) {
+          return fail('年代の選択内容が正しくありません。', 400);
+        }
       }
       const email = cleaned.guest_email as string;
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
