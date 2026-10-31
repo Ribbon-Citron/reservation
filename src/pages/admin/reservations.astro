@@ -130,16 +130,13 @@ const formatCurrency = (amount) => {
             <tr
               style="background: #f1f5f9; color: #475569; border-bottom: 6px solid #e2e8f0;"
             >
+              <th style="padding: 6px 8px; text-align: center;">宿泊者名</th>
+              <th style="padding: 6px 8px; text-align: center;">宿泊日程</th>
+              <th style="padding: 6px 8px; text-align: center;">人数/金額</th>
               <th
                 style="padding: 6px 4px; text-align: center; width: 116px; min-width: 116px;"
                 >操作</th
               >
-              <th style="padding: 6px 8px; text-align: center; ">宿泊者名</th>
-              <th style="padding: 6px 8px; text-align: center; "
-                >宿泊日程 到着時間</th
-              >
-              <th style="padding: 6px 8px; text-align: center; ">人数 金額</th>
-              <th style="padding: 6px 8px; text-align: center; ">連絡先</th>
             </tr>
           </thead>
           <tbody>
@@ -148,6 +145,51 @@ const formatCurrency = (amount) => {
                 reservations.map((item) => {
                   return (
                     <tr style="border-bottom: 6px solid #f1f5f9;">
+                      <td style="padding: 6px 8px; color: #0f172a;">
+                        <div style="max-width: 12em; word-break: break-all; font-weight: bold; font-size: 1rem; margin-bottom: 4px;">
+                          {item.guest_name}
+                        </div>
+                        <button
+                          onclick={`openReservationGuestEditor('${item.id}')`}
+                          style="margin: 4px 0; padding: 5px 8px; background: #0f766e; color: white; border: none; border-radius: 5px; font-size: 0.75rem; font-weight: bold; cursor: pointer;"
+                        >
+                          宿泊者情報
+                        </button>
+                        {item.reservation_code ? (
+                          <span style="display: inline-block; background: #f1f5f9; color: #0369a1; border: 1px solid #cbd5e1; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-family: monospace; font-weight: bold; letter-spacing: 1px;">
+                            ID: {item.reservation_code}
+                          </span>
+                        ) : (
+                          <span style="font-size: 0.75rem; color: #94a3b8;">
+                            コードなし
+                          </span>
+                        )}
+                      </td>
+
+                      <td style="padding: 6px 8px; color: #334155; font-size: 0.85rem; white-space: nowrap;">
+                        <div>
+                          {item.check_in_date} 〜 {item.check_out_date}（
+                          {item.nights ??
+                            Math.round(
+                              (Date.parse(`${item.check_out_date}T00:00:00Z`) -
+                                Date.parse(`${item.check_in_date}T00:00:00Z`)) /
+                                86400000,
+                            )}
+                          泊）
+                        </div>
+                        <div style="color: #2563eb; font-weight: bold; margin-top: 2px;">
+                          🕒 到着: {item.arrival_time || "未設定"}
+                        </div>
+                      </td>
+
+                      <td style="padding: 6px 8px; color: #334155; text-align: right; white-space: nowrap;">
+                        <div>{item.guests_count || 1}名</div>
+                        <div style="font-weight: bold; color: #0f172a;">
+                          {item.payment_status === "paid" ? "✓ " : ""}
+                          {formatCurrency(item.total_amount)}
+                        </div>
+                      </td>
+
                       <td style="padding: 6px 4px; text-align: center; width: 116px; min-width: 116px;">
                         {item.status === "pending" ? (
                           <div style="display: flex; flex-direction: column; gap: 6px; justify-content: center; align-items: center; flex-wrap: nowrap;">
@@ -201,54 +243,6 @@ const formatCurrency = (amount) => {
                             No Action
                           </span>
                         )}
-                      </td>
-
-                      <td style="padding: 6px 8px; color: #0f172a;">
-                        <div style="max-width: 12em; word-break: break-all; font-weight: bold; font-size: 1rem; margin-bottom: 4px;">
-                          {item.guest_name}
-                        </div>
-                        <button
-                          onclick={`openReservationGuestEditor('${item.id}')`}
-                          style="margin: 4px 0; padding: 5px 8px; background: #0f766e; color: white; border: none; border-radius: 5px; font-size: 0.75rem; font-weight: bold; cursor: pointer;"
-                        >
-                          宿泊者情報
-                        </button>
-                        {item.reservation_code ? (
-                          <span style="display: inline-block; background: #f1f5f9; color: #0369a1; border: 1px solid #cbd5e1; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-family: monospace; font-weight: bold; letter-spacing: 1px;">
-                            ID: {item.reservation_code}
-                          </span>
-                        ) : (
-                          <span style="font-size: 0.75rem; color: #94a3b8;">
-                            コードなし
-                          </span>
-                        )}
-                      </td>
-
-                      <td style="padding: 6px 8px; color: #334155; font-size: 0.85rem; white-space: nowrap;">
-                        <div>
-                          {item.check_in_date} 〜 {item.check_out_date}（
-                          （{item.nights ?? Math.round((Date.parse(`${item.check_out_date}T00:00:00Z`) - Date.parse(`${item.check_in_date}T00:00:00Z`)) / 86400000)}泊）
-                        </div>
-                        <div style="color: #2563eb; font-weight: bold; margin-top: 2px;">
-                          🕒 到着: {item.arrival_time || "未設定"}
-                        </div>
-                      </td>
-
-                      <td style="padding: 6px 8px; color: #334155; text-align: right; white-space: nowrap;">
-                        <div>{item.guests_count || 1}名</div>
-                        <div style="font-weight: bold; color: #0f172a;">
-                          {item.payment_status === "paid" ? "✓ " : ""}
-                          {formatCurrency(item.total_amount)}
-                        </div>
-                      </td>
-
-                      <td style="padding: 6px 8px; color: #334155; font-size: 0.85rem;">
-                        <div style="max-width: 22em; word-break: break-all;">
-                          {item.guest_email}
-                        </div>
-                        <div style="max-width: 7em; word-break: break-all;">
-                          {item.guest_phone || "電話番号なし"}
-                        </div>
                       </td>
                     </tr>
                   );
