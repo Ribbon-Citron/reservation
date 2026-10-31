@@ -161,6 +161,9 @@ export const POST: APIRoute = async ({ request }) => {
           reservation_code: reservationCode, // ★ ここに追加
           check_in_date: checkIn,
           check_out_date: checkOut,
+          check_out_date: checkOut,
+          nights: nights,
+          guests_count: guestCount,
           guests_count: guestCount,
           arrival_time: arrivalTime,
           guest_name: name,

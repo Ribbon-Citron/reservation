@@ -255,14 +255,24 @@
             </div>
 
             <div
-              style="background: #eff6ff; padding: 10px 12px; border-radius: 8px; text-align: right; border: 1px solid #bfdbfe;"
+              style="background: #eff6ff; padding: 10px 12px; border-radius: 8px; border: 1px solid #bfdbfe; display: flex; justify-content: space-between; align-items: center;"
             >
-              <span style="font-size: 0.75rem; color: #1e40af; display: block;"
-                >概算合計（税込）</span
+              <strong
+                id="nightsDisplay"
+                style="font-size: 0.9rem; color: #1e40af;"
               >
-              <strong id="totalPrice" style="font-size: 1.1rem; color: #1d4ed8;"
-                >￥0</strong
-              >
+                宿泊数：--泊
+              </strong>
+              <div style="text-align: right;">
+                <span
+                  style="font-size: 0.75rem; color: #1e40af; display: block;"
+                  >概算合計（税込）</span
+                >
+                <strong
+                  id="totalPrice"
+                  style="font-size: 1.1rem; color: #1d4ed8;">￥0</strong
+                >
+              </div>
             </div>
           </section>
 
@@ -520,6 +530,7 @@
         const guestsSelect = document.getElementById("guests");
         const arrivalTimeSelect = document.getElementById("arrivalTime");
         const totalPriceEl = document.getElementById("totalPrice");
+        const nightsDisplayEl = document.getElementById("nightsDisplay");
         const form = document.getElementById("requestForm");
         const submitBtn = document.getElementById("submitBtn");
         const bookingPauseMessage = document.getElementById(
@@ -722,6 +733,7 @@
 
           if (!checkIn || !checkOut) {
             totalPriceEl.textContent = "￥0";
+            if (nightsDisplayEl) nightsDisplayEl.textContent = "宿泊数：--泊";
             return 0;
           }
 
@@ -742,7 +754,12 @@
 
           if (nights <= 0) {
             totalPriceEl.textContent = "日程エラー";
+            if (nightsDisplayEl) nightsDisplayEl.textContent = "宿泊数：--泊";
             return 0;
+          }
+
+          if (nightsDisplayEl) {
+            nightsDisplayEl.textContent = `宿泊数：${nights}泊`;
           }
 
           totalPriceEl.textContent = `￥${totalSum.toLocaleString()}`;
