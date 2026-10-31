@@ -177,10 +177,12 @@
                   >チェックイン</label
                 >
                 <input
-                  type="date"
+                  type="text"
                   id="checkIn"
                   name="checkIn"
                   required
+                  readonly
+                  placeholder="チェックイン日を選択"
                   style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; box-sizing: border-box;"
                 />
               </div>
@@ -190,10 +192,12 @@
                   >チェックアウト</label
                 >
                 <input
-                  type="date"
+                  type="text"
                   id="checkOut"
                   name="checkOut"
                   required
+                  readonly
+                  placeholder="チェックアウト日を選択"
                   style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; box-sizing: border-box;"
                 />
               </div>
@@ -522,6 +526,23 @@
           "bookingPauseMessage",
         );
         let isBookingPaused = false;
+        // カレンダーの日付選択状態
+        let selectingDate = "checkIn";
+
+        function updateDateSelection() {
+          const hasCheckIn = !!checkInInput.value;
+          const hasCheckOut = !!checkOutInput.value;
+
+          checkInInput.style.border = !hasCheckIn
+            ? "1px solid #000"
+            : hasCheckOut
+              ? "1px solid #000"
+              : "1px solid #cbd5e1";
+
+          checkOutInput.style.border =
+            hasCheckIn && !hasCheckOut ? "1px solid #000" : "1px solid #cbd5e1";
+        }
+        updateDateSelection();
         const qrModal = document.getElementById("qrModal");
 
         const dateWarningModal = document.getElementById("dateWarningModal");
@@ -564,6 +585,7 @@
           if (checkInInput && checkInInput.value) {
             const inDate = new Date(`${checkInInput.value}T00:00:00`);
             inDate.setDate(inDate.getDate() + 1);
+
             const nextDayStr = [
               inDate.getFullYear(),
               String(inDate.getMonth() + 1).padStart(2, "0"),
@@ -575,17 +597,23 @@
                 `予約受付は ${maxAllowedDateStr} が最終チェックアウト日です。別の日付を選択してください。`,
               );
               checkInInput.value = "";
-              if (checkOutInput) checkOutInput.value = "";
+              if (checkOutInput) {
+                checkOutInput.value = "";
+              }
               calculateTotal();
               checkGuestAvailability();
               return;
             }
 
             if (checkOutInput) {
-              checkOutInput.value = nextDayStr;
+              checkOutInput.value = "";
               checkOutInput.min = nextDayStr;
             }
+
+            selectingDate = "checkOut";
+            updateDateSelection();
           }
+
           calculateTotal();
           checkGuestAvailability();
         }
@@ -815,23 +843,64 @@
             const cell = document.createElement("div");
             cell.style.cssText =
               "padding: 6px 2px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.75rem; background: #fff;";
+            cell.dataset.date = dateStr;
 
+            if (checkInInput?.value === dateStr) {
+              cell.style.background = "#dbeafe";
+              cell.style.border = "2px solid #2563eb";
+              cell.style.fontWeight = "bold";
+            }
+
+            if (checkOutInput?.value === dateStr) {
+              cell.style.background = "#dcfce7";
+              cell.style.border = "2px solid #16a34a";
+              cell.style.fontWeight = "bold";
+            }
             if (isAvailable) {
               cell.style.cursor = "pointer";
               cell.style.background = "#f8fafc";
               cell.innerHTML = `<div>${d}</div><div style="color: #16a34a; font-weight: bold;">${availableCount}</div>`;
               cell.addEventListener("click", () => {
-                if (checkInInput && checkOutInput) {
+                if (!checkInInput || !checkOutInput) return;
+
+                if (selectingDate === "checkIn") {
                   checkInInput.value = dateStr;
                   handleCheckInChange();
+                } else {
+                  if (dateStr <= checkInInput.value) {
+                    checkInInput.value = dateStr;
+                    checkOutInput.value = "";
+                    handleCheckInChange();
+                    fetchAndRenderCalendar();
+                    return;
+                  }
+
+                  checkOutInput.value = dateStr;
+                  selectingDate = "checkIn";
+                  updateDateSelection();
+
+                  calculateTotal();
+                  checkGuestAvailability();
                 }
+
+                fetchAndRenderCalendar();
               });
             } else {
               cell.style.background = "#f1f5f9";
               cell.style.color = "#94a3b8";
               cell.innerHTML = `<div>${d}</div><div style="color: #94a3b8; font-weight: bold;">0</div>`;
             }
+            if (checkInInput?.value === dateStr) {
+              cell.style.background = "#dbeafe";
+              cell.style.border = "2px solid #2563eb";
+              cell.style.fontWeight = "bold";
+            }
 
+            if (checkOutInput?.value === dateStr) {
+              cell.style.background = "#dcfce7";
+              cell.style.border = "2px solid #16a34a";
+              cell.style.fontWeight = "bold";
+            }
             grid.appendChild(cell);
           }
 
