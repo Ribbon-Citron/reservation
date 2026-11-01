@@ -374,16 +374,15 @@ const formatCurrency = (amount: number) => {
     </style>
   </head>
   <body
-    style="font-family: sans-serif; background: #f8fafc; margin: 0; padding: 1rem;"
+    style="font-family: sans-serif; background: #f8fafc; margin: 0; padding: 0.75rem;"
   >
     <div style="max-width: 900px; margin: 0 auto;">
       <!-- ヘッダー -->
       <div
-        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;"
-      >
+        style="display: flex; justify-content: space-between; align-items: center; width: 100%; box-sizing: border-box; margin-bottom: 1.5rem;">
         <div>
           <h1 style="margin: 0; color: #0f172a; font-size: 1.5rem;">
-            🎛️ 設定一覧
+            ⚙️ 各種設定
           </h1>
           <p style="margin: 0.25rem 0 0; color: #64748b; font-size: 0.9rem;">
             宿泊料金, 最大人数, ブロック(休業) の個別設定
@@ -410,7 +409,7 @@ const formatCurrency = (amount: number) => {
 
       {
         dbError && (
-          <div style="background: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+          <div style="background: #fee2e2; color: #991b1b; padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem;">
             <strong>エラー:</strong> {dbError}
           </div>
         )
@@ -425,14 +424,14 @@ const formatCurrency = (amount: number) => {
       }
 
       <div
-        style="display: flex; align-items: stretch; gap: 12px; flex-wrap: wrap;"
+        style="display: flex; align-items: stretch; gap: 10px; flex-wrap: wrap;"
       >
         <form
           method="POST"
-          style="background: white; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 6px; flex-wrap: wrap;"
+          style="background: white; padding: 0.75rem; margin-bottom: 0.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 6px; flex-wrap: wrap;"
         >
           <input type="hidden" name="action" value="save-base-price" />
-          <label for="basePrice" style="font-weight: bold; color: #303030;">
+          <label for="basePrice" style="font-weight: bold; color: #303030; font-size: 0.8rem;">
             基本料金 (1泊)
           </label>
           <input
@@ -443,7 +442,7 @@ const formatCurrency = (amount: number) => {
             min="0"
             step="100"
             required
-            style="width: 60px; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.95rem; text-align: right;"
+            style="width: 60px; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.8rem; text-align: right;"
           />
           <span style="color: #64748b;">円</span>
           <button
@@ -456,7 +455,7 @@ const formatCurrency = (amount: number) => {
 
         <form
           method="POST"
-          style="background: white; padding: 1rem; margin-bottom: 1rem; margin-left: auto; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"
+          style="background: white; padding: 0.75rem; margin-bottom: 0.5rem; margin-left: auto; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"
         >
           <input type="hidden" name="action" value="save-booking-end-date" />
           <label
