@@ -308,8 +308,9 @@ const formatCurrency = (amount: number) => {
           white-space: nowrap;
         }
       }
+
       /* スマホ用 設定一覧テーブル */
-      @media screen and (max-width: 600px) {
+      @media screen and (max-width: 300px) {
         .availability-table {
           font-size: 0.72rem !important;
           table-layout: fixed;
@@ -328,12 +329,12 @@ const formatCurrency = (amount: number) => {
 
         .availability-table th:nth-child(2),
         .availability-table td:nth-child(2) {
-          width: 23%;
+          width: 30%;
         }
 
         .availability-table th:nth-child(3),
         .availability-table td:nth-child(3) {
-          width: 17%;
+          width: 10%;
         }
 
         .availability-table th:nth-child(4),
@@ -355,7 +356,7 @@ const formatCurrency = (amount: number) => {
 
         .availability-table td:nth-child(2) div,
         .availability-table td:nth-child(3) div {
-          gap: 1px !important;
+          gap: 2px !important;
         }
 
         .availability-table td:nth-child(4) span {
@@ -373,14 +374,14 @@ const formatCurrency = (amount: number) => {
       }
     </style>
   </head>
+
   <body
-    style="font-family: sans-serif; background: #f8fafc; margin: 0; padding: 0.75rem;"
+    style="font-family: sans-serif; background: #f8fafc; margin: 0; padding: 1rem;"
   >
     <div style="max-width: 900px; margin: 0 auto;">
       <!-- ヘッダー -->
-      <div
-        style="display: flex; justify-content: space-between; align-items: center; width: 100%; box-sizing: border-box; margin-bottom: 1.5rem;">
-        <div>
+      <div class="admin-header">
+        <div class="admin-header-title">
           <h1 style="margin: 0; color: #0f172a; font-size: 1.5rem;">
             ⚙️ 各種設定
           </h1>
@@ -394,16 +395,19 @@ const formatCurrency = (amount: number) => {
             <span class="nav-icon">📆</span>
             <span class="nav-label">予約</span>
           </a>
-
           <a href="/admin/reservations" class="admin-nav-link" title="予約状況と処理">
             <span class="nav-icon">📊</span>
             <span class="nav-label">状況</span>
           </a>
-
           <a href="/admin/scanner" class="admin-nav-link" title="予約コードスキャン">
             <span class="nav-icon">📸</span>
             <span class="nav-label">受付</span>
           </a>
+            <a href="/admin/guest-export" class="admin-nav-link" title="宿泊者情報CSV出力">
+            <span class="nav-icon">📄</span>
+            <span class="nav-label">名簿</span>
+          </a>
+
         </div>
       </div>
 
@@ -417,7 +421,7 @@ const formatCurrency = (amount: number) => {
 
       {
         settingsMessage && (
-          <div style="background: #dcfce7; color: #166534; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem;">
+          <div style="background: #dcfce7; color: #166534; padding: 0.5rem 1rem; border-radius: 6px; margin-bottom: 1rem; text-align: center; font-size: 0.9rem;">
             {settingsMessage}
           </div>
         )
@@ -428,11 +432,11 @@ const formatCurrency = (amount: number) => {
       >
         <form
           method="POST"
-          style="background: white; padding: 0.75rem; margin-bottom: 0.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 6px; flex-wrap: wrap;"
+          style="background: white; padding: 0.5rem; margin-bottom: 0.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 6px; flex-wrap: wrap;"
         >
           <input type="hidden" name="action" value="save-base-price" />
           <label for="basePrice" style="font-weight: bold; color: #303030; font-size: 0.8rem;">
-            基本料金 (1泊)
+            基本料金
           </label>
           <input
             type="number"
@@ -442,24 +446,23 @@ const formatCurrency = (amount: number) => {
             min="0"
             step="100"
             required
-            style="width: 60px; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.8rem; text-align: right;"
+            style="width: 70px; box-sizing: border-box; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.8rem;"
           />
-          <span style="color: #64748b;">円</span>
+          <span style="color: #64748b; font-size: 0.75rem; ">円</span>
           <button
             type="submit"
-            style="padding: 4px 8px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: bold; cursor: pointer;"
-          >
+            style="padding: 4px 8px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer;">
             保存
           </button>
         </form>
 
         <form
           method="POST"
-          style="background: white; padding: 0.75rem; margin-bottom: 0.5rem; margin-left: auto; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"
+          style="background: white; padding: 0.5rem; margin-bottom: 0.5rem; margin-left: auto; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"
         >
           <input type="hidden" name="action" value="save-booking-end-date" />
           <label for="bookingEndDate" style="font-weight: bold; color: #303030; font-size: 0.8rem;">
-            予約最終日
+            最終予約
           </label>
           <input
             type="date"
@@ -467,11 +470,11 @@ const formatCurrency = (amount: number) => {
             name="bookingEndDate"
             value={bookingEndDate}
             required
-            style="width: 120px; box-sizing: border-box; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem;"
+            style="width: 110px; box-sizing: border-box; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.8rem;"
           />
           <button
             type="submit"
-            style="padding: 4px 8px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: bold; cursor: pointer;"
+            style="padding: 4px 8px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer;"
           >
             保存
           </button>
@@ -483,14 +486,14 @@ const formatCurrency = (amount: number) => {
         <form method="POST" id="availability-form">
           <table
             class="availability-table"
-            style="width: 100%; border-collapse: collapse; text-align: center; font-size: 0.95rem;"
+            style="width: 100%; border-collapse: collapse; text-align: center; font-size: 0.85rem;"
           >
             <thead>
               <tr
                 style="background: #f1f5f9; border-bottom: 2px solid #e2e8f0; color: #475569;"
               >
                 <th style="padding: 6px 8px; white-space: nowrap;">日付</th>
-                <th style="padding: 6px 8px; white-space: nowrap;">1泊の料金</th
+                <th style="padding: 6px 8px; white-space: nowrap;">料金</th
                 >
                 <th style="padding: 6px 8px; white-space: nowrap;">最大人数</th>
                 <th style="padding: 6px 8px; white-space: nowrap;">予約状況</th>
@@ -556,7 +559,7 @@ const formatCurrency = (amount: number) => {
                             min="0"
                             style="width: 60px; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.9rem; text-align: right;"
                           />
-                          <span style="font-size: 0.85rem; color: #64748b;">
+                          <span style="font-size: 0.75rem; color: #64748b;">
                             円
                           </span>
                         </div>
@@ -573,7 +576,7 @@ const formatCurrency = (amount: number) => {
                             required
                             style="width: 40px; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.9rem; text-align: right;"
                           />
-                          <span style="font-size: 0.85rem; color: #64748b;">
+                          <span style="font-size: 0.75rem; color: #64748b;">
                             名
                           </span>
                         </div>
