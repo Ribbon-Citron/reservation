@@ -72,158 +72,159 @@ const formatCurrency = (amount) => {
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>PMS Reservations</title>
-    
-<style>
-  .admin-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-  }
 
-  .admin-header-nav {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-
-  .admin-nav-link {
-    padding: 4px 12px;
-    background: #f0f0f0;
-    text-decoration: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #0f172a;
-    text-align: center;
-  }
-
-  .nav-label {
-    display: none;
-  }
-
-  @media screen and (max-width: 600px) {
-    .admin-header {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      gap: 14px;
-      margin-bottom: 1rem;
-    }
-
-    .admin-header-title h1 {
-      font-size: 1.3rem !important;
-      white-space: nowrap;
-    }
-
-    .admin-header-title p {
-      font-size: 0.78rem !important;
-    }
-
-    .admin-header-nav {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 7px;
-      width: 100%;
-    }
-
-    .admin-nav-link {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      box-sizing: border-box;
-      min-width: 0;
-      min-height: 58px;
-      padding: 6px 2px;
-      font-size: 0.75rem;
-    }
-
-    .nav-icon {
-      font-size: 1.15rem;
-      line-height: 1.3;
-    }
-
-    .nav-label {
-      display: block;
-      font-size: 0.68rem;
-      white-space: nowrap;
-    }
-  }
-</style>
-
-  </head>
-  <style>
-    @media screen and (max-width: 600px) {
-      .reservation-table-wrap {
-        overflow: visible !important;
-        background: transparent !important;
-        box-shadow: none !important;
+    <style>
+      .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
       }
 
-      .reservation-table {
-        display: block;
-        width: 100% !important;
+      .admin-header-nav {
+        display: flex;
+        justify-content: flex-end;
+        gap: 6px;
       }
 
-      .reservation-table thead {
-        display: none;
-      }
-
-      .reservation-table tbody {
-        display: block;
-        width: 100%;
-      }
-
-      .reservation-table tbody tr {
-        display: block;
-        width: 100%;
-        margin-bottom: 12px;
-        padding: 6px 10px;
-        box-sizing: border-box;
-        background: white;
-        border: 1px solid #e2e8f0 !important;
-        border-radius: 8px;
-      }
-
-      .reservation-table tbody td {
-        display: block;
-        width: 100% !important;
-        min-width: 0 !important;
-        box-sizing: border-box;
-        padding: 8px 4px !important;
-        white-space: normal !important;
-        text-align: left !important;
-        border-bottom: 1px solid #f1f5f9;
-        overflow-wrap: anywhere;
-      }
-
-      .reservation-table tbody td:nth-child(2)::before {
-        content: "宿泊日程・到着時刻";
-        display: block;
+      .admin-nav-link {
+        padding: 4px 12px;
+        background: #f0f0f0;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: normal;
         color: #64748b;
-        font-size: 0.75rem;
-        margin-bottom: 4px;
+        text-align: center;
       }
 
-      .reservation-table tbody td:nth-child(3) {
-        text-align: left !important;
-        font-size: 0.9rem;
+      .nav-label {
+        display: inline;
       }
 
-      .reservation-table tbody td:nth-child(4) {
-        text-align: center !important;
-        border-bottom: none;
-      }
+      @media screen and (max-width: 600px) {
+        .admin-header {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 14px;
+          margin-bottom: 1rem;
+        }
 
-      .reservation-table tbody td:nth-child(4) button {
-        width: 100% !important;
-        max-width: 180px;
-        padding: 9px !important;
+        .admin-header-title h1 {
+          font-size: 1.3rem !important;
+          white-space: nowrap;
+        }
+
+        .admin-header-title p {
+          font-size: 0.78rem !important;
+        }
+
+        .admin-header-nav {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 7px;
+          width: 100%;
+        }
+
+        .admin-nav-link {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 3px;
+          box-sizing: border-box;
+          min-width: 0;
+          min-height: 58px;
+          padding: 6px 2px;
+          font-size: 0.75rem;
+        }
+
+        .nav-icon {
+          font-size: 1.15rem;
+          line-height: 1.3;
+        }
+
+        .nav-label {
+          display: block;
+          font-size: 0.68rem;
+          white-space: nowrap;
+        }
       }
-    }
-  </style>
+    </style>
+
+    <style>
+      @media screen and (max-width: 600px) {
+        .reservation-table-wrap {
+          overflow: visible !important;
+          background: transparent !important;
+          box-shadow: none !important;
+        }
+
+        .reservation-table {
+          display: block;
+          width: 100% !important;
+        }
+
+        .reservation-table thead {
+          display: none;
+        }
+
+        .reservation-table tbody {
+          display: block;
+          width: 100%;
+        }
+
+        .reservation-table tbody tr {
+          display: block;
+          width: 100%;
+          margin-bottom: 12px;
+          padding: 6px 10px;
+          box-sizing: border-box;
+          background: white;
+          border: 1px solid #e2e8f0 !important;
+          border-radius: 8px;
+        }
+
+        .reservation-table tbody td {
+          display: block;
+          width: 100% !important;
+          min-width: 0 !important;
+          box-sizing: border-box;
+          padding: 8px 4px !important;
+          white-space: normal !important;
+          text-align: left !important;
+          border-bottom: 1px solid #f1f5f9;
+          overflow-wrap: anywhere;
+        }
+
+        .reservation-table tbody td:nth-child(2)::before {
+          content: "宿泊日程・到着時刻";
+          display: block;
+          color: #64748b;
+          font-size: 0.75rem;
+          margin-bottom: 4px;
+        }
+
+        .reservation-table tbody td:nth-child(3) {
+          text-align: left !important;
+          font-size: 0.9rem;
+        }
+
+        .reservation-table tbody td:nth-child(4) {
+          text-align: center !important;
+          border-bottom: none;
+        }
+
+        .reservation-table tbody td:nth-child(4) button {
+          width: 100% !important;
+          max-width: 180px;
+          padding: 9px !important;
+        }
+      }
+    </style></head
+  >
+
   <body
     style="font-family: sans-serif; background-color: #f8fafc; margin: 0; padding: 1rem;"
   >
@@ -240,26 +241,26 @@ const formatCurrency = (amount) => {
         </div>
 
         <div class="admin-header-nav">
-          <a href="/" class="admin-nav-link">
+          <a href="/" class="admin-nav-link" title="ゲスト用予約ページ">
             <span class="nav-icon">📆</span>
             <span class="nav-label">予約</span>
           </a>
-          <a href="/admin/availability" class="admin-nav-link">
-            <span class="nav-icon">⚙️</span>
+
+          <a href="/admin/availability" class="admin-nav-link" title="各種設定">
+          <span class="nav-icon">⚙️</span>
             <span class="nav-label">設定</span>
           </a>
-          <a href="/admin/scanner" class="admin-nav-link">
-            <span class="nav-icon">❙❙❘❙❚❙❘❚</span>
+
+          <a href="/admin/scanner" class="admin-nav-link" title="予約コードスキャン">
+            <span class="nav-icon">📷</span>
             <span class="nav-label">受付</span>
           </a>
-          <a
-            href="/admin/guest-export"
-            title="宿泊者情報CSV出力"
-            class="admin-nav-link"
-          >
+
+          <a href="/admin/guest-export" class="admin-nav-link" title="宿泊者情報CSV出力">
             <span class="nav-icon">📄</span>
-            <span class="nav-label">宿泊者情報</span>
+            <span class="nav-label">名簿</span>
           </a>
+
         </div>
       </div>
     </div>
