@@ -22,26 +22,20 @@
         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;"
       >
         <h1 style="margin: 0; font-size: 1.25rem;">📷 入室処理</h1>
-        <div
-          style="text-align: right; display: flex; justify-content: flex-end; gap: 10px;"
-        >
-          <a
-            href="/"
-            style="padding: 4px 20px; background: #f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;"
-          >
-            📆
+        <div class="admin-header-nav">
+          <a href="/" class="admin-nav-link" title="ゲスト用予約ページ">
+            <span class="nav-icon">📆</span>
+            <span class="nav-label">予約</span>
           </a>
-          <a
-            href="/admin/reservations"
-            style="padding: 4px 18px; background:#f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;"
-          >
-            📊
+
+          <a href="/admin/reservations" class="admin-nav-link" title="予約状況と処理">
+            <span class="nav-icon">📊</span>
+            <span class="nav-label">状況</span>
           </a>
-          <a
-            href="/admin/availability"
-            style="padding: 4px 18px; background:#f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;"
-          >
-            ⚙️
+
+          <a href="/admin/availability" class="admin-nav-link" title="各種設定">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-label">設定</span>
           </a>
         </div>
       </div>
@@ -51,7 +45,7 @@
         style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 1.5rem; text-align: center;"
       >
         <p style="color: #64748b; font-size: 0.9rem; margin-top: 0;">
-          Scan QRcode
+          Scan QR code
         </p>
 
         <!-- カメラ映像が映る要素 -->
