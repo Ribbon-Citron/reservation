@@ -16,150 +16,160 @@
   <body
     style="font-family: sans-serif; background: #f8fafc; margin: 0; padding: 0.5rem; color: #0f172a;"
   >
-    <div style="max-width: 800px; margin: 0 auto;">
+    <div style="max-width: 900px; margin: 0 auto;">
       <!-- ヘッダー -->
-      <div
-        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;"
-      >
-        <h1 style="margin: 0; font-size: 1.25rem;">📷 入室処理</h1>
-        <div class="admin-header-nav">
-          <a href="/" class="admin-nav-link" title="ゲスト用予約ページ">
-            <span class="nav-icon">📆</span>
-            <span class="nav-label">予約</span>
-          </a>
+      <div class="admin-header">
+        <div class="admin-header-title">
+          <h1 style="margin: 0; color: #0f172a; font-size: 1.5rem;">
+            📷 入室処理
+          </h1>
+          <div class="admin-header-nav">
+            <a href="/" class="admin-nav-link" title="ゲスト用予約ページ">
+              <span class="nav-icon">📆</span>
+              <span class="nav-label">予約</span>
+            </a>
 
-          <a href="/admin/reservations" class="admin-nav-link" title="予約状況と処理">
-            <span class="nav-icon">📊</span>
-            <span class="nav-label">状況</span>
-          </a>
+            <a
+              href="/admin/reservations"
+              class="admin-nav-link"
+              title="予約状況と処理"
+            >
+              <span class="nav-icon">📊</span>
+              <span class="nav-label">状況</span>
+            </a>
 
-          <a href="/admin/availability" class="admin-nav-link" title="各種設定">
-            <span class="nav-icon">⚙️</span>
-            <span class="nav-label">設定</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- スキャナー表示エリア -->
-      <div
-        style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 1.5rem; text-align: center;"
-      >
-        <p style="color: #64748b; font-size: 0.9rem; margin-top: 0;">
-          Scan QR code
-        </p>
-
-        <!-- カメラ映像が映る要素 -->
-        <div
-          id="reader"
-          style="width: 100%; max-width: 400px; margin: 0 auto; border-radius: 8px; overflow: hidden;"
-        >
+            <a
+              href="/admin/availability"
+              class="admin-nav-link"
+              title="各種設定"
+            >
+              <span class="nav-icon">⚙️</span>
+              <span class="nav-label">設定</span>
+            </a>
+          </div>
         </div>
 
-        <!-- 結果表示エリア -->
+        <!-- スキャナー表示エリア -->
         <div
-          id="result-container"
-          style="margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; text-align: left;"
+          style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 1.5rem; text-align: center;"
         >
-          <h3 id="result-title" style="margin: 0 0 8px 0; font-size: 1.1rem;">
-          </h3>
-          <p
-            id="result-details"
-            style="margin: 0; font-size: 0.9rem; line-height: 1.5;"
-          >
+          <p style="color: #64748b; font-size: 0.9rem; margin-top: 0;">
+            Scan QR code
           </p>
-        </div>
 
-        <div style="margin-top: 1.5rem;">
-          <button
-            id="restart-btn"
-            style="display: none; padding: 10px 20px; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.95rem;"
+          <!-- カメラ映像が映る要素 -->
+          <div
+            id="reader"
+            style="width: 100%; max-width: 400px; margin: 0 auto; border-radius: 8px; overflow: hidden;"
           >
-            次のコードを読み取る
-          </button>
+          </div>
+
+          <!-- 結果表示エリア -->
+          <div
+            id="result-container"
+            style="margin-top: 1.5rem; padding: 1rem; border-radius: 8px; display: none; text-align: left;"
+          >
+            <h3 id="result-title" style="margin: 0 0 8px 0; font-size: 1.1rem;">
+            </h3>
+            <p
+              id="result-details"
+              style="margin: 0; font-size: 0.9rem; line-height: 1.5;"
+            >
+            </p>
+          </div>
+
+          <div style="margin-top: 1.5rem;">
+            <button
+              id="restart-btn"
+              style="display: none; padding: 10px 20px; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.95rem;"
+            >
+              次のコードを読み取る
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <script>
-      let html5QrCode;
+      <script>
+        let html5QrCode;
 
-      async function onScanSuccess(decodedText, decodedResult) {
-        console.log(`Code matched = ${decodedText}`, decodedResult);
+        async function onScanSuccess(decodedText, decodedResult) {
+          console.log(`Code matched = ${decodedText}`, decodedResult);
 
-        if (html5QrCode) {
-          html5QrCode.stop().catch((err) => {
-            console.error("Failed to stop scanner.", err);
-          });
-        }
-
-        const resultContainer = document.getElementById("result-container");
-        const resultTitle = document.getElementById("result-title");
-        const resultDetails = document.getElementById("result-details");
-        const restartBtn = document.getElementById("restart-btn");
-
-        resultContainer.style.display = "block";
-        resultContainer.style.background = "#dbeafe";
-        resultTitle.style.color = "#1d4ed8";
-        resultTitle.innerText = "📷 QRコードを読み取りました";
-        resultDetails.innerText = "予約情報を確認しています…";
-        restartBtn.style.display = "inline-block";
-
-        try {
-          const response = await fetch("/api/admin/lookup-reservation", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ reservationId: decodedText }),
-          });
-
-          const data = await response.json();
-
-          if (!response.ok || !data.success) {
-            throw new Error(data.error || "予約情報を取得できませんでした。");
+          if (html5QrCode) {
+            html5QrCode.stop().catch((err) => {
+              console.error("Failed to stop scanner.", err);
+            });
           }
 
-          resultDetails.innerText =
-            `予約ID：${data.reservation.reservation_code || data.reservation.id}\n` +
-            `予約者名：${data.reservation.guest_name || "未登録"}\n\n` +
-            "予約内容, お支払い, 本人確認 を受付で確認してください。" +
-            "確認後、状況一覧の「Check-In」ボタンを押してください。";
-        } catch (err) {
-          console.error("Reservation lookup error:", err);
-          resultDetails.innerText =
-            `読み取りコード：${decodedText}\n` +
-            `予約情報の取得に失敗しました。\n${err.message}`;
+          const resultContainer = document.getElementById("result-container");
+          const resultTitle = document.getElementById("result-title");
+          const resultDetails = document.getElementById("result-details");
+          const restartBtn = document.getElementById("restart-btn");
+
+          resultContainer.style.display = "block";
+          resultContainer.style.background = "#dbeafe";
+          resultTitle.style.color = "#1d4ed8";
+          resultTitle.innerText = "📷 QRコードを読み取りました";
+          resultDetails.innerText = "予約情報を確認しています…";
+          restartBtn.style.display = "inline-block";
+
+          try {
+            const response = await fetch("/api/admin/lookup-reservation", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ reservationId: decodedText }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+              throw new Error(data.error || "予約情報を取得できませんでした。");
+            }
+
+            resultDetails.innerText =
+              `予約ID：${data.reservation.reservation_code || data.reservation.id}\n` +
+              `予約者名：${data.reservation.guest_name || "未登録"}\n\n` +
+              "予約内容, お支払い, 本人確認 を受付で確認してください。" +
+              "確認後、状況一覧の「Check-In」ボタンを押してください。";
+          } catch (err) {
+            console.error("Reservation lookup error:", err);
+            resultDetails.innerText =
+              `読み取りコード：${decodedText}\n` +
+              `予約情報の取得に失敗しました。\n${err.message}`;
+          }
         }
-      }
 
-      function restartScanner() {
-        document.getElementById("result-container").style.display = "none";
-        document.getElementById("restart-btn").style.display = "none";
-        startScanner();
-      }
-      // restartScanner() の外側に置く
-      document
-        .getElementById("restart-btn")
-        ?.addEventListener("click", restartScanner);
+        function restartScanner() {
+          document.getElementById("result-container").style.display = "none";
+          document.getElementById("restart-btn").style.display = "none";
+          startScanner();
+        }
+        // restartScanner() の外側に置く
+        document
+          .getElementById("restart-btn")
+          ?.addEventListener("click", restartScanner);
 
-      function startScanner() {
-        html5QrCode = new Html5Qrcode("reader");
-        const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+        function startScanner() {
+          html5QrCode = new Html5Qrcode("reader");
+          const config = { fps: 10, qrbox: { width: 250, height: 250 } };
 
-        html5QrCode
-          .start({ facingMode: "environment" }, config, onScanSuccess)
-          .catch((err) => {
-            console.error("Unable to start scanning.", err);
-            alert(
-              "カメラを起動できませんでした。カメラの権限が許可されているかご確認ください。",
-            );
-          });
-      }
+          html5QrCode
+            .start({ facingMode: "environment" }, config, onScanSuccess)
+            .catch((err) => {
+              console.error("Unable to start scanning.", err);
+              alert(
+                "カメラを起動できませんでした。カメラの権限が許可されているかご確認ください。",
+              );
+            });
+        }
 
-      // ページ読み込み時にカメラ起動を試みる
-      window.addEventListener("load", () => {
-        startScanner();
-      });
-    </script>
+        // ページ読み込み時にカメラ起動を試みる
+        window.addEventListener("load", () => {
+          startScanner();
+        });
+      </script>
+    </div>
   </body>
 </html>
