@@ -1,0 +1,191 @@
+
+---
+const pageTitle = '宿泊者情報CSV出力';
+---
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{pageTitle} | CENTER INN</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px 16px;
+      font-family: Arial, "Noto Sans JP", sans-serif;
+      background: #f5f6f8;
+      color: #333;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .back-link {
+      color: #2563eb;
+      text-decoration: none;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .panel {
+      background: white;
+      padding: 24px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .description {
+      margin: 0 0 20px;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    input[type="date"] {
+      width: 100%;
+      max-width: 260px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    .note {
+      color: #666;
+      font-size: 13px;
+      line-height: 1.6;
+      margin: 8px 0 20px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 7px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .warning {
+      margin-top: 20px;
+      padding: 12px;
+      background: #fff7ed;
+      border-radius: 6px;
+      color: #9a3412;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 480px) {
+      .panel {
+        padding: 18px;
+      }
+
+      h1 {
+        font-size: 19px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <div class="header">
+      <h1>{pageTitle}</h1>
+      <a class="back-link" href="/admin/reservations">← 予約一覧へ</a>
+    </div>
+
+    <section class="panel">
+      <p class="description">
+        チェックイン済みの宿泊者情報をCSVファイルとして出力します。
+        宿泊者1名につき1行で出力されます。
+      </p>
+
+      <form id="exportForm" action="/api/admin/export-guests" method="GET">
+        <div class="field">
+          <label for="startDate">到着日の開始日</label>
+          <input type="date" id="startDate" name="startDate" />
+        </div>
+
+        <div class="field">
+          <label for="endDate">到着日の終了日</label>
+          <input type="date" id="endDate" name="endDate" />
+        </div>
+
+        <p class="note">
+          ※ 期間を指定する場合は、開始日と終了日の両方を入力してください。<br />
+          ※ 両方空欄の場合は全期間が対象になります。<br />
+          ※ 対象はチェックイン済み（checked_in）の予約のみです。
+        </p>
+
+        <button type="submit">CSVファイルをダウンロード</button>
+      </form>
+
+      <div class="warning">
+        <strong>個人情報の取り扱いにご注意ください。</strong><br />
+        CSVには氏名・住所・電話番号・メールアドレス・国籍・旅券番号などの個人情報が含まれます。
+        出力後は安全に保管し、不要になったファイルは適切に削除してください。
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById('exportForm');
+    const startDate = document.getElementById('startDate');
+    const endDate = document.getElementById('endDate');
+
+    form?.addEventListener('submit', (event) => {
+      const start = startDate.value;
+      const end = endDate.value;
+
+      if (Boolean(start) !== Boolean(end)) {
+        event.preventDefault();
+        alert('期間を指定する場合は、開始日と終了日の両方を入力してください。');
+        return;
+      }
+
+      if (start && end && start > end) {
+        event.preventDefault();
+        alert('終了日は開始日以降の日付を指定してください。');
+      }
+    });
+  </script>
+</body>
+</html>
