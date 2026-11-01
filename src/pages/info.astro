@@ -1,0 +1,575 @@
+
+---
+const pageTitle = '宿泊施設のご案内 | CENTER INN';
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>{pageTitle}</title>
+    <meta
+      name="description"
+      content="CENTER INNの宿泊施設情報、ご予約方法、お問い合わせ先をご案内します。"
+    />
+  </head>
+
+  <body>
+    <header class="site-header">
+      <a href="/" class="brand">CENTER INN</a>
+      <a href="/" class="header-link">予約ページへ</a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-inner">
+          <p class="eyebrow">INFORMATION</p>
+          <h1>宿泊施設のご案内</h1>
+          <p>施設の情報やご予約方法についてご案内します。</p>
+        </div>
+      </section>
+
+      <div class="container">
+        <div class="draft-warning">
+          <strong>⚠ これは仮情報です</strong>
+          <p>
+            施設情報・写真・案内内容は準備中です。
+            正式な情報に差し替えてから公開してください。
+          </p>
+        </div>
+
+        <!-- 施設情報 -->
+        <section class="content-section">
+          <div class="section-heading">
+            <p class="eyebrow">01 / FACILITY</p>
+            <h2>設備・施設のご案内</h2>
+            <p class="section-lead">
+              CENTER INNの施設や設備についてご紹介します。
+            </p>
+          </div>
+
+          <div class="facility-card">
+            <img
+              src="/room.png"
+              alt="宿泊施設の室内"
+              class="facility-image"
+            />
+            <div class="facility-text">
+              <h3>宿泊施設について</h3>
+              <p>
+                施設の特徴や室内の様子などを掲載する予定です。
+                写真と説明文は、準備ができ次第追加します。
+              </p>
+            </div>
+          </div>
+
+          <!--
+            写真を追加するときは、上の facility-card を複製して、
+            画像ファイル名と見出し・説明文を変更してください。
+
+            例：
+            <img src="/bathroom.jpg" alt="浴室" class="facility-image" />
+          -->
+        </section>
+
+        <section class="content-section booking-section">
+          <div class="section-heading">
+            <p class="eyebrow">02 / RESERVATION</p>
+            <h2>リクエスト予約制について</h2>
+          </div>
+
+          <div class="info-panel">
+            <p>
+              CENTER INNでは、リクエスト予約制を採用しています。
+            </p>
+            <ol>
+              <li>予約ページから希望の日程・人数などを入力して送信します。</li>
+              <li>施設側で予約内容と空室状況を確認します。</li>
+              <li>施設からの承認・確定の連絡をもって予約成立となります。</li>
+            </ol>
+            <p class="note">
+              予約リクエストを送信した時点では、宿泊予約は確定していません。
+            </p>
+
+            <a href="/" class="primary-button">予約ページへ進む</a>
+          </div>
+        </section>
+
+        <section class="content-section contact-section">
+          <div class="section-heading">
+            <p class="eyebrow">03 / CONTACT</p>
+            <h2>お問い合わせ</h2>
+            <p class="section-lead">
+              ご質問やご不明な点がございましたら、こちらのフォームからお問い合わせください。
+            </p>
+          </div>
+
+          <form id="contact-form" class="contact-form">
+            <div class="form-group">
+              <label for="contact-name">お名前 <span>必須</span></label>
+              <input
+                type="text"
+                id="contact-name"
+                name="name"
+                placeholder="お名前を入力してください"
+                maxlength="100"
+                required
+                autocomplete="name"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="contact-email">メールアドレス <span>必須</span></label>
+              <input
+                type="email"
+                id="contact-email"
+                name="email"
+                placeholder="メールアドレスを入力してください"
+                maxlength="254"
+                required
+                autocomplete="email"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="contact-message">メッセージ <span>必須</span></label>
+              <textarea
+                id="contact-message"
+                name="message"
+                rows="7"
+                placeholder="お問い合わせ内容を入力してください"
+                maxlength="5000"
+                required
+              ></textarea>
+            </div>
+
+            <!-- 迷惑送信対策用の隠し項目 -->
+            <div class="honeypot" aria-hidden="true">
+              <label for="contact-website">ウェブサイト</label>
+              <input
+                type="text"
+                id="contact-website"
+                name="website"
+                tabindex="-1"
+                autocomplete="off"
+              />
+            </div>
+
+            <button type="submit" id="contact-submit" class="primary-button">
+              送信する
+            </button>
+
+            <p id="contact-status" class="contact-status" role="status" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <section class="terms-link-section">
+          <a href="/terms" class="terms-link">
+            利用規約・宿泊約款（特商法に基づく表示）
+            <span>→</span>
+          </a>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p>© CENTER INN</p>
+    </footer>
+  </body>
+</html>
+
+<script>
+  const contactForm = document.querySelector<HTMLFormElement>('#contact-form');
+  const contactSubmit = document.querySelector<HTMLButtonElement>('#contact-submit');
+  const contactStatus = document.querySelector<HTMLParagraphElement>('#contact-status');
+
+  contactForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    if (!contactForm.reportValidity()) return;
+
+    if (!contactSubmit || !contactStatus) return;
+
+    contactSubmit.disabled = true;
+    contactSubmit.textContent = '送信中...';
+    contactStatus.textContent = '';
+    contactStatus.className = 'contact-status';
+
+    const formData = new FormData(contactForm);
+
+    const payload = {
+      name: String(formData.get('name') || ''),
+      email: String(formData.get('email') || ''),
+      message: String(formData.get('message') || ''),
+      website: String(formData.get('website') || ''),
+    };
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || '送信に失敗しました。');
+      }
+
+      contactStatus.textContent = 'お問い合わせを送信しました。ありがとうございます。';
+      contactStatus.classList.add('success');
+      contactForm.reset();
+    } catch (error) {
+      contactStatus.textContent =
+        error instanceof Error
+          ? error.message
+          : '送信に失敗しました。時間をおいて再度お試しください。';
+      contactStatus.classList.add('error');
+    } finally {
+      contactSubmit.disabled = false;
+      contactSubmit.textContent = '送信する';
+    }
+  });
+</script>
+
+<style>
+  :root {
+    --navy: #1e293b;
+    --red: #a3080f;
+    --background: #f8fafc;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #e2e8f0;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--background);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.8;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .site-header {
+    height: 68px;
+    padding: 0 6%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .brand {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: var(--navy);
+  }
+
+  .header-link {
+    color: var(--red);
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .hero {
+    background: var(--navy);
+    color: white;
+    padding: 65px 20px;
+    text-align: center;
+  }
+
+  .hero-inner {
+    max-width: 900px;
+    margin: auto;
+  }
+
+  .hero h1 {
+    margin: 8px 0;
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    letter-spacing: 0.04em;
+  }
+
+  .hero p:last-child {
+    margin: 8px 0 0;
+    color: #cbd5e1;
+  }
+
+  .eyebrow {
+    margin: 0;
+    color: var(--red);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+  }
+
+  .hero .eyebrow {
+    color: #fca5a5;
+  }
+
+  .container {
+    width: min(900px, 90%);
+    margin: 45px auto 80px;
+  }
+
+  .draft-warning {
+    padding: 18px 22px;
+    margin-bottom: 65px;
+    background: #fff7ed;
+    border: 1px solid #fdba74;
+    border-left: 5px solid var(--red);
+    border-radius: 8px;
+  }
+
+  .draft-warning strong {
+    color: var(--red);
+  }
+
+  .draft-warning p {
+    margin: 5px 0 0;
+    font-size: 0.9rem;
+  }
+
+  .content-section {
+    margin-bottom: 75px;
+  }
+
+  .section-heading {
+    margin-bottom: 28px;
+  }
+
+  .section-heading h2 {
+    margin: 5px 0;
+    color: var(--navy);
+    font-size: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  .section-lead {
+    color: var(--muted);
+    margin: 8px 0 0;
+  }
+
+  .facility-card {
+    overflow: hidden;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgb(15 23 42 / 4%);
+  }
+
+  .facility-image {
+    display: block;
+    width: 100%;
+    max-height: 430px;
+    object-fit: cover;
+  }
+
+  .facility-text {
+    padding: 24px 28px;
+  }
+
+  .facility-text h3 {
+    margin: 0 0 8px;
+    color: var(--navy);
+  }
+
+  .facility-text p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .info-panel {
+    padding: 30px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .info-panel ol {
+    padding-left: 1.5em;
+    margin: 20px 0;
+  }
+
+  .info-panel li {
+    padding: 4px 0;
+  }
+
+  .note {
+    padding: 12px 16px;
+    background: #fff7ed;
+    border-radius: 6px;
+    color: #9a3412;
+    font-size: 0.9rem;
+  }
+
+  .primary-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 52px;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 7px;
+    background: var(--red);
+    color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .primary-button:hover {
+    opacity: 0.85;
+  }
+
+  .primary-button:disabled {
+    opacity: 0.55;
+    cursor: wait;
+  }
+
+  .contact-form {
+    padding: 32px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgb(15 23 42 / 4%);
+  }
+
+  .form-group {
+    margin-bottom: 24px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  .form-group label span {
+    margin-left: 6px;
+    color: var(--red);
+    font-size: 0.75rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: #fff;
+    color: var(--text);
+    font: inherit;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: 2px solid #94a3b8;
+    outline-offset: 1px;
+    border-color: var(--navy);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+  }
+
+  .contact-status {
+    margin: 16px 0 0;
+    font-size: 0.9rem;
+  }
+
+  .contact-status.success {
+    color: #15803d;
+  }
+
+  .contact-status.error {
+    color: var(--red);
+  }
+
+  .honeypot {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .terms-link-section {
+    padding: 25px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .terms-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  .terms-link span {
+    color: var(--red);
+    font-size: 1.3rem;
+  }
+
+  .site-footer {
+    padding: 25px;
+    background: var(--navy);
+    color: #cbd5e1;
+    text-align: center;
+    font-size: 0.85rem;
+  }
+
+  .site-footer p {
+    margin: 0;
+  }
+
+  @media (max-width: 600px) {
+    .hero {
+      padding: 48px 18px;
+    }
+
+    .container {
+      margin-top: 30px;
+    }
+
+    .draft-warning {
+      margin-bottom: 45px;
+    }
+
+    .content-section {
+      margin-bottom: 55px;
+    }
+
+    .info-panel,
+    .contact-form {
+      padding: 22px 18px;
+    }
+
+    .facility-text {
+      padding: 20px;
+    }
+
+    .primary-button {
+      width: 100%;
+    }
+  }
+</style>
