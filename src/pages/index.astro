@@ -489,18 +489,10 @@
     </main>
 
     <!-- 最下部 -->
-    <footer
-      id="info"
-      style="background: #1e293b; color: #f8fafc; padding: 2rem 1rem; margin-top: 3rem; text-align: center;"
-    >
-      <a
-        href="/"
-        class="brand"
-        style="color: #a3080f; text-decoration: none; font-size: 1.5rem; font-weight: bold;"
-      >
-        CENTER <span>INN</span>
-      </a>
-    </footer>
+  <footer>
+    <p>© CENTER INN</p>
+    <p>本ページはデバッグ用の仮情報を含みます。</p>
+  </footer>
 
     <!-- 完了モーダル -->
     <div
@@ -1086,3 +1078,25 @@
     </script>
   </body>
 </html>
+
+<style>
+  footer {
+    background: #1e293b;
+    color: #cbd5e1;
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+  }
+
+  footer p { margin: 3px; }
+
+  @media (max-width: 600px) {
+    .site-header { padding: 12px 16px; }
+    .container { width: min(100% - 20px, 850px); margin-top: 14px; }
+    .warning { padding: 16px; }
+    .toc, .section, .contact { padding: 17px 15px; }
+    .section-heading h2 { font-size: 20px; }
+    th, td { padding: 10px 9px; }
+    .business-table tbody th { width: 38%; }
+  }
+</style>
