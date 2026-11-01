@@ -307,6 +307,69 @@ const formatCurrency = (amount: number) => {
           white-space: nowrap;
         }
       }
+      /* スマホ用 設定一覧テーブル */
+      @media screen and (max-width: 600px) {
+        .availability-table {
+          font-size: 0.72rem !important;
+          table-layout: fixed;
+        }
+
+        .availability-table th,
+        .availability-table td {
+          padding: 5px 2px !important;
+          overflow-wrap: anywhere;
+        }
+
+        .availability-table th:nth-child(1),
+        .availability-table td:nth-child(1) {
+          width: 19%;
+        }
+
+        .availability-table th:nth-child(2),
+        .availability-table td:nth-child(2) {
+          width: 23%;
+        }
+
+        .availability-table th:nth-child(3),
+        .availability-table td:nth-child(3) {
+          width: 17%;
+        }
+
+        .availability-table th:nth-child(4),
+        .availability-table td:nth-child(4) {
+          width: 25%;
+        }
+
+        .availability-table th:nth-child(5),
+        .availability-table td:nth-child(5) {
+          width: 16%;
+        }
+
+        .availability-table input[type="number"] {
+          width: 42px !important;
+          padding: 4px 2px !important;
+          box-sizing: border-box;
+          font-size: 0.75rem !important;
+        }
+
+        .availability-table td:nth-child(2) div,
+        .availability-table td:nth-child(3) div {
+          gap: 1px !important;
+        }
+
+        .availability-table td:nth-child(4) span {
+          font-size: 0.65rem !important;
+          padding: 3px 2px !important;
+          white-space: normal;
+        }
+
+        .availability-table td:nth-child(5) button,
+        .availability-table th:nth-child(5) button {
+          padding: 5px 2px !important;
+          font-size: 0.65rem !important;
+          white-space: normal !important;
+        }
+      }
     </style>
   </head>
   <body
@@ -332,7 +395,11 @@ const formatCurrency = (amount: number) => {
             <span class="nav-label">予約</span>
           </a>
 
-          <a href="/admin/reservations" class="admin-nav-link" title="予約状況と処理">
+          <a
+            href="/admin/reservations"
+            class="admin-nav-link"
+            title="予約状況と処理"
+          >
             <span class="nav-icon">📊</span>
             <span class="nav-label">状況</span>
           </a>
@@ -426,6 +493,7 @@ const formatCurrency = (amount: number) => {
       >
         <form method="POST" id="availability-form">
           <table
+            class="availability-table"
             style="width: 100%; border-collapse: collapse; text-align: center; font-size: 0.95rem;"
           >
             <thead>
