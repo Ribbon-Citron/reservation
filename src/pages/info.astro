@@ -18,8 +18,8 @@ const pageTitle = '宿泊施設のご案内 | CENTER INN';
 
   <body>
     <header class="site-header">
-      <a href="/" class="brand">CENTER INN</a>
-      <a href="/" class="header-link">予約ページへ</a>
+      <a href="/" class="brand">CENTER <span>INN</span></a>
+      <a href="/" class="back-link">予約ページへ</a>
     </header>
 
     <main>
@@ -281,12 +281,13 @@ const pageTitle = '宿泊施設のご案内 | CENTER INN';
     color: var(--navy);
   }
 
-  .header-link {
-    color: var(--red);
-    font-size: 0.9rem;
-    font-weight: 700;
+  .back-link {
+    font-size: 13px;
+    text-decoration: none;
+    border: 1px solid #94a3b8;
+    border-radius: 7px;
+    padding: 6px 12px;
   }
-
   .hero {
     background: var(--navy);
     color: white;
