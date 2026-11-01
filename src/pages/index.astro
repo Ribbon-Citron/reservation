@@ -22,8 +22,8 @@
       <div
         style="max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center;"
       >
-        <h1 style="margin: 0 0 0.5rem 0; font-size: 2.50rem; color: #a3080f;">
-          CENTER INN
+        <h1 style="margin: 0 0 0.5rem 0; font-size: 2.50rem; color: white;">
+          CENTER <span style="color: #a3080f;">INN</span>
         </h1>
         <p style="margin: 0 0 1.25rem 0; color: #edeae5; font-size: 0.95rem;">
           ここは開発中の架空サイトです
@@ -44,6 +44,15 @@
           style="margin: 0; color: #e5eae0; font-size: 0.9rem; line-height: 1.6; text-align: center;"
         >
           九州中央市のシェアスタイル素泊まり宿
+        </p>
+
+        <p style="margin: 0.6rem 0 0; text-align: center;">
+          <a
+            href="/info"
+            style="color: #e5eae0; text-decoration: underline; font-size: 0.9rem;"
+          >
+            宿・施設案内はこちら
+          </a>
         </p>
       </div>
     </header>
@@ -436,8 +445,24 @@
               <li>状況確認に最大24時間頂戴いたします</li>
             </ul>
 
+            <div style="padding-top: 0.65rem; border-top: 1px dashed #cbd5e1;">
+              <p
+                style="margin: 0 0 0.4rem; font-size: 0.8rem; font-weight: bold; color: #0f172a;"
+              >
+                利用規則・宿泊約款を確認承諾してください
+              </p>
+              <a
+                href="/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                style="font-size: 0.8rem; color: #2563eb; text-decoration: underline;"
+              >
+                利用規則・宿泊約款を確認する
+              </a>
+            </div>
+
             <label
-              style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; font-weight: bold; color: #0f172a; cursor: pointer; padding-top: 0.4rem; border-top: 1px dashed #cbd5e1;"
+              style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; font-weight: bold; color: #0f172a; cursor: pointer; padding-top: 0.65rem; margin-top: 0.65rem; border-top: 1px dashed #cbd5e1;"
             >
               <input
                 type="checkbox"
@@ -463,32 +488,18 @@
       </div>
     </main>
 
-    <!-- #info: 最下部・アクセス・お問い合わせ (センター配置) -->
+    <!-- 最下部 -->
     <footer
       id="info"
-      style="background: #1e293b; color: #f8fafc; padding: 2.5rem 1rem; margin-top: 3rem; text-align: center;"
+      style="background: #1e293b; color: #f8fafc; padding: 2rem 1rem; margin-top: 3rem; text-align: center;"
     >
-      <div
-        style="max-width: 480px; margin: 0 auto; font-size: 0.9rem; line-height: 2;"
+      <a
+        href="/"
+        class="brand"
+        style="color: #a3080f; text-decoration: none; font-size: 1.5rem; font-weight: bold;"
       >
-        <h3
-          style="margin: 0 0 0.75rem 0; font-size: 1rem; color: #cbd5e1; border-bottom: 1px solid #334155; padding-bottom: 0.4rem;"
-        >
-          アクセス・お問い合わせ
-        </h3>
-        <div>🏠宮森県 九州中央市 弟屈 0-0-00</div>
-        <div>📞090-9999-9999&emsp;📩centerinn@fmail.gom</div>
-        <div
-          style="margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem;"
-        >
-          <a href="/info" style="color: #cbd5e1; text-decoration: underline;">
-            宿・施設案内
-          </a>
-          <a href="/terms" style="color: #cbd5e1; text-decoration: underline;">
-            利用規約・キャンセルポリシー
-          </a>
-        </div>
-      </div>
+        CENTER <span>INN</span>
+      </a>
     </footer>
 
     <!-- 完了モーダル -->
