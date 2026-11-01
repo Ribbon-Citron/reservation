@@ -72,6 +72,87 @@ const formatCurrency = (amount) => {
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>PMS Reservations</title>
+    
+<style>
+  .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .admin-header-nav {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .admin-nav-link {
+    padding: 4px 12px;
+    background: #f0f0f0;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #0f172a;
+    text-align: center;
+  }
+
+  .nav-label {
+    display: none;
+  }
+
+  @media screen and (max-width: 600px) {
+    .admin-header {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 14px;
+      margin-bottom: 1rem;
+    }
+
+    .admin-header-title h1 {
+      font-size: 1.3rem !important;
+      white-space: nowrap;
+    }
+
+    .admin-header-title p {
+      font-size: 0.78rem !important;
+    }
+
+    .admin-header-nav {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 7px;
+      width: 100%;
+    }
+
+    .admin-nav-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      box-sizing: border-box;
+      min-width: 0;
+      min-height: 58px;
+      padding: 6px 2px;
+      font-size: 0.75rem;
+    }
+
+    .nav-icon {
+      font-size: 1.15rem;
+      line-height: 1.3;
+    }
+
+    .nav-label {
+      display: block;
+      font-size: 0.68rem;
+      white-space: nowrap;
+    }
+  }
+</style>
+
   </head>
   <style>
     @media screen and (max-width: 600px) {
@@ -148,10 +229,8 @@ const formatCurrency = (amount) => {
   >
     <div style="max-width: 900px; margin: 0 auto;">
       <!-- ヘッダーエリア -->
-      <div
-        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;"
-      >
-        <div>
+      <div class="admin-header">
+        <div class="admin-header-title">
           <h1 style="margin: 0; color: #0f172a; font-size: 1.5rem;">
             📊 状況一覧
           </h1>
@@ -159,793 +238,775 @@ const formatCurrency = (amount) => {
             ゲストからのリクエスト確認・予約承認
           </p>
         </div>
-        <div
-          style="text-align: right; display: flex; justify-content: flex-end; gap: 10px;"
-        >
-          <a
-            href="/"
-            style="padding: 4px 20px; background: #f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;"
-          >
-            📆
+
+        <div class="admin-header-nav">
+          <a href="/" class="admin-nav-link">
+            <span class="nav-icon">📆</span>
+            <span class="nav-label">予約</span>
           </a>
-          <a
-            href="/admin/availability"
-            style="padding: 4px 18px; background:#f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;"
-          >
-            ⚙️
+          <a href="/admin/availability" class="admin-nav-link">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-label">設定</span>
           </a>
-          <a
-            href="/admin/scanner"
-            style="padding: 4px 8px; background:#f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;"
-          >
-            ❙❙❘❙❚❙❘❚
+          <a href="/admin/scanner" class="admin-nav-link">
+            <span class="nav-icon">❙❙❘❙❚❙❘❚</span>
+            <span class="nav-label">受付</span>
           </a>
           <a
             href="/admin/guest-export"
             title="宿泊者情報CSV出力"
-            style="padding: 4px 10px; background:#f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;"
+            class="admin-nav-link"
           >
-            📄
+            <span class="nav-icon">📄</span>
+            <span class="nav-label">宿泊者情報</span>
           </a>
         </div>
       </div>
-
-      <!-- 予約データテーブル -->
-      {
-        dbError && (
-          <div style="background:#fee2e2; color:#991b1b; padding:1rem; margin-bottom:1rem;">
-            <strong>予約データの取得エラー:</strong> {dbError}
-          </div>
-        )
-      }
-      <div
-        class="reservation-table-wrap"
-        style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: auto;"
-      >
-        <table
-          class="reservation-table"
-          style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;"
-        >
-          <thead>
-            <tr
-              style="background: #f1f5f9; color: #475569; border-bottom: 6px solid #e2e8f0;"
-            >
-              <th style="padding: 6px 8px; text-align: center;">宿泊者名</th>
-              <th style="padding: 6px 8px; text-align: center;">宿泊日程</th>
-              <th style="padding: 6px 8px; text-align: center;">人数/金額</th>
-              <th
-                style="padding: 6px 4px; text-align: center; width: 116px; min-width: 116px;"
-                >操作</th
-              >
-            </tr>
-          </thead>
-          <tbody>
-            {
-              reservations && reservations.length > 0 ? (
-                reservations.map((item) => {
-                  return (
-                    <tr style="border-bottom: 6px solid #f1f5f9;">
-                      <td style="padding: 6px 8px; color: #0f172a;">
-                        <div style="max-width: 12em; word-break: break-all; font-weight: bold; font-size: 1rem; margin-bottom: 4px;">
-                          {item.guest_name}
-                        </div>
-                        <button
-                          onclick={`openReservationGuestEditor('${item.id}')`}
-                          style="margin: 4px 0; padding: 5px 8px; background: #0f766e; color: white; border: none; border-radius: 5px; font-size: 0.75rem; font-weight: bold; cursor: pointer;"
-                        >
-                          宿泊者情報
-                        </button>
-                        {item.reservation_code ? (
-                          <span style="display: inline-block; background: #f1f5f9; color: #0369a1; border: 1px solid #cbd5e1; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-family: monospace; font-weight: bold; letter-spacing: 1px;">
-                            ID: {item.reservation_code}
-                          </span>
-                        ) : (
-                          <span style="font-size: 0.75rem; color: #94a3b8;">
-                            コードなし
-                          </span>
-                        )}
-                      </td>
-
-                      <td style="padding: 6px 8px; color: #334155; font-size: 0.85rem; white-space: nowrap;">
-                        <div>
-                          {item.check_in_date} 〜 {item.check_out_date}（
-                          {item.nights ??
-                            Math.round(
-                              (Date.parse(`${item.check_out_date}T00:00:00Z`) -
-                                Date.parse(`${item.check_in_date}T00:00:00Z`)) /
-                                86400000,
-                            )}
-                          泊）
-                        </div>
-                        <div style="color: #2563eb; font-weight: bold; margin-top: 2px;">
-                          🕒 到着: {item.arrival_time || "未設定"}
-                        </div>
-                      </td>
-
-                      <td style="padding: 6px 8px; color: #334155; text-align: right; white-space: nowrap;">
-                        <div>{item.guests_count || 1}名</div>
-                        <div style="font-weight: bold; color: #0f172a;">
-                          {item.payment_status === "paid" ? "✓ " : ""}
-                          {formatCurrency(item.total_amount)}
-                        </div>
-                      </td>
-
-                      <td style="padding: 6px 4px; text-align: center; width: 116px; min-width: 116px;">
-                        {item.status === "pending" ? (
-                          <div style="display: flex; flex-direction: column; gap: 6px; justify-content: center; align-items: center; flex-wrap: nowrap;">
-                            <button
-                              onclick={`approveReservation('${item.id}')`}
-                              style="width: 100px; padding: 6px 0; background: #438a5d; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
-                            >
-                              Approve
-                            </button>
-                            <button
-                              onclick={`rejectReservation('${item.id}')`}
-                              style="width: 100px; padding: 6px 0; background: #c74343; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
-                            >
-                              Reject
-                            </button>
-                          </div>
-                        ) : item.status === "approved" ||
-                          item.status === "paid" ? (
-                          <div style="display: flex; flex-direction: column; gap: 6px; justify-content: center; align-items: center; flex-wrap: nowrap;">
-                            <button
-                              onclick={`quickCheckIn('${item.id}')`}
-                              style="width: 100px; padding: 6px 0; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
-                            >
-                              Check-In
-                            </button>
-                            <button
-                              onclick={`cancelReservation('${item.id}')`}
-                              style="width: 100px; padding: 6px 0; background: #64748b; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        ) : item.status === "checked_in" ? (
-                          <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; justify-content: center;">
-                            <span style="font-size: 0.8rem; color: #16a34a; font-weight: bold;">
-                              ✅ Checked-In&nbsp;
-                            </span>
-                            <button
-                              onclick={`cancelReservation('${item.id}')`}
-                              style="width: 100px; padding: 6px 0; background: #64748b; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        ) : item.status === "cancelled" ? (
-                          <span style="font-size: 0.8rem; color: #dc2626; font-weight: bold;">
-                            Cancelled
-                          </span>
-                        ) : (
-                          <span style="font-size: 0.8rem; color: #64748b;">
-                            No Action
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td
-                    colspan="6"
-                    style="padding: 32px; text-align: center; color: #94a3b8;"
-                  >
-                    予約データがありません。
-                  </td>
-                </tr>
-              )
-            }
-          </tbody>
-        </table>
-      </div>
     </div>
 
-    <!-- 管理画面アクション用スクリプト -->
-    <script is:inline>
-      async function approveReservation(reservationId) {
-        if (
-          !confirm(
-            "この予約リクエストを承認し、ゲストに確定メールを送信しますか？",
-          )
-        ) {
-          return;
-        }
+    <!-- 予約データテーブル -->
+    {
+      dbError && (
+        <div style="background:#fee2e2; color:#991b1b; padding:1rem; margin-bottom:1rem;">
+          <strong>予約データの取得エラー:</strong> {dbError}
+        </div>
+      )
+    }
+    <div
+      class="reservation-table-wrap"
+      style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: auto;"
+    >
+      <table
+        class="reservation-table"
+        style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;"
+      >
+        <thead>
+          <tr
+            style="background: #f1f5f9; color: #475569; border-bottom: 6px solid #e2e8f0;"
+          >
+            <th style="padding: 6px 8px; text-align: center;">宿泊者名</th>
+            <th style="padding: 6px 8px; text-align: center;">宿泊日程</th>
+            <th style="padding: 6px 8px; text-align: center;">人数/金額</th>
+            <th
+              style="padding: 6px 4px; text-align: center; width: 116px; min-width: 116px;"
+              >操作</th
+            >
+          </tr>
+        </thead>
+        <tbody>
+          {
+            reservations && reservations.length > 0 ? (
+              reservations.map((item) => {
+                return (
+                  <tr style="border-bottom: 6px solid #f1f5f9;">
+                    <td style="padding: 6px 8px; color: #0f172a;">
+                      <div style="max-width: 12em; word-break: break-all; font-weight: bold; font-size: 1rem; margin-bottom: 4px;">
+                        {item.guest_name}
+                      </div>
+                      <button
+                        onclick={`openReservationGuestEditor('${item.id}')`}
+                        style="margin: 4px 0; padding: 5px 8px; background: #0f766e; color: white; border: none; border-radius: 5px; font-size: 0.75rem; font-weight: bold; cursor: pointer;"
+                      >
+                        宿泊者情報
+                      </button>
+                      {item.reservation_code ? (
+                        <span style="display: inline-block; background: #f1f5f9; color: #0369a1; border: 1px solid #cbd5e1; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-family: monospace; font-weight: bold; letter-spacing: 1px;">
+                          ID: {item.reservation_code}
+                        </span>
+                      ) : (
+                        <span style="font-size: 0.75rem; color: #94a3b8;">
+                          コードなし
+                        </span>
+                      )}
+                    </td>
 
-        try {
-          const res = await fetch("/api/admin/approve-reservation", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ reservationId }),
-          });
+                    <td style="padding: 6px 8px; color: #334155; font-size: 0.85rem; white-space: nowrap;">
+                      <div>
+                        {item.check_in_date} 〜 {item.check_out_date}（
+                        {item.nights ??
+                          Math.round(
+                            (Date.parse(`${item.check_out_date}T00:00:00Z`) -
+                              Date.parse(`${item.check_in_date}T00:00:00Z`)) /
+                              86400000,
+                          )}
+                        泊）
+                      </div>
+                      <div style="color: #2563eb; font-weight: bold; margin-top: 2px;">
+                        🕒 到着: {item.arrival_time || "未設定"}
+                      </div>
+                    </td>
 
-          const result = await res.json();
+                    <td style="padding: 6px 8px; color: #334155; text-align: right; white-space: nowrap;">
+                      <div>{item.guests_count || 1}名</div>
+                      <div style="font-weight: bold; color: #0f172a;">
+                        {item.payment_status === "paid" ? "✓ " : ""}
+                        {formatCurrency(item.total_amount)}
+                      </div>
+                    </td>
 
-          if (res.ok) {
-            alert("予約を承認し、確定メールを送信しました！");
-            location.reload();
-          } else {
-            if (result.approved === true) {
-              alert(
-                "予約は承認済みですが、確定メールの送信を確認できませんでした。\n" +
-                  (result.error || "メールの送信状況を確認してください。"),
-              );
-            } else {
-              alert("エラー: " + (result.error || "処理に失敗しました。"));
-            }
+                    <td style="padding: 6px 4px; text-align: center; width: 116px; min-width: 116px;">
+                      {item.status === "pending" ? (
+                        <div style="display: flex; flex-direction: column; gap: 6px; justify-content: center; align-items: center; flex-wrap: nowrap;">
+                          <button
+                            onclick={`approveReservation('${item.id}')`}
+                            style="width: 100px; padding: 6px 0; background: #438a5d; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                          >
+                            Approve
+                          </button>
+                          <button
+                            onclick={`rejectReservation('${item.id}')`}
+                            style="width: 100px; padding: 6px 0; background: #c74343; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      ) : item.status === "approved" ||
+                        item.status === "paid" ? (
+                        <div style="display: flex; flex-direction: column; gap: 6px; justify-content: center; align-items: center; flex-wrap: nowrap;">
+                          <button
+                            onclick={`quickCheckIn('${item.id}')`}
+                            style="width: 100px; padding: 6px 0; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                          >
+                            Check-In
+                          </button>
+                          <button
+                            onclick={`cancelReservation('${item.id}')`}
+                            style="width: 100px; padding: 6px 0; background: #64748b; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : item.status === "checked_in" ? (
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; justify-content: center;">
+                          <span style="font-size: 0.8rem; color: #16a34a; font-weight: bold;">
+                            ✅ Checked-In&nbsp;
+                          </span>
+                          <button
+                            onclick={`cancelReservation('${item.id}')`}
+                            style="width: 100px; padding: 6px 0; background: #64748b; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : item.status === "cancelled" ? (
+                        <span style="font-size: 0.8rem; color: #dc2626; font-weight: bold;">
+                          Cancelled
+                        </span>
+                      ) : (
+                        <span style="font-size: 0.8rem; color: #64748b;">
+                          No Action
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td
+                  colspan="6"
+                  style="padding: 32px; text-align: center; color: #94a3b8;"
+                >
+                  予約データがありません。
+                </td>
+              </tr>
+            )
           }
-        } catch (err) {
-          console.error("Approve error:", err);
-          alert("通信エラーが発生しました。");
-        }
+        </tbody>
+      </table>
+    </div>
+  </body>
+
+  <!-- 管理画面アクション用スクリプト -->
+  <script is:inline>
+    async function approveReservation(reservationId) {
+      if (
+        !confirm(
+          "この予約リクエストを承認し、ゲストに確定メールを送信しますか？",
+        )
+      ) {
+        return;
       }
 
-      async function rejectReservation(reservationId) {
-        if (
-          !confirm(
-            "この予約リクエストを【却下（キャンセル）】し、ゲストにお断りメールを送信しますか？",
-          )
-        ) {
-          return;
-        }
+      try {
+        const res = await fetch("/api/admin/approve-reservation", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reservationId }),
+        });
 
-        try {
-          const res = await fetch("/api/admin/reject-reservation", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ reservationId }),
-          });
+        const result = await res.json();
 
-          const result = await res.json();
-
-          if (res.ok) {
-            alert("予約を却下し、お断りメールを送信しました。");
-            location.reload();
-          } else {
-            alert("エラー: " + (result.error || "処理に失敗しました。"));
-          }
-        } catch (err) {
-          console.error("Reject error:", err);
-          alert("通信エラーが発生しました。");
-        }
-      }
-
-      async function cancelReservation(reservationId) {
-        if (
-          !confirm(
-            "この予約を【キャンセル】扱いとし、宿泊枠を再開放してゲストにメールを送信しますか？",
-          )
-        ) {
-          return;
-        }
-
-        try {
-          const res = await fetch("/api/admin/cancel-reservation", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ reservationId }),
-          });
-
-          const result = await res.json();
-
-          if (res.ok) {
-            alert("予約をキャンセルし、在庫を再開放しました。");
-            location.reload();
-          } else {
-            alert("エラー: " + (result.error || "処理に失敗しました。"));
-          }
-        } catch (err) {
-          console.error("Cancel error:", err);
-          alert("通信エラーが発生しました。");
-        }
-      }
-
-      async function quickCheckIn(reservationId) {
-        if (!confirm("この予約をチェックイン済みに変更しますか？")) return;
-
-        try {
-          const res = await fetch("/api/admin/check-in", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ reservationId }),
-          });
-
-          const data = await res.json();
-          if (res.ok) {
+        if (res.ok) {
+          alert("予約を承認し、確定メールを送信しました！");
+          location.reload();
+        } else {
+          if (result.approved === true) {
             alert(
-              data.alreadyCheckedIn
-                ? "すでにチェックイン済みです。"
-                : "チェックイン処理が完了しました！",
+              "予約は承認済みですが、確定メールの送信を確認できませんでした。\n" +
+                (result.error || "メールの送信状況を確認してください。"),
             );
-            location.reload();
           } else {
-            alert("エラー: " + (data.error || "処理に失敗しました。"));
+            alert("エラー: " + (result.error || "処理に失敗しました。"));
           }
-        } catch (err) {
-          console.error(err);
-          alert("通信エラーが発生しました。");
         }
+      } catch (err) {
+        console.error("Approve error:", err);
+        alert("通信エラーが発生しました。");
+      }
+    }
+
+    async function rejectReservation(reservationId) {
+      if (
+        !confirm(
+          "この予約リクエストを【却下（キャンセル）】し、ゲストにお断りメールを送信しますか？",
+        )
+      ) {
+        return;
       }
 
-      let guestEditorReservationId = "";
-      let guestEditorGuestCount = 0;
+      try {
+        const res = await fetch("/api/admin/reject-reservation", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reservationId }),
+        });
 
-      const adminGuestRows = [
-        [
-          ["guest_name", "氏名", 200, "text"],
-          ["gender", "性別", 30, "select"],
-          ["age_group", "年代", 30, "select"],
-        ],
-        [["guest_address", "住所", 500, "text"]],
-        [
-          ["guest_phone", "電話番号", 50, "tel"],
-          ["guest_email", "メールアドレス", 254, "email"],
-        ],
-        [
-          ["nationality", "国籍", 200, "text"],
-          ["passport_number", "パスポート番号", 200, "text"],
-        ],
-      ];
+        const result = await res.json();
 
-      function createGuestInput(index, key, label, maxLength, type, guest) {
-        const wrapper = document.createElement("div");
-        wrapper.style.cssText = "min-width:0;margin-bottom:4px;";
-
-        const fieldLabel = document.createElement("label");
-        fieldLabel.htmlFor = `guest-${index}-${key}`;
-        fieldLabel.dataset.labelFor = key;
-        fieldLabel.textContent = label;
-        fieldLabel.style.cssText =
-          "display:block;font-weight:600;margin-bottom:4px;";
-
-        let input;
-
-        if (type === "select") {
-          input = document.createElement("select");
-          input.style.cssText =
-            "box-sizing:border-box;width:100%;padding:9px;border:1px solid #94a3b8;border-radius:5px;background:white;";
-
-          const choices =
-            key === "gender"
-              ? ["男性", "女性", "回答しない/その他"]
-              : ["10代以下", "20代", "30代", "40代", "50代", "60代以上"];
-
-          const placeholder = document.createElement("option");
-          placeholder.value = "";
-          placeholder.textContent = "選択してください";
-          input.appendChild(placeholder);
-
-          for (const choice of choices) {
-            const option = document.createElement("option");
-            option.value = choice;
-            option.textContent = choice;
-            input.appendChild(option);
-          }
-
-          input.value = guest[key] || "";
+        if (res.ok) {
+          alert("予約を却下し、お断りメールを送信しました。");
+          location.reload();
         } else {
-          input = document.createElement("input");
-          input.type = type;
-          input.value = guest[key] || "";
-          input.maxLength = maxLength;
-          input.autocomplete = "off";
-          input.style.cssText =
-            "box-sizing:border-box;width:100%;padding:9px;border:1px solid #94a3b8;border-radius:5px;";
+          alert("エラー: " + (result.error || "処理に失敗しました。"));
         }
+      } catch (err) {
+        console.error("Reject error:", err);
+        alert("通信エラーが発生しました。");
+      }
+    }
 
-        input.id = `guest-${index}-${key}`;
-        input.dataset.guestIndex = String(index);
-        input.dataset.field = key;
-
-        if (key === "guest_email") {
-          input.autocomplete = "email";
-        } else if (key === "guest_phone") {
-          input.autocomplete = "tel";
-        } else if (key === "guest_name") {
-          input.autocomplete = index === 0 ? "name" : "off";
-        } else if (key === "guest_address") {
-          input.autocomplete = index === 0 ? "street-address" : "off";
-        }
-
-        wrapper.appendChild(fieldLabel);
-        wrapper.appendChild(input);
-
-        return wrapper;
+    async function cancelReservation(reservationId) {
+      if (
+        !confirm(
+          "この予約を【キャンセル】扱いとし、宿泊枠を再開放してゲストにメールを送信しますか？",
+        )
+      ) {
+        return;
       }
 
-      function updateAdminGuestFields(index) {
-        const section = document.getElementById(`guest-section-${index}`);
-        if (!section) return;
+      try {
+        const res = await fetch("/api/admin/cancel-reservation", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reservationId }),
+        });
 
-        const domestic = section.querySelector('[data-role="japan-resident"]');
-        const nationality = document.getElementById(
-          `guest-${index}-nationality`,
-        );
-        const passport = document.getElementById(
-          `guest-${index}-passport_number`,
-        );
-        const address = document.getElementById(`guest-${index}-guest_address`);
-        const sameAddress = section.querySelector('[data-role="same-address"]');
+        const result = await res.json();
 
-        if (domestic.checked) {
-          nationality.value = "";
-          passport.value = "";
-          nationality.disabled = true;
-          passport.disabled = true;
-          nationality.required = false;
-          passport.required = false;
+        if (res.ok) {
+          alert("予約をキャンセルし、在庫を再開放しました。");
+          location.reload();
         } else {
-          nationality.disabled = false;
-          passport.disabled = false;
-          nationality.required = true;
-          passport.required = true;
+          alert("エラー: " + (result.error || "処理に失敗しました。"));
         }
+      } catch (err) {
+        console.error("Cancel error:", err);
+        alert("通信エラーが発生しました。");
+      }
+    }
 
-        const isSameAddress = index > 0 && sameAddress && sameAddress.checked;
+    async function quickCheckIn(reservationId) {
+      if (!confirm("この予約をチェックイン済みに変更しますか？")) return;
 
-        if (isSameAddress) {
-          const primaryAddress = document.getElementById(
-            "guest-0-guest_address",
+      try {
+        const res = await fetch("/api/admin/check-in", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reservationId }),
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          alert(
+            data.alreadyCheckedIn
+              ? "すでにチェックイン済みです。"
+              : "チェックイン処理が完了しました！",
           );
-          address.value = primaryAddress ? primaryAddress.value : "";
-          address.disabled = true;
+          location.reload();
         } else {
-          address.disabled = false;
+          alert("エラー: " + (data.error || "処理に失敗しました。"));
+        }
+      } catch (err) {
+        console.error(err);
+        alert("通信エラーが発生しました。");
+      }
+    }
+
+    let guestEditorReservationId = "";
+    let guestEditorGuestCount = 0;
+
+    const adminGuestRows = [
+      [
+        ["guest_name", "氏名", 200, "text"],
+        ["gender", "性別", 30, "select"],
+        ["age_group", "年代", 30, "select"],
+      ],
+      [["guest_address", "住所", 500, "text"]],
+      [
+        ["guest_phone", "電話番号", 50, "tel"],
+        ["guest_email", "メールアドレス", 254, "email"],
+      ],
+      [
+        ["nationality", "国籍", 200, "text"],
+        ["passport_number", "パスポート番号", 200, "text"],
+      ],
+    ];
+
+    function createGuestInput(index, key, label, maxLength, type, guest) {
+      const wrapper = document.createElement("div");
+      wrapper.style.cssText = "min-width:0;margin-bottom:4px;";
+
+      const fieldLabel = document.createElement("label");
+      fieldLabel.htmlFor = `guest-${index}-${key}`;
+      fieldLabel.dataset.labelFor = key;
+      fieldLabel.textContent = label;
+      fieldLabel.style.cssText =
+        "display:block;font-weight:600;margin-bottom:4px;";
+
+      let input;
+
+      if (type === "select") {
+        input = document.createElement("select");
+        input.style.cssText =
+          "box-sizing:border-box;width:100%;padding:9px;border:1px solid #94a3b8;border-radius:5px;background:white;";
+
+        const choices =
+          key === "gender"
+            ? ["男性", "女性", "回答しない/その他"]
+            : ["10代以下", "20代", "30代", "40代", "50代", "60代以上"];
+
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = "選択してください";
+        input.appendChild(placeholder);
+
+        for (const choice of choices) {
+          const option = document.createElement("option");
+          option.value = choice;
+          option.textContent = choice;
+          input.appendChild(option);
         }
 
-        const nationalityLabel = section.querySelector(
-          '[data-label-for="nationality"]',
-        );
-        const passportLabel = section.querySelector(
-          '[data-label-for="passport_number"]',
-        );
-        const addressLabel = section.querySelector(
-          '[data-label-for="guest_address"]',
-        );
-
-        if (nationalityLabel) {
-          nationalityLabel.textContent = domestic.checked
-            ? "国籍（入力不要）"
-            : "国籍";
-        }
-
-        if (passportLabel) {
-          passportLabel.textContent = domestic.checked
-            ? "パスポート番号（入力不要）"
-            : "パスポート番号";
-        }
-
-        if (addressLabel) {
-          addressLabel.textContent = isSameAddress
-            ? "住所（代表者と同じ）"
-            : "住所";
-        }
+        input.value = guest[key] || "";
+      } else {
+        input = document.createElement("input");
+        input.type = type;
+        input.value = guest[key] || "";
+        input.maxLength = maxLength;
+        input.autocomplete = "off";
+        input.style.cssText =
+          "box-sizing:border-box;width:100%;padding:9px;border:1px solid #94a3b8;border-radius:5px;";
       }
 
-      function closeGuestEditor() {
-        document.getElementById("guestEditor").style.display = "none";
-        document.getElementById("guestEditorFields").innerHTML = "";
-        document.getElementById("guestEditorMessage").textContent = "";
+      input.id = `guest-${index}-${key}`;
+      input.dataset.guestIndex = String(index);
+      input.dataset.field = key;
+
+      if (key === "guest_email") {
+        input.autocomplete = "email";
+      } else if (key === "guest_phone") {
+        input.autocomplete = "tel";
+      } else if (key === "guest_name") {
+        input.autocomplete = index === 0 ? "name" : "off";
+      } else if (key === "guest_address") {
+        input.autocomplete = index === 0 ? "street-address" : "off";
       }
 
-      async function openReservationGuestEditor(reservationId) {
-        const message = document.getElementById("guestEditorMessage");
-        const fields = document.getElementById("guestEditorFields");
-        const panel = document.getElementById("guestEditor");
+      wrapper.appendChild(fieldLabel);
+      wrapper.appendChild(input);
 
-        message.textContent = "宿泊者情報を読み込んでいます…";
-        fields.innerHTML = "";
-        panel.style.display = "block";
-        guestEditorReservationId = reservationId;
+      return wrapper;
+    }
 
-        try {
-          const res = await fetch(
-            `/api/admin/reservation-guests?reservationId=${encodeURIComponent(reservationId)}`,
-            { cache: "no-store" },
-          );
-          const data = await res.json();
+    function updateAdminGuestFields(index) {
+      const section = document.getElementById(`guest-section-${index}`);
+      if (!section) return;
 
-          if (!res.ok) {
-            message.textContent =
-              data.error || "宿泊者情報を取得できませんでした。";
-            return;
-          }
+      const domestic = section.querySelector('[data-role="japan-resident"]');
+      const nationality = document.getElementById(`guest-${index}-nationality`);
+      const passport = document.getElementById(
+        `guest-${index}-passport_number`,
+      );
+      const address = document.getElementById(`guest-${index}-guest_address`);
+      const sameAddress = section.querySelector('[data-role="same-address"]');
 
-          const reservation = data.reservation;
-          const guests = data.guests || [];
+      if (domestic.checked) {
+        nationality.value = "";
+        passport.value = "";
+        nationality.disabled = true;
+        passport.disabled = true;
+        nationality.required = false;
+        passport.required = false;
+      } else {
+        nationality.disabled = false;
+        passport.disabled = false;
+        nationality.required = true;
+        passport.required = true;
+      }
 
-          guestEditorGuestCount = Math.max(
-            1,
-            Math.min(20, Number(reservation.guests_count) || 1),
-          );
+      const isSameAddress = index > 0 && sameAddress && sameAddress.checked;
 
-          if (guests.length > guestEditorGuestCount) {
-            message.textContent =
-              "既存の宿泊者データが予約人数を超えています。管理者による確認が必要です。";
-            return;
-          }
+      if (isSameAddress) {
+        const primaryAddress = document.getElementById("guest-0-guest_address");
+        address.value = primaryAddress ? primaryAddress.value : "";
+        address.disabled = true;
+      } else {
+        address.disabled = false;
+      }
 
-          document.getElementById("guestEditorReservation").textContent =
-            `予約番号：${reservation.reservation_code || "不明"} ／ 予約者：${reservation.guest_name || "不明"} ／ 予約人数：${guestEditorGuestCount}名`;
+      const nationalityLabel = section.querySelector(
+        '[data-label-for="nationality"]',
+      );
+      const passportLabel = section.querySelector(
+        '[data-label-for="passport_number"]',
+      );
+      const addressLabel = section.querySelector(
+        '[data-label-for="guest_address"]',
+      );
 
-          for (let i = 0; i < guestEditorGuestCount; i++) {
-            const savedGuest = guests[i] || {};
+      if (nationalityLabel) {
+        nationalityLabel.textContent = domestic.checked
+          ? "国籍（入力不要）"
+          : "国籍";
+      }
 
-            const guest =
-              i === 0
-                ? {
-                    ...savedGuest,
-                    guest_name:
-                      savedGuest.guest_name || reservation.guest_name || "",
-                    gender: savedGuest.gender || reservation.guest_gender || "",
-                    age_group:
-                      savedGuest.age_group || reservation.guest_age_group || "",
-                    guest_phone:
-                      savedGuest.guest_phone || reservation.guest_phone || "",
-                    guest_email:
-                      savedGuest.guest_email || reservation.guest_email || "",
-                    guest_address: savedGuest.guest_address || "",
-                    nationality: savedGuest.nationality || "",
-                    passport_number: savedGuest.passport_number || "",
-                  }
-                : savedGuest;
-            const section = document.createElement("section");
-            section.id = `guest-section-${i}`;
-            section.style.cssText =
-              "border:1px solid #cbd5e1;border-radius:8px;padding:14px;margin-top:14px;";
+      if (passportLabel) {
+        passportLabel.textContent = domestic.checked
+          ? "パスポート番号（入力不要）"
+          : "パスポート番号";
+      }
 
-            const heading = document.createElement("h3");
-            heading.textContent = `宿泊者 ${i + 1}${i === 0 ? "（代表者）" : ""}`;
-            heading.style.marginTop = "0";
-            section.appendChild(heading);
+      if (addressLabel) {
+        addressLabel.textContent = isSameAddress
+          ? "住所（代表者と同じ）"
+          : "住所";
+      }
+    }
 
-            if (i > 0) {
-              const sameLabel = document.createElement("label");
-              sameLabel.style.cssText =
-                "display:flex;gap:8px;align-items:center;margin-bottom:12px;";
+    function closeGuestEditor() {
+      document.getElementById("guestEditor").style.display = "none";
+      document.getElementById("guestEditorFields").innerHTML = "";
+      document.getElementById("guestEditorMessage").textContent = "";
+    }
 
-              const sameCheckbox = document.createElement("input");
-              sameCheckbox.type = "checkbox";
-              sameCheckbox.dataset.role = "same-address";
-              sameCheckbox.checked = false;
-              sameCheckbox.addEventListener("change", () =>
-                updateAdminGuestFields(i),
-              );
+    async function openReservationGuestEditor(reservationId) {
+      const message = document.getElementById("guestEditorMessage");
+      const fields = document.getElementById("guestEditorFields");
+      const panel = document.getElementById("guestEditor");
 
-              sameLabel.appendChild(sameCheckbox);
-              sameLabel.append("代表者と同じ住所");
-              section.appendChild(sameLabel);
-            }
+      message.textContent = "宿泊者情報を読み込んでいます…";
+      fields.innerHTML = "";
+      panel.style.display = "block";
+      guestEditorReservationId = reservationId;
 
-            const domesticLabel = document.createElement("label");
-            domesticLabel.style.cssText =
-              "display:flex;gap:8px;align-items:center;font-weight:600;margin-bottom:4px;";
+      try {
+        const res = await fetch(
+          `/api/admin/reservation-guests?reservationId=${encodeURIComponent(reservationId)}`,
+          { cache: "no-store" },
+        );
+        const data = await res.json();
 
-            const domesticCheckbox = document.createElement("input");
-            domesticCheckbox.type = "checkbox";
-            domesticCheckbox.dataset.role = "japan-resident";
+        if (!res.ok) {
+          message.textContent =
+            data.error || "宿泊者情報を取得できませんでした。";
+          return;
+        }
 
-            // 国内住所の選択はDBに保存しないため、再編集時は空欄から推定する
-            domesticCheckbox.checked =
-              !String(guest.nationality || "").trim() &&
-              !String(guest.passport_number || "").trim();
+        const reservation = data.reservation;
+        const guests = data.guests || [];
 
-            domesticCheckbox.addEventListener("change", () =>
+        guestEditorGuestCount = Math.max(
+          1,
+          Math.min(20, Number(reservation.guests_count) || 1),
+        );
+
+        if (guests.length > guestEditorGuestCount) {
+          message.textContent =
+            "既存の宿泊者データが予約人数を超えています。管理者による確認が必要です。";
+          return;
+        }
+
+        document.getElementById("guestEditorReservation").textContent =
+          `予約番号：${reservation.reservation_code || "不明"} ／ 予約者：${reservation.guest_name || "不明"} ／ 予約人数：${guestEditorGuestCount}名`;
+
+        for (let i = 0; i < guestEditorGuestCount; i++) {
+          const savedGuest = guests[i] || {};
+
+          const guest =
+            i === 0
+              ? {
+                  ...savedGuest,
+                  guest_name:
+                    savedGuest.guest_name || reservation.guest_name || "",
+                  gender: savedGuest.gender || reservation.guest_gender || "",
+                  age_group:
+                    savedGuest.age_group || reservation.guest_age_group || "",
+                  guest_phone:
+                    savedGuest.guest_phone || reservation.guest_phone || "",
+                  guest_email:
+                    savedGuest.guest_email || reservation.guest_email || "",
+                  guest_address: savedGuest.guest_address || "",
+                  nationality: savedGuest.nationality || "",
+                  passport_number: savedGuest.passport_number || "",
+                }
+              : savedGuest;
+          const section = document.createElement("section");
+          section.id = `guest-section-${i}`;
+          section.style.cssText =
+            "border:1px solid #cbd5e1;border-radius:8px;padding:14px;margin-top:14px;";
+
+          const heading = document.createElement("h3");
+          heading.textContent = `宿泊者 ${i + 1}${i === 0 ? "（代表者）" : ""}`;
+          heading.style.marginTop = "0";
+          section.appendChild(heading);
+
+          if (i > 0) {
+            const sameLabel = document.createElement("label");
+            sameLabel.style.cssText =
+              "display:flex;gap:8px;align-items:center;margin-bottom:12px;";
+
+            const sameCheckbox = document.createElement("input");
+            sameCheckbox.type = "checkbox";
+            sameCheckbox.dataset.role = "same-address";
+            sameCheckbox.checked = false;
+            sameCheckbox.addEventListener("change", () =>
               updateAdminGuestFields(i),
             );
 
-            domesticLabel.appendChild(domesticCheckbox);
-            domesticLabel.append("日本国内に住所がある");
-            section.appendChild(domesticLabel);
-
-            const hint = document.createElement("p");
-            hint.textContent =
-              "チェックすると、国籍・パスポート番号は入力不要になります。";
-            hint.style.cssText =
-              "font-size:0.85rem;color:#64748b;margin:4px 0 12px;";
-            section.appendChild(hint);
-
-            for (
-              let rowIndex = 0;
-              rowIndex < adminGuestRows.length;
-              rowIndex++
-            ) {
-              const row = document.createElement("div");
-              row.style.cssText =
-                "display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:10px;";
-
-              if (rowIndex === 1) {
-                row.style.gridTemplateColumns = "minmax(0,1fr)";
-              } else if (rowIndex === 2 || rowIndex === 3) {
-                row.style.gridTemplateColumns = "repeat(2,minmax(0,1fr))";
-              }
-
-              for (const [key, label, maxLength, type] of adminGuestRows[
-                rowIndex
-              ]) {
-                const wrapper = createGuestInput(
-                  i,
-                  key,
-                  label,
-                  maxLength,
-                  type,
-                  guest,
-                );
-                row.appendChild(wrapper);
-              }
-
-              section.appendChild(row);
-            }
-
-            fields.appendChild(section);
-
-            const primaryAddress = document.getElementById(
-              `guest-0-guest_address`,
-            );
-            if (i === 0 && primaryAddress) {
-              primaryAddress.addEventListener("input", () => {
-                for (let j = 1; j < guestEditorGuestCount; j++) {
-                  updateAdminGuestFields(j);
-                }
-              });
-            }
-
-            updateAdminGuestFields(i);
+            sameLabel.appendChild(sameCheckbox);
+            sameLabel.append("代表者と同じ住所");
+            section.appendChild(sameLabel);
           }
 
-          message.textContent = "必要項目を入力して保存してください。";
-        } catch (err) {
-          console.error("宿泊者情報取得エラー:", err);
-          message.textContent = "通信エラーが発生しました。";
+          const domesticLabel = document.createElement("label");
+          domesticLabel.style.cssText =
+            "display:flex;gap:8px;align-items:center;font-weight:600;margin-bottom:4px;";
+
+          const domesticCheckbox = document.createElement("input");
+          domesticCheckbox.type = "checkbox";
+          domesticCheckbox.dataset.role = "japan-resident";
+
+          // 国内住所の選択はDBに保存しないため、再編集時は空欄から推定する
+          domesticCheckbox.checked =
+            !String(guest.nationality || "").trim() &&
+            !String(guest.passport_number || "").trim();
+
+          domesticCheckbox.addEventListener("change", () =>
+            updateAdminGuestFields(i),
+          );
+
+          domesticLabel.appendChild(domesticCheckbox);
+          domesticLabel.append("日本国内に住所がある");
+          section.appendChild(domesticLabel);
+
+          const hint = document.createElement("p");
+          hint.textContent =
+            "チェックすると、国籍・パスポート番号は入力不要になります。";
+          hint.style.cssText =
+            "font-size:0.85rem;color:#64748b;margin:4px 0 12px;";
+          section.appendChild(hint);
+
+          for (let rowIndex = 0; rowIndex < adminGuestRows.length; rowIndex++) {
+            const row = document.createElement("div");
+            row.style.cssText =
+              "display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:10px;";
+
+            if (rowIndex === 1) {
+              row.style.gridTemplateColumns = "minmax(0,1fr)";
+            } else if (rowIndex === 2 || rowIndex === 3) {
+              row.style.gridTemplateColumns = "repeat(2,minmax(0,1fr))";
+            }
+
+            for (const [key, label, maxLength, type] of adminGuestRows[
+              rowIndex
+            ]) {
+              const wrapper = createGuestInput(
+                i,
+                key,
+                label,
+                maxLength,
+                type,
+                guest,
+              );
+              row.appendChild(wrapper);
+            }
+
+            section.appendChild(row);
+          }
+
+          fields.appendChild(section);
+
+          const primaryAddress = document.getElementById(
+            `guest-0-guest_address`,
+          );
+          if (i === 0 && primaryAddress) {
+            primaryAddress.addEventListener("input", () => {
+              for (let j = 1; j < guestEditorGuestCount; j++) {
+                updateAdminGuestFields(j);
+              }
+            });
+          }
+
+          updateAdminGuestFields(i);
+        }
+
+        message.textContent = "必要項目を入力して保存してください。";
+      } catch (err) {
+        console.error("宿泊者情報取得エラー:", err);
+        message.textContent = "通信エラーが発生しました。";
+      }
+    }
+
+    async function saveReservationGuests() {
+      const message = document.getElementById("guestEditorMessage");
+      const button = document.querySelector(
+        "#guestEditor button[onclick='saveReservationGuests()']",
+      );
+
+      const guests = [];
+
+      for (let i = 0; i < guestEditorGuestCount; i++) {
+        const section = document.getElementById(`guest-section-${i}`);
+        const domestic = section.querySelector('[data-role="japan-resident"]');
+        const sameAddress = section.querySelector('[data-role="same-address"]');
+
+        const guest = {
+          japan_resident: domestic.checked,
+          guest_occupation: "",
+        };
+
+        for (const key of [
+          "guest_name",
+          "gender",
+          "age_group",
+          "guest_address",
+          "guest_phone",
+          "guest_email",
+          "nationality",
+          "passport_number",
+        ]) {
+          const input = document.getElementById(`guest-${i}-${key}`);
+          guest[key] = input ? input.value.trim() : "";
+        }
+
+        if (sameAddress && sameAddress.checked) {
+          const primaryAddress = document.getElementById(
+            "guest-0-guest_address",
+          );
+          guest.guest_address = primaryAddress
+            ? primaryAddress.value.trim()
+            : "";
+        }
+
+        if (domestic.checked) {
+          guest.nationality = "";
+          guest.passport_number = "";
+        }
+
+        guests.push(guest);
+      }
+
+      // エラーメッセージを初期化
+      message.style.color = "red";
+      message.textContent = "";
+
+      for (let i = 0; i < guests.length; i++) {
+        const guest = guests[i];
+
+        if (
+          !guest.guest_name ||
+          !guest.gender ||
+          !guest.age_group ||
+          !guest.guest_address ||
+          !guest.guest_phone ||
+          !guest.guest_email
+        ) {
+          message.textContent = "未記入項目があります。";
+          return;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guest.guest_email)) {
+          message.textContent = `宿泊者 ${i + 1} のメールアドレスの形式を確認してください。`;
+          return;
+        }
+
+        if (
+          !guest.japan_resident &&
+          (!guest.nationality || !guest.passport_number)
+        ) {
+          message.textContent = `宿泊者 ${i + 1} は、国内住所がないため国籍とパスポート番号が必要です。`;
+          return;
         }
       }
 
-      async function saveReservationGuests() {
-        const message = document.getElementById("guestEditorMessage");
-        const button = document.querySelector(
-          "#guestEditor button[onclick='saveReservationGuests()']",
-        );
+      if (button) button.disabled = true;
+      message.textContent = "保存しています…";
 
-        const guests = [];
+      try {
+        const res = await fetch("/api/admin/save-reservation-guests", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          cache: "no-store",
+          body: JSON.stringify({
+            reservationId: guestEditorReservationId,
+            guests,
+          }),
+        });
 
-        for (let i = 0; i < guestEditorGuestCount; i++) {
-          const section = document.getElementById(`guest-section-${i}`);
-          const domestic = section.querySelector(
-            '[data-role="japan-resident"]',
-          );
-          const sameAddress = section.querySelector(
-            '[data-role="same-address"]',
-          );
+        const data = await res.json();
 
-          const guest = {
-            japan_resident: domestic.checked,
-            guest_occupation: "",
-          };
-
-          for (const key of [
-            "guest_name",
-            "gender",
-            "age_group",
-            "guest_address",
-            "guest_phone",
-            "guest_email",
-            "nationality",
-            "passport_number",
-          ]) {
-            const input = document.getElementById(`guest-${i}-${key}`);
-            guest[key] = input ? input.value.trim() : "";
-          }
-
-          if (sameAddress && sameAddress.checked) {
-            const primaryAddress = document.getElementById(
-              "guest-0-guest_address",
-            );
-            guest.guest_address = primaryAddress
-              ? primaryAddress.value.trim()
-              : "";
-          }
-
-          if (domestic.checked) {
-            guest.nationality = "";
-            guest.passport_number = "";
-          }
-
-          guests.push(guest);
+        if (!res.ok) {
+          message.textContent = data.error || "保存できませんでした。";
+          return;
         }
 
-        // エラーメッセージを初期化
-        message.style.color = "red";
-        message.textContent = "";
-
-        for (let i = 0; i < guests.length; i++) {
-          const guest = guests[i];
-
-          if (
-            !guest.guest_name ||
-            !guest.gender ||
-            !guest.age_group ||
-            !guest.guest_address ||
-            !guest.guest_phone ||
-            !guest.guest_email
-          ) {
-            message.textContent = "未記入項目があります。";
-            return;
-          }
-
-          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guest.guest_email)) {
-            message.textContent = `宿泊者 ${i + 1} のメールアドレスの形式を確認してください。`;
-            return;
-          }
-
-          if (
-            !guest.japan_resident &&
-            (!guest.nationality || !guest.passport_number)
-          ) {
-            message.textContent = `宿泊者 ${i + 1} は、国内住所がないため国籍とパスポート番号が必要です。`;
-            return;
-          }
-        }
-
-        if (button) button.disabled = true;
-        message.textContent = "保存しています…";
-
-        try {
-          const res = await fetch("/api/admin/save-reservation-guests", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            cache: "no-store",
-            body: JSON.stringify({
-              reservationId: guestEditorReservationId,
-              guests,
-            }),
-          });
-
-          const data = await res.json();
-
-          if (!res.ok) {
-            message.textContent = data.error || "保存できませんでした。";
-            return;
-          }
-
-          message.textContent = data.message || "保存しました。";
-          alert("宿泊者情報を保存しました。");
-          closeGuestEditor();
-        } catch (err) {
-          console.error("宿泊者情報保存エラー:", err);
-          message.textContent = "通信エラーが発生しました。";
-        } finally {
-          if (button) button.disabled = false;
-        }
+        message.textContent = data.message || "保存しました。";
+        alert("宿泊者情報を保存しました。");
+        closeGuestEditor();
+      } catch (err) {
+        console.error("宿泊者情報保存エラー:", err);
+        message.textContent = "通信エラーが発生しました。";
+      } finally {
+        if (button) button.disabled = false;
       }
-    </script>
+    }
+  </script>
+  <div
+    id="guestEditor"
+    style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(15,23,42,.65); overflow-y:auto; padding:20px;"
+  >
     <div
-      id="guestEditor"
-      style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(15,23,42,.65); overflow-y:auto; padding:20px;"
+      style="max-width:850px; margin:20px auto; background:#fff; border-radius:12px; padding:20px;"
     >
-      <div
-        style="max-width:850px; margin:20px auto; background:#fff; border-radius:12px; padding:20px;"
-      >
-        <h2 style="margin-top:0;">宿泊者情報の登録・編集</h2>
-        <p id="guestEditorReservation" style="color:#475569;"></p>
-        <div id="guestEditorFields"></div>
-        <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;">
-          <button
-            type="button"
-            onclick="saveReservationGuests()"
-            style="background:#0f766e;color:white;border:0;border-radius:6px;padding:10px 18px;font-weight:bold;cursor:pointer;"
-            >保存</button
-          >
-          <button
-            type="button"
-            onclick="closeGuestEditor()"
-            style="background:#e2e8f0;color:#0f172a;border:0;border-radius:6px;padding:10px 18px;cursor:pointer;"
-            >閉じる</button
-          >
-        </div>
-        <p id="guestEditorMessage" role="status" style="margin-bottom:0;"></p>
+      <h2 style="margin-top:0;">宿泊者情報の登録・編集</h2>
+      <p id="guestEditorReservation" style="color:#475569;"></p>
+      <div id="guestEditorFields"></div>
+      <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;">
+        <button
+          type="button"
+          onclick="saveReservationGuests()"
+          style="background:#0f766e;color:white;border:0;border-radius:6px;padding:10px 18px;font-weight:bold;cursor:pointer;"
+          >保存</button
+        >
+        <button
+          type="button"
+          onclick="closeGuestEditor()"
+          style="background:#e2e8f0;color:#0f172a;border:0;border-radius:6px;padding:10px 18px;cursor:pointer;"
+          >閉じる</button
+        >
       </div>
+      <p id="guestEditorMessage" role="status" style="margin-bottom:0;"></p>
     </div>
-  </body>
+  </div>
 </html>
