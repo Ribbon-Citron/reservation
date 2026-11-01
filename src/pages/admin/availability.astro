@@ -228,6 +228,86 @@ const formatCurrency = (amount: number) => {
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>PMS Availability</title>
+
+    <style>
+      .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .admin-header-nav {
+        display: flex;
+        justify-content: flex-end;
+        gap: 6px;
+      }
+
+      .admin-nav-link {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 12px;
+        background: #f0f0f0;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: normal;
+        color: #64748b;
+        text-align: center;
+      }
+
+      .nav-label {
+        display: inline;
+      }
+
+      @media screen and (max-width: 600px) {
+        .admin-header {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 14px;
+          margin-bottom: 1rem;
+        }
+
+        .admin-header-title h1 {
+          font-size: 1.3rem !important;
+          white-space: nowrap;
+        }
+
+        .admin-header-title p {
+          font-size: 0.78rem !important;
+        }
+
+        .admin-header-nav {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 7px;
+          width: 100%;
+        }
+
+        .admin-nav-link {
+          flex-direction: column;
+          justify-content: center;
+          gap: 3px;
+          min-width: 0;
+          min-height: 58px;
+          box-sizing: border-box;
+          padding: 6px 2px;
+          font-size: 0.75rem;
+        }
+
+        .nav-icon {
+          font-size: 1.15rem;
+          line-height: 1.3;
+        }
+
+        .nav-label {
+          display: block;
+          font-size: 0.68rem;
+          white-space: nowrap;
+        }
+      }
+    </style>
   </head>
   <body
     style="font-family: sans-serif; background: #f8fafc; margin: 0; padding: 1rem;"
@@ -246,26 +326,24 @@ const formatCurrency = (amount: number) => {
           </p>
         </div>
 
-        <div
-          style="text-align: right; display: flex; justify-content: flex-end; gap: 10px;"
-        >
-          <a
-            href="/"
-            style="padding: 4px 20px; background: #f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;"
-          >
-            📆
+        <div class="admin-header-nav">
+          <a href="/" class="admin-nav-link" title="ゲスト用予約ページ">
+            <span class="nav-icon">📆</span>
+            <span class="nav-label">予約</span>
           </a>
-          <a
-            href="/admin/reservations"
-            style="padding: 4px 18px; background:#f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;"
-          >
-            📊
+
+          <a href="/admin/reservations" class="admin-nav-link" title="予約状況と処理">
+            <span class="nav-icon">📊</span>
+            <span class="nav-label">状況</span>
           </a>
+
           <a
             href="/admin/scanner"
-            style="padding: 4px 8px; background:#f0f0f0; text-decoration: none; border-radius: 6px; font-size: 1.0rem; font-weight: bold;"
+            class="admin-nav-link"
+            title="予約コードスキャン"
           >
-            ❙❙❘❙❚❙❘❚
+            <span class="nav-icon">📷</span>
+            <span class="nav-label">受付</span>
           </a>
         </div>
       </div>
