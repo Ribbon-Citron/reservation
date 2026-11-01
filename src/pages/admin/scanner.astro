@@ -9,6 +9,63 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PMS Scanner</title>
+    <style>
+      .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .admin-nav-link {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 12px;
+        background: #f0f0f0;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: normal;
+        color: #64748b;
+        text-align: center;
+      }
+
+      @media screen and (max-width: 600px) {
+        .admin-header {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 14px;
+          margin-bottom: 1rem;
+        }
+
+      .admin-header-title h1 {
+        font-size: 1.3rem !important;
+        white-space: nowrap;
+      }
+
+      .admin-header-title p {
+        font-size: 0.78rem !important;
+      }
+
+      .admin-header-nav {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 7px;
+        width: 100%;
+      }
+      .admin-nav-link {
+        flex-direction: column;
+        justify-content: center;
+        gap: 3px;
+        min-width: 0;
+        min-height: 58px;
+        box-sizing: border-box;
+        padding: 6px 2px;
+        font-size: 0.75rem;
+      }
+    </style>
+
     <!-- html5-qrcode ライブラリの読み込み -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"
     ></script>
@@ -21,30 +78,28 @@
       <div class="admin-header">
         <div class="admin-header-title">
           <h1 style="margin: 0; color: #0f172a; font-size: 1.5rem;">
-            📷 入室処理
+            📸 入室処理
           </h1>
+          <p style="margin: 0.5rem 0 0; color: #64748b; font-size: 0.9rem;">
+            ゲストの予約コードをスキャンして照合
+          </p><br />
           <div class="admin-header-nav">
             <a href="/" class="admin-nav-link" title="ゲスト用予約ページ">
               <span class="nav-icon">📆</span>
               <span class="nav-label">予約</span>
             </a>
-
             <a
-              href="/admin/reservations"
-              class="admin-nav-link"
-              title="予約状況と処理"
-            >
+              href="/admin/reservations" class="admin-nav-link" title="予約状況と処理">
               <span class="nav-icon">📊</span>
               <span class="nav-label">状況</span>
             </a>
-
-            <a
-              href="/admin/availability"
-              class="admin-nav-link"
-              title="各種設定"
-            >
+            <a href="/admin/availability" class="admin-nav-link" title="各種設定">
               <span class="nav-icon">⚙️</span>
               <span class="nav-label">設定</span>
+            </a>
+            <a href="/admin/guest-export" class="admin-nav-link" title="宿泊者情報CSV出力">
+              <span class="nav-icon">📄</span>
+              <span class="nav-label">名簿</span>
             </a>
           </div>
         </div>
