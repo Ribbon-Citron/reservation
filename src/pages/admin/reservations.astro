@@ -22,7 +22,7 @@ try {
 
   reservations = data || [];
 } catch (e: any) {
-  console.error("予約一覧の取得エラー:", e);
+  console.error("状況一覧の取得エラー:", e);
   dbError = e?.message || "予期せぬエラーが発生しました";
 }
 
@@ -73,6 +73,76 @@ const formatCurrency = (amount) => {
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>PMS Reservations</title>
   </head>
+  <style>
+    @media screen and (max-width: 600px) {
+      .reservation-table-wrap {
+        overflow: visible !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+
+      .reservation-table {
+        display: block;
+        width: 100% !important;
+      }
+
+      .reservation-table thead {
+        display: none;
+      }
+
+      .reservation-table tbody {
+        display: block;
+        width: 100%;
+      }
+
+      .reservation-table tbody tr {
+        display: block;
+        width: 100%;
+        margin-bottom: 12px;
+        padding: 6px 10px;
+        box-sizing: border-box;
+        background: white;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 8px;
+      }
+
+      .reservation-table tbody td {
+        display: block;
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box;
+        padding: 8px 4px !important;
+        white-space: normal !important;
+        text-align: left !important;
+        border-bottom: 1px solid #f1f5f9;
+        overflow-wrap: anywhere;
+      }
+
+      .reservation-table tbody td:nth-child(2)::before {
+        content: "宿泊日程・到着時刻";
+        display: block;
+        color: #64748b;
+        font-size: 0.75rem;
+        margin-bottom: 4px;
+      }
+
+      .reservation-table tbody td:nth-child(3) {
+        text-align: left !important;
+        font-size: 0.9rem;
+      }
+
+      .reservation-table tbody td:nth-child(4) {
+        text-align: center !important;
+        border-bottom: none;
+      }
+
+      .reservation-table tbody td:nth-child(4) button {
+        width: 100% !important;
+        max-width: 180px;
+        padding: 9px !important;
+      }
+    }
+  </style>
   <body
     style="font-family: sans-serif; background-color: #f8fafc; margin: 0; padding: 1rem;"
   >
@@ -129,9 +199,11 @@ const formatCurrency = (amount) => {
         )
       }
       <div
+        class="reservation-table-wrap"
         style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: auto;"
       >
         <table
+          class="reservation-table"
           style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;"
         >
           <thead>
