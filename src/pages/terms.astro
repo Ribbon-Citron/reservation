@@ -1,0 +1,497 @@
+
+---
+const business = {
+  name: 'CENTER INN（仮）',
+  operator: '宿泊施設運営責任者（仮）',
+  address: '〒000-0000 仮住所（デバッグ用）',
+  phone: '000-0000-0000',
+  email: 'example@example.com',
+  license: '旅館業許可番号：仮番号（未確定）',
+  price: '宿泊日・人数・プランにより予約画面に表示',
+  payment: '予約画面に表示する方法によりお支払いいただきます（仮）',
+};
+
+const cancellation = [
+  { period: '宿泊日の60日前から', fee: '20％（現時点の仮設定）' },
+  { period: 'その他の期間区分', fee: '予約画面に表示する条件を適用' },
+  { period: '無連絡の不泊', fee: '予約時に表示した条件を適用' },
+];
+
+const rules = [
+  {
+    title: '第1条（適用範囲）',
+    body: '本規則は、CENTER INN（以下「当施設」といいます）が提供する宿泊サービスおよびこれに付随するサービスの利用に適用されます。'
+  },
+  {
+    title: '第2条（宿泊契約の申込み）',
+    body: '宿泊を希望するお客様は、当施設所定の方法により、宿泊日、宿泊人数、氏名、連絡先その他必要事項を申し出てください。'
+  },
+  {
+    title: '第3条（宿泊料金）',
+    body: '宿泊料金は、予約画面に表示された金額とします。追加サービスや追加料金が発生する場合は、事前に内容と金額をお知らせします。'
+  },
+  {
+    title: '第4条（チェックイン・チェックアウト）',
+    body: 'チェックインおよびチェックアウトの時刻は、予約画面または当施設からの案内に表示する時刻とします。時間の変更を希望する場合は、事前に当施設へご相談ください。'
+  },
+  {
+    title: '第5条（施設利用上の注意）',
+    body: 'お客様は、施設および備品を適切に取り扱い、他のお客様や近隣の方に迷惑を及ぼす行為をしないものとします。施設内の案内およびスタッフの指示に従ってください。'
+  },
+  {
+    title: '第6条（禁止事項）',
+    body: '法令に違反する行為、危険物の持込み、施設や備品を故意に損傷する行為、他のお客様への迷惑行為、無断での定員超過や第三者への宿泊権の譲渡を禁止します。'
+  },
+  {
+    title: '第7条（損害賠償）',
+    body: 'お客様の故意または過失により当施設に損害が生じた場合、法令に従い、その損害の賠償をお願いすることがあります。'
+  },
+  {
+    title: '第8条（個人情報の取扱い）',
+    body: '当施設は、予約、本人確認、宿泊サービスの提供、お問い合わせへの対応および法令上必要な手続のために個人情報を利用します。業務委託先への必要な提供や法令に基づく場合を除き、本人の同意なく個人情報を第三者に提供しません。'
+  },
+  {
+    title: '第9条（規則の変更）',
+    body: '当施設は、必要に応じて本規則を変更することがあります。変更後の規則は、当施設のウェブサイト等で告知した時点から適用します。ただし、成立済みの宿泊契約については、予約時に合意された条件を原則として適用します。'
+  },
+];
+
+const lodgingTerms = [
+  {
+    title: '第1条（宿泊契約の成立）',
+    body: '宿泊契約は、お客様からの申込みに対し、当施設が承諾したときに成立します。予約完了画面または予約確認メール等をもって成立の確認とします。'
+  },
+  {
+    title: '第2条（宿泊契約の拒否）',
+    body: '当施設は、法令に定める場合その他正当な理由がある場合、宿泊の申込みをお断りすることがあります。'
+  },
+  {
+    title: '第3条（宿泊者情報）',
+    body: 'お客様は、予約時および宿泊時に、当施設が求める必要な情報を正確に提供するものとします。'
+  },
+  {
+    title: '第4条（宿泊料金の支払い）',
+    body: '宿泊料金および追加料金は、予約時または当施設が指定する方法・時期にお支払いください。現地払いの場合は、当施設が案内する方法によりお支払いください。'
+  },
+  {
+    title: '第5条（契約の解除）',
+    body: 'お客様が宿泊契約を解除する場合、予約時に表示されたキャンセル条件に従うものとします。当施設から契約を解除する場合は、法令および適用される宿泊約款に従います。'
+  },
+  {
+    title: '第6条（免責）',
+    body: '天災、交通機関の運休その他当施設の合理的な管理の範囲を超える事情によりサービスの提供が困難となる場合があります。責任の有無および範囲は、関係法令に従って判断します。'
+  },
+  {
+    title: '第7条（準拠法・管轄）',
+    body: '本約款は日本法に準拠します。本約款または宿泊契約に関して紛争が生じた場合は、法令に従い管轄裁判所を定めます。'
+  },
+];
+---
+
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>利用規則・宿泊約款・特商法表示 | CENTER INN</title>
+  <meta name="description" content="CENTER INNの利用規則、宿泊約款、キャンセル規定および特定商取引法に基づく表示です。" />
+</head>
+
+<body>
+  <header class="site-header">
+    <a href="/" class="brand">CENTER <span>INN</span></a>
+    <a href="/" class="back-link">予約ページへ戻る</a>
+  </header>
+
+  <main class="container">
+    <section class="warning">
+      <div class="warning-title">⚠ これは仮情報です</div>
+      <p>
+        このページはデバッグ用の仮ページです。事業者情報、連絡先、許可番号、
+        料金、キャンセル条件等には架空または未確定の情報が含まれています。
+        実際の宿泊契約・営業には使用できません。
+      </p>
+    </section>
+
+    <section class="page-heading">
+      <p class="eyebrow">CENTER INN</p>
+      <h1>利用規則・宿泊約款</h1>
+      <p>安心してご利用いただくために、以下の内容をご確認ください。</p>
+    </section>
+
+    <nav class="toc" aria-label="ページ内目次">
+      <h2>目次</h2>
+      <a href="#rules">1. 利用規則</a>
+      <a href="#lodging">2. 宿泊約款</a>
+      <a href="#cancellation">3. キャンセル規定</a>
+      <a href="#commerce">4. 特定商取引法に基づく表示</a>
+    </nav>
+
+    <section id="rules" class="section">
+      <div class="section-heading">
+        <span>01</span>
+        <h2>利用規則</h2>
+      </div>
+      <p class="section-lead">当施設をご利用いただく際の基本的なルールです。</p>
+
+      {rules.map((item) => (
+        <details class="article">
+          <summary>{item.title}</summary>
+          <p>{item.body}</p>
+        </details>
+      ))}
+    </section>
+
+    <section id="lodging" class="section">
+      <div class="section-heading">
+        <span>02</span>
+        <h2>宿泊約款</h2>
+      </div>
+      <p class="section-lead">宿泊契約の成立、料金、解除等について定めています。</p>
+
+      {lodgingTerms.map((item) => (
+        <details class="article">
+          <summary>{item.title}</summary>
+          <p>{item.body}</p>
+        </details>
+      ))}
+    </section>
+
+    <section id="cancellation" class="section">
+      <div class="section-heading">
+        <span>03</span>
+        <h2>キャンセル規定</h2>
+      </div>
+
+      <div class="notice">
+        <strong>予約時に表示されたキャンセル条件が適用されます。</strong>
+        <p>
+          キャンセル料の具体的な条件は、予約時に画面上で確認できるように表示します。
+          ご予約成立後は、原則として予約時に合意された条件を適用します。
+        </p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>キャンセル時期</th><th>キャンセル料</th></tr>
+          </thead>
+          <tbody>
+            {cancellation.map((item) => (
+              <tr><td>{item.period}</td><td>{item.fee}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <p class="small-note">
+        ※上記はデバッグ用の暫定表示です。その他の期間区分、算定方法および例外条件は今後調整します。
+      </p>
+    </section>
+
+    <section id="commerce" class="section">
+      <div class="section-heading">
+        <span>04</span>
+        <h2>特定商取引法に基づく表示</h2>
+      </div>
+
+      <div class="table-wrap">
+        <table class="business-table">
+          <tbody>
+            <tr><th>販売事業者</th><td>{business.name}</td></tr>
+            <tr><th>運営責任者</th><td>{business.operator}</td></tr>
+            <tr><th>所在地</th><td>{business.address}</td></tr>
+            <tr><th>電話番号</th><td>{business.phone}</td></tr>
+            <tr><th>メールアドレス</th><td>{business.email}</td></tr>
+            <tr><th>旅館業許可</th><td>{business.license}</td></tr>
+            <tr><th>販売価格</th><td>{business.price}</td></tr>
+            <tr><th>商品代金以外の必要料金</th><td>追加料金がある場合は、予約画面に表示します（仮）。</td></tr>
+            <tr><th>支払方法</th><td>{business.payment}</td></tr>
+            <tr><th>支払時期</th><td>選択した支払方法に応じて予約画面に表示します（仮）。</td></tr>
+            <tr><th>サービス提供時期</th><td>予約された宿泊日および宿泊期間に提供します。</td></tr>
+            <tr><th>キャンセル・返金</th><td>予約時に表示されたキャンセル条件に従います。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="contact">
+      <h2>お問い合わせ</h2>
+      <p>ご不明な点がございましたら、下記までお問い合わせください。</p>
+      <p class="contact-email">{business.email}</p>
+      <p class="small-note">※連絡先はデバッグ用の仮情報です。</p>
+    </section>
+
+    <p class="updated">制定日・最終改定日：公開時に設定</p>
+
+    <div class="bottom-link">
+      <a href="/">予約ページへ戻る</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>© CENTER INN</p>
+    <p>本ページはデバッグ用の仮情報を含みます。</p>
+  </footer>
+</body>
+</html>
+
+<style>
+  :root {
+    color-scheme: light;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #0f172a;
+    background: #f8fafc;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    line-height: 1.75;
+    background: #f8fafc;
+  }
+
+  a { color: inherit; }
+
+  .site-header {
+    min-height: 64px;
+    padding: 12px max(20px, calc((100% - 960px) / 2));
+    background: #1e293b;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .brand {
+    font-size: 21px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-decoration: none;
+  }
+
+  .brand span { color: #ef4444; }
+
+  .back-link {
+    font-size: 13px;
+    text-decoration: none;
+    border: 1px solid #94a3b8;
+    border-radius: 7px;
+    padding: 6px 12px;
+  }
+
+  .container {
+    width: min(100% - 32px, 850px);
+    margin: 28px auto 60px;
+  }
+
+  .warning {
+    border: 3px solid #dc2626;
+    border-radius: 12px;
+    background: #fff1f2;
+    padding: 20px 22px;
+    margin-bottom: 30px;
+    color: #991b1b;
+  }
+
+  .warning-title {
+    font-size: clamp(25px, 5vw, 34px);
+    line-height: 1.3;
+    font-weight: 900;
+    margin-bottom: 10px;
+  }
+
+  .warning p {
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .page-heading {
+    text-align: center;
+    padding: 18px 0 28px;
+  }
+
+  .eyebrow {
+    color: #a3080f;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    margin: 0;
+  }
+
+  h1 {
+    font-size: clamp(27px, 5vw, 38px);
+    margin: 5px 0 8px;
+    color: #1e293b;
+  }
+
+  .page-heading > p:last-child {
+    color: #64748b;
+    margin: 0;
+  }
+
+  .toc, .section, .contact {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 13px;
+    padding: 22px;
+    margin-bottom: 24px;
+    box-shadow: 0 3px 12px rgb(15 23 42 / 4%);
+  }
+
+  .toc h2 {
+    font-size: 18px;
+    margin: 0 0 12px;
+  }
+
+  .toc a {
+    display: block;
+    color: #1e293b;
+    text-decoration: none;
+    padding: 7px 0;
+    border-top: 1px solid #f1f5f9;
+  }
+
+  .toc a:hover { color: #a3080f; }
+
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+  }
+
+  .section-heading span {
+    color: white;
+    background: #a3080f;
+    border-radius: 7px;
+    padding: 3px 9px;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .section-heading h2 {
+    font-size: 22px;
+    margin: 0;
+    color: #1e293b;
+  }
+
+  .section-lead {
+    color: #64748b;
+    margin: 0 0 15px;
+    font-size: 14px;
+  }
+
+  .article {
+    border-bottom: 1px solid #e2e8f0;
+    padding: 13px 2px;
+  }
+
+  .article:last-child { border-bottom: 0; }
+
+  .article summary {
+    cursor: pointer;
+    font-weight: 750;
+    color: #1e293b;
+  }
+
+  .article summary::marker { color: #a3080f; }
+
+  .article p {
+    margin: 10px 0 2px;
+    color: #475569;
+    font-size: 14px;
+  }
+
+  .notice {
+    border-left: 4px solid #a3080f;
+    background: #fff7f7;
+    padding: 15px 17px;
+    margin: 16px 0;
+  }
+
+  .notice strong { color: #991b1b; }
+  .notice p { margin: 6px 0 0; font-size: 14px; }
+
+  .table-wrap {
+    overflow-x: auto;
+    margin-top: 15px;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 14px;
+  }
+
+  th, td {
+    padding: 12px 13px;
+    border: 1px solid #e2e8f0;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  thead th {
+    background: #1e293b;
+    color: white;
+  }
+
+  tbody th {
+    width: 34%;
+    background: #f1f5f9;
+    font-weight: 700;
+  }
+
+  .small-note {
+    color: #64748b;
+    font-size: 12px;
+  }
+
+  .contact { text-align: center; }
+  .contact h2 { margin: 0 0 8px; }
+  .contact p { margin: 5px 0; }
+  .contact-email { color: #a3080f; font-weight: 800; }
+
+  .updated {
+    text-align: right;
+    font-size: 12px;
+    color: #64748b;
+  }
+
+  .bottom-link { text-align: center; margin-top: 28px; }
+
+  .bottom-link a {
+    display: inline-block;
+    background: #1e293b;
+    color: white;
+    text-decoration: none;
+    padding: 11px 28px;
+    border-radius: 8px;
+    font-weight: 700;
+  }
+
+  footer {
+    background: #1e293b;
+    color: #cbd5e1;
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+  }
+
+  footer p { margin: 3px; }
+
+  @media (max-width: 600px) {
+    .site-header { padding: 12px 16px; }
+    .container { width: min(100% - 20px, 850px); margin-top: 14px; }
+    .warning { padding: 16px; }
+    .toc, .section, .contact { padding: 17px 15px; }
+    .section-heading h2 { font-size: 20px; }
+    th, td { padding: 10px 9px; }
+    .business-table tbody th { width: 38%; }
+  }
+</style>
