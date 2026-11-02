@@ -325,16 +325,18 @@ const formatCurrency = (amount: number) => {
         .availability-table th:nth-child(1),
         .availability-table td:nth-child(1) {
           width: 15%;
+          text-align: center;
         }
 
         .availability-table th:nth-child(2),
         .availability-table td:nth-child(2) {
-          width: 30%;
+          width: 36%;
+          
         }
 
         .availability-table th:nth-child(3),
         .availability-table td:nth-child(3) {
-          width: 14%;
+          width: 8%;
         }
 
         .availability-table th:nth-child(4),
@@ -375,18 +377,17 @@ const formatCurrency = (amount: number) => {
     </style>
   </head>
 
-  <body
-    style="font-family: sans-serif; background: #f8fafc; margin: 0; padding: 1rem;"
-  >
-    <div style="max-width: 900px; margin: 0 auto;">
+  <body style="font-family: sans-serif; background: #f8fafc; margin: 0; padding: 1rem;">
+    <div style="max-width: 600px; margin: 0 auto;">
+
       <!-- ヘッダー -->
       <div class="admin-header">
         <div class="admin-header-title">
           <h1 style="margin: 0; color: #0f172a; font-size: 1.5rem;">
-            ⚙️ 各種設定
+            ⚙️各種設定
           </h1>
           <p style="margin: 0.25rem 0 0; color: #64748b; font-size: 0.9rem;">
-            料金,人数,休業の個別設定
+            <!-- 料金,人数,休業の個別設定 -->
           </p>
         </div>
 
@@ -500,8 +501,8 @@ const formatCurrency = (amount: number) => {
                 <th style="padding: 6px 8px; white-space: nowrap;">
                   <button
                     type="submit"
-                    style="margin-left: 0px; padding: 4px 22px; background: #2563eb; color: white; border: none; border-radius: 4px; font-size: 0.85rem; font-weight: bold; cursor: pointer; white-space: nowrap;"
-                    >更新</button
+                    style="margin-left: 0px; padding: 4px 8px; background: #2563eb; color: white; border: none; border-radius: 4px; font-size: 0.85rem; font-weight: bold; cursor: pointer; white-space: nowrap;"
+                    >操作更新</button
                   >
                 </th>
               </tr>
@@ -557,9 +558,9 @@ const formatCurrency = (amount: number) => {
                             placeholder={String(basePrice)}
                             step="100"
                             min="0"
-                            style="width: 60px; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.9rem; text-align: right;"
+                            style="width: 80px; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.9rem; text-align: right;"
                           />
-                          <span style="font-size: 0.75rem; color: #64748b;">
+                          <span style="font-size: 0.6rem; color: #64748b;">
                             円
                           </span>
                         </div>
@@ -576,7 +577,7 @@ const formatCurrency = (amount: number) => {
                             required
                             style="width: 40px; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.9rem; text-align: right;"
                           />
-                          <span style="font-size: 0.75rem; color: #64748b;">
+                          <span style="font-size: 0.6rem; color: #64748b;">
                             名
                           </span>
                         </div>
