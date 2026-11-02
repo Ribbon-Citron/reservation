@@ -102,7 +102,7 @@ const formatCurrency = (amount) => {
         display: inline;
       }
 
-      @media screen and (min-width: 601px) and (max-width: 1100px) {
+      @media screen and (min-width: 301px) and (max-width: 1100px) {
         .admin-header {
           display: flex;
           flex-direction: column;
@@ -153,7 +153,7 @@ const formatCurrency = (amount) => {
       }
     </style>
 
-    <style>
+    <!-- <style>
       @media screen and (max-width: 600px) {
         .reservation-table-wrap {
           overflow: visible !important;
@@ -223,12 +223,10 @@ const formatCurrency = (amount) => {
           padding: 9px !important;
         }
       }
-    </style>
+    </style> -->
   </head>
 
-  <body
-    style="font-family: sans-serif; background-color: #f8fafc; margin: 0; padding: 1rem;"
-  >
+  <body style="font-family: sans-serif; background-color: #f8fafc; margin: 0; padding: 1rem;">
     <div style="max-width: 600px; margin: 0 auto;">
 
       <!-- ヘッダーエリア -->
@@ -238,8 +236,10 @@ const formatCurrency = (amount) => {
             📊状況一覧
           </h1>
           <p style="margin: 0.25rem 0 0; color: #64748b; font-size: 0.9rem;">
+          <!-- 説明コメント -->
           </p>
         </div>
+
         <div class="admin-header-nav">
           <a href="/" class="admin-nav-link" title="ゲスト用予約ページ">
             <span class="nav-icon">📆</span>
