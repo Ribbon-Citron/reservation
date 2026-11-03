@@ -13,15 +13,18 @@
     "generate-types": "wrangler types"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^14.3.4",
-    "@astrojs/node": "^11.1.7",
+    "@astrojs/cloudflare": "^14.4.3",
+    "@astrojs/node": "^11.1.9",
     "@supabase/supabase-js": "^2.117.3",
-    "astro": "^7.3.7",
+    "astro": "^7.4.4",
     "resend": "^6.32.1",
     "stripe": "^23.0.0",
     "wrangler": "^4.149.0"
   },
   "allowScripts": {
     "esbuild": true
+  },
+  "devDependencies": {
+    "supabase": "^2.122.0"
   }
 }
