@@ -73,7 +73,7 @@ const formatCurrency = (amount) => {
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>PMS Reservations</title>
 
-    <style>
+     <style>
       .admin-header {
         display: flex;
         justify-content: space-between;
@@ -85,7 +85,7 @@ const formatCurrency = (amount) => {
         display: flex;
         justify-content: flex-end;
         gap: 6px;
-        margin-left: auto        
+        margin-left: auto;
       }
 
       .admin-nav-link {
@@ -108,7 +108,6 @@ const formatCurrency = (amount) => {
 
       @media screen and (min-width: 301px) and (max-width: 1100px) {
         .admin-header {
-          /* display: flex; */
           flex-direction: column;
           align-items: stretch;
           gap: 14px;
@@ -132,14 +131,12 @@ const formatCurrency = (amount) => {
         }
 
         .admin-nav-link {
-          display: flex;
           flex-direction: column;
-          align-items: center;
           justify-content: center;
           gap: 3px;
-          box-sizing: border-box;
           min-width: 0;
           min-height: 58px;
+          box-sizing: border-box;
           padding: 6px 2px;
           font-size: 0.75rem;
         }
@@ -230,17 +227,18 @@ const formatCurrency = (amount) => {
     </style> -->
   </head>
 
-  <body style="font-family: sans-serif; background-color: #f8fafc; margin: 0; padding: 1rem;">
+  <body
+    style="font-family: sans-serif; background: #f8fafc; margin: 0; padding: 1rem;"
+  >
     <div style="max-width: 600px; margin: 0 auto;">
-
-      <!-- ヘッダーエリア -->
+      <!-- ヘッダー -->
       <div class="admin-header">
         <div class="admin-header-title">
           <h1 style="margin: 0; color: #0f172a; font-size: 1.5rem;">
             📊状況一覧
           </h1>
           <p style="margin: 0.25rem 0 0; color: #64748b; font-size: 0.9rem;">
-          <!-- 説明コメント -->
+            <!-- 説明コメント -->
           </p>
         </div>
 
@@ -250,67 +248,84 @@ const formatCurrency = (amount) => {
             <span class="nav-label">予約</span>
           </a>
           <a href="/admin/availability" class="admin-nav-link" title="各種設定">
-          <span class="nav-icon">⚙️</span>
+            <span class="nav-icon">⚙️</span>
             <span class="nav-label">設定</span>
           </a>
-          <a href="/admin/scanner" class="admin-nav-link" title="予約コードスキャン">
+          <a
+            href="/admin/scanner"
+            class="admin-nav-link"
+            title="予約コードスキャン"
+          >
             <span class="nav-icon">📸</span>
             <span class="nav-label">受付</span>
           </a>
-          <a href="/admin/guest-export" class="admin-nav-link" title="宿泊者情報CSV出力">
+          <a
+            href="/admin/guest-export"
+            class="admin-nav-link"
+            title="宿泊者情報CSV出力"
+          >
             <span class="nav-icon">📄</span>
             <span class="nav-label">名簿</span>
           </a>
         </div>
       </div>
-    </div>
 
-    <!-- 予約データテーブル -->
-    {
-      dbError && (
-        <div style="background:#fee2e2; color:#991b1b; padding:1rem; margin-bottom:1rem;">
-          <strong>予約データの取得エラー:</strong> {dbError}
-        </div>
-      )
-    }
-    <div
-      class="reservation-table-wrap"
-      style="width: 600px; margin: 0 auto; width: 600px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: auto;"
-    >
-      <!-- style="width: 600px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: auto;" -->
-    
+      <!-- 予約データテーブル -->
+      {
+        dbError && (
+          <div style="background:#fee2e2; color:#991b1b; padding:1rem; margin-bottom:1rem;">
+            <strong>予約データの取得エラー:</strong> {dbError}
+          </div>
+        )
+      }
 
-    <table
-        class="reservation-table"
-        style="width: 100%; margin: 0 auto; border-collapse: collapse; text-align: left; font-size: 0.95rem;"
+      <div
+        class="reservation-table-wrap"
+        style="width: 600px; margin: 0 auto; width: 600px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: auto;"
       >
-        <thead>
-          <tr
-            style="background: #f1f5f9; color: #475569; border-bottom: 6px solid #e2e8f0;"
-          >
-            <th style="padding: 6px 8px; text-align: center; width: auto; min-width: 160px;">宿泊者名</th>
-            <th style="padding: 6px 8px; text-align: center; width: auto;">宿泊日程</th>
-            <th style="padding: 6px 8px; text-align: center; width: auto;">人数/金額</th>
-            <th style="padding: 6px 4px; text-align: center; width: auto; min-width: 116px;">操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            reservations && reservations.length > 0 ? (
-              reservations.map((item) => {
-                return (
-                  <tr style="border-bottom: 6px solid #f1f5f9;">
-                    <td style="padding: 6px 8px; color: #0f172a;">
-                      <div style="max-width: 12em; word-break: break-all; font-weight: bold; font-size: 1rem; margin-bottom: 4px;">
-                        {item.guest_name}
-                      </div>
-                      <button
-                        onclick={`openReservationGuestEditor('${item.id}')`}
-                        style="margin: 4px 0; padding: 5px 8px; background: #0f766e; color: white; border: none; border-radius: 5px; font-size: 0.75rem; font-weight: bold; cursor: pointer;"
-                      >
-                        宿泊者情報
-                      </button>
-                      {/* {item.reservation_code ? (
+        <!-- style="width: 600px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: auto;" -->
+
+        <table
+          class="reservation-table"
+          style="width: 100%; margin: 0 auto; border-collapse: collapse; text-align: left; font-size: 0.95rem;"
+        >
+          <thead>
+            <tr
+              style="background: #f1f5f9; color: #475569; border-bottom: 6px solid #e2e8f0;"
+            >
+              <th
+                style="padding: 6px 8px; text-align: center; width: auto; min-width: 160px;"
+                >宿泊者名</th
+              >
+              <th style="padding: 6px 8px; text-align: center; width: auto;"
+                >宿泊日程</th
+              >
+              <th style="padding: 6px 8px; text-align: center; width: auto;"
+                >人数/金額</th
+              >
+              <th
+                style="padding: 6px 4px; text-align: center; width: auto; min-width: 116px;"
+                >操作</th
+              >
+            </tr>
+          </thead>
+          <tbody>
+            {
+              reservations && reservations.length > 0 ? (
+                reservations.map((item) => {
+                  return (
+                    <tr style="border-bottom: 6px solid #f1f5f9;">
+                      <td style="padding: 6px 8px; color: #0f172a;">
+                        <div style="max-width: 12em; word-break: break-all; font-weight: bold; font-size: 1rem; margin-bottom: 4px;">
+                          {item.guest_name}
+                        </div>
+                        <button
+                          onclick={`openReservationGuestEditor('${item.id}')`}
+                          style="margin: 4px 0; padding: 5px 8px; background: #0f766e; color: white; border: none; border-radius: 5px; font-size: 0.75rem; font-weight: bold; cursor: pointer;"
+                        >
+                          宿泊者情報
+                        </button>
+                        {/* {item.reservation_code ? (
                         <span style="display: inline-block; background: #f1f5f9; color: #0369a1; border: 1px solid #cbd5e1; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-family: monospace; font-weight: bold; letter-spacing: 1px;">
                           ID: {item.reservation_code}
                         </span>
@@ -319,103 +334,103 @@ const formatCurrency = (amount) => {
                           コードなし
                         </span>
                       )} */}
+                      </td>
 
-                    </td>
-
-                    <td style="padding: 6px 8px; color: #334155; font-size: 0.85rem; white-space: nowrap;">
-                      <div>
-                        {item.check_in_date} 〜 {item.check_out_date}（
-                        {item.nights ??
-                          Math.round(
-                            (Date.parse(`${item.check_out_date}T00:00:00Z`) -
-                              Date.parse(`${item.check_in_date}T00:00:00Z`)) /
-                              86400000,
-                          )}
-                        泊）
-                      </div>
-                      <div style="color: #2563eb; font-weight: bold; margin-top: 2px;">
-                        🕒 到着: {item.arrival_time || "未設定"}
-                      </div>
-                    </td>
-
-                    <td style="padding: 6px 8px; color: #334155; text-align: right; white-space: nowrap;">
-                      <div>{item.guests_count || 1}名</div>
-                      <div style="font-weight: bold; color: #0f172a;">
-                        {item.payment_status === "paid" ? "✓ " : ""}
-                        {formatCurrency(item.total_amount)}
-                      </div>
-                    </td>
-
-                    <td style="padding: 6px 4px; text-align: center; width: 116px; min-width: 116px;">
-                      {item.status === "pending" ? (
-                        <div style="display: flex; flex-direction: column; gap: 6px; justify-content: center; align-items: center; flex-wrap: nowrap;">
-                          <button
-                            onclick={`approveReservation('${item.id}')`}
-                            style="width: 80px; padding: 6px 0; background: #438a5d; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
-                          >
-                            Approve
-                          </button>
-                          <button
-                            onclick={`rejectReservation('${item.id}')`}
-                            style="width: 80px; padding: 6px 0; background: #c74343; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
-                          >
-                            Reject
-                          </button>
+                      <td style="padding: 6px 8px; color: #334155; font-size: 0.85rem; white-space: nowrap;">
+                        <div>
+                          {item.check_in_date} 〜 {item.check_out_date}（
+                          {item.nights ??
+                            Math.round(
+                              (Date.parse(`${item.check_out_date}T00:00:00Z`) -
+                                Date.parse(`${item.check_in_date}T00:00:00Z`)) /
+                                86400000,
+                            )}
+                          泊）
                         </div>
-                      ) : item.status === "approved" ||
-                        item.status === "paid" ? (
-                        <div style="display: flex; flex-direction: column; gap: 6px; justify-content: center; align-items: center; flex-wrap: nowrap;">
-                          <button
-                            onclick={`quickCheckIn('${item.id}')`}
-                            style="width: 100px; padding: 6px 0; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
-                          >
-                            Check-In
-                          </button>
-                          <button
-                            onclick={`cancelReservation('${item.id}')`}
-                            style="width: 80px; padding: 6px 0; background: #64748b; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
-                          >
-                            Cancel
-                          </button>
+                        <div style="color: #2563eb; font-weight: bold; margin-top: 2px;">
+                          🕒 到着: {item.arrival_time || "未設定"}
                         </div>
-                      ) : item.status === "checked_in" ? (
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; justify-content: center;">
-                          <span style="font-size: 0.8rem; color: #16a34a; font-weight: bold;">
-                            Checked-In
+                      </td>
+
+                      <td style="padding: 6px 8px; color: #334155; text-align: right; white-space: nowrap;">
+                        <div>{item.guests_count || 1}名</div>
+                        <div style="font-weight: bold; color: #0f172a;">
+                          {item.payment_status === "paid" ? "✓ " : ""}
+                          {formatCurrency(item.total_amount)}
+                        </div>
+                      </td>
+
+                      <td style="padding: 6px 4px; text-align: center; width: 116px; min-width: 116px;">
+                        {item.status === "pending" ? (
+                          <div style="display: flex; flex-direction: column; gap: 6px; justify-content: center; align-items: center; flex-wrap: nowrap;">
+                            <button
+                              onclick={`approveReservation('${item.id}')`}
+                              style="width: 80px; padding: 6px 0; background: #438a5d; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                            >
+                              Approve
+                            </button>
+                            <button
+                              onclick={`rejectReservation('${item.id}')`}
+                              style="width: 80px; padding: 6px 0; background: #c74343; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                            >
+                              Reject
+                            </button>
+                          </div>
+                        ) : item.status === "approved" ||
+                          item.status === "paid" ? (
+                          <div style="display: flex; flex-direction: column; gap: 6px; justify-content: center; align-items: center; flex-wrap: nowrap;">
+                            <button
+                              onclick={`quickCheckIn('${item.id}')`}
+                              style="width: 100px; padding: 6px 0; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                            >
+                              Check-In
+                            </button>
+                            <button
+                              onclick={`cancelReservation('${item.id}')`}
+                              style="width: 80px; padding: 6px 0; background: #64748b; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : item.status === "checked_in" ? (
+                          <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; justify-content: center;">
+                            <span style="font-size: 0.8rem; color: #16a34a; font-weight: bold;">
+                              Checked-In
+                            </span>
+                            <button
+                              onclick={`cancelReservation('${item.id}')`}
+                              style="width: 80px; padding: 6px 0; background: #64748b; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : item.status === "cancelled" ? (
+                          <span style="font-size: 0.8rem; color: #dc2626; font-weight: bold;">
+                            Cancelled
                           </span>
-                          <button
-                            onclick={`cancelReservation('${item.id}')`}
-                            style="width: 80px; padding: 6px 0; background: #64748b; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center;"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      ) : item.status === "cancelled" ? (
-                        <span style="font-size: 0.8rem; color: #dc2626; font-weight: bold;">
-                          Cancelled
-                        </span>
-                      ) : (
-                        <span style="font-size: 0.8rem; color: #64748b;">
-                          No Action
-                        </span>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })
-            ) : (
-              <tr>
-                <td
-                  colspan="6"
-                  style="padding: 32px; text-align: center; color: #94a3b8;"
-                >
-                  予約データがありません。
-                </td>
-              </tr>
-            )
-          }
-        </tbody>
-      </table>
+                        ) : (
+                          <span style="font-size: 0.8rem; color: #64748b;">
+                            No Action
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td
+                    colspan="6"
+                    style="padding: 32px; text-align: center; color: #94a3b8;"
+                  >
+                    予約データがありません。
+                  </td>
+                </tr>
+              )
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
   </body>
 
@@ -992,7 +1007,8 @@ const formatCurrency = (amount) => {
       style="max-width:850px; margin:20px auto; background:#fff; border-radius:12px; padding:20px;"
     >
       <h2 style="margin-top:0;">宿泊者情報の登録・編集</h2>
-      <p id="guestEditorReservation" style="color:#0e0492; font-weight:bold;"></p>
+      <p id="guestEditorReservation" style="color:#0e0492; font-weight:bold;">
+      </p>
       <div id="guestEditorFields"></div>
       <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;">
         <button
