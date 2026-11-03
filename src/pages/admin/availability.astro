@@ -453,7 +453,7 @@ const formatCurrency = (amount: number) => {
             for="basePrice"
             style="font-weight: bold; color: #303030; font-size: 0.8rem;"
           >
-            基本
+            <!-- 基本料金 -->
           </label>
           <input
             type="number"
@@ -463,14 +463,14 @@ const formatCurrency = (amount: number) => {
             min="0"
             step="100"
             required
-            style="width: 70px; box-sizing: border-box; padding: 0.5rem; border: 1px solid #ffffff; border-radius: 4px; font-size: 0.8rem; text-align: right;"
+            style="width: 60px; box-sizing: border-box; padding: 0.1rem; border: 1px solid #ffffff; border-radius: 4px; font-size: 0.8rem; text-align: right;"
           />
           <span style="color: #64748b; font-size: 0.75rem; ">円</span>
           <button
             type="submit"
-            style="padding: 4px 8px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer;"
+            style="padding: 2px 4px; background: #ffffff; color: white; border: none; border-radius: 0px; font-size: 1rem; font-weight: bold; cursor: pointer;"
           >
-            保存
+            🔄<!-- 保存 -->
           </button>
         </form>
 
@@ -483,7 +483,7 @@ const formatCurrency = (amount: number) => {
             for="bookingEndDate"
             style="font-weight: bold; color: #303030; font-size: 0.8rem;"
           >
-            最終
+            <!-- 予約可能な最終日 -->
           </label>
           <input
             type="date"
@@ -491,13 +491,13 @@ const formatCurrency = (amount: number) => {
             name="bookingEndDate"
             value={bookingEndDate}
             required
-            style="width: 116px; box-sizing: border-box; padding: 0.5rem; border: 1px solid #ffffff; border-radius: 4px; font-size: 0.8rem; text-align: center;"
+            style="width: 116px; box-sizing: border-box; padding: 0.1rem; border: 1px solid #ffffff; border-radius: 4px; font-size: 0.8rem; text-align: center;"
           />
           <button
             type="submit"
-            style="padding: 4px 8px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer;"
+            style="padding: 2px 4px; background: #ffffff; color: white; border: none; border-radius: 0px; font-size: 1rem; font-weight: bold; cursor: pointer;"
           >
-            保存
+            🔄<!-- 保存 -->
           </button>
         </form>
       </div>
