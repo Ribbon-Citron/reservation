@@ -73,7 +73,7 @@ const formatCurrency = (amount) => {
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>PMS Reservations</title>
 
-     <style>
+    <style>
       .admin-header {
         display: flex;
         justify-content: space-between;
@@ -280,11 +280,8 @@ const formatCurrency = (amount) => {
       }
 
       <div
-
         style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: auto;"
       >
-        <!-- style="width: 600px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: auto;" -->
-
         <table
           class="reservation-table"
           style="width: 100%; margin: 0 auto; border-collapse: collapse; text-align: left; font-size: 0.95rem;"
@@ -325,15 +322,15 @@ const formatCurrency = (amount) => {
                         >
                           宿泊者情報
                         </button>
-                        {/* {item.reservation_code ? (
-                        <span style="display: inline-block; background: #f1f5f9; color: #0369a1; border: 1px solid #cbd5e1; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-family: monospace; font-weight: bold; letter-spacing: 1px;">
-                          ID: {item.reservation_code}
-                        </span>
-                      ) : (
-                        <span style="font-size: 0.75rem; color: #94a3b8;">
-                          コードなし
-                        </span>
-                      )} */}
+                        {item.reservation_code ? (
+                          <span style="display: inline-block; background: #f1f5f9; color: #0369a1; border: 1px solid #cbd5e1; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-family: monospace; font-weight: bold; letter-spacing: 1px;">
+                            ID: {item.reservation_code}
+                          </span>
+                        ) : (
+                          <span style="font-size: 0.75rem; color: #94a3b8;">
+                            コードなし
+                          </span>
+                        )}
                       </td>
 
                       <td style="padding: 6px 8px; color: #334155; font-size: 0.85rem; white-space: nowrap;">
