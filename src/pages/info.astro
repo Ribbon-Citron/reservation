@@ -96,6 +96,20 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
         <path d="M5 2h14v20l-3-2-4 2-4-2-3 2z"></path>
         <path d="M8 7h8M8 11h8M8 15h5"></path>
       </symbol>
+
+      <symbol id="icon-bathroom" viewBox="0 0 24 24">
+        <path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Z"></path>
+        <path d="M6 12V5a2 2 0 0 1 4 0v1"></path>
+        <path d="M4 19v2M20 19v2"></path>
+        <path d="M7 15v1M12 15v1M17 15v1"></path>
+      </symbol>
+
+      <symbol id="icon-livingroom" viewBox="0 0 24 24">
+        <path d="M4 11h16a2 2 0 0 1 2 2v5H2v-5a2 2 0 0 1 2-2Z"></path>
+        <path d="M4 11V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3"></path>
+        <path d="M4 18v2M20 18v2"></path>
+        <path d="M8 11v7M16 11v7"></path>
+      </symbol>
     </svg>
 
     <main>
@@ -103,7 +117,7 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
         <div class="hero-inner">
           <p class="eyebrow">INFORMATION</p>
           <h1>宿泊施設のご案内</h1>
-          <p>施設の情報やご予約方法についてご案内します。</p>
+          <!-- <p>施設の情報やご予約方法についてご案内します。</p> -->
         </div>
       </section>
 
@@ -121,9 +135,7 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
           <div class="section-heading">
             <p class="eyebrow">01 / FACILITY</p>
             <h2>設備・施設のご案内</h2>
-            <p class="section-lead">
-              CENTER INNの施設や設備についてご紹介します。
-            </p>
+            <p class="section-lead">写真や設備・アメニティ</p>
           </div>
 
           <div class="facility-card">
@@ -146,23 +158,22 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
                 type="button"
                 aria-label="次の写真">›</button
               >
-            </div>
 
-            <div class="gallery-dots" aria-label="写真の位置">
-              {
-                Array.from({ length: 5 }, (_, i) => (
-                  <button
-                    type="button"
-                    class:list={["gallery-dot", { active: i === 0 }]}
-                    data-index={i}
-                    aria-label={`写真 ${i + 1}`}
-                    aria-current={i === 0 ? "true" : undefined}
-                  />
-                ))
-              }
+              <div class="gallery-dots" aria-label="写真の位置">
+                {
+                  Array.from({ length: 5 }, (_, i) => (
+                    <button
+                      type="button"
+                      class:list={["gallery-dot", { active: i === 0 }]}
+                      data-index={i}
+                      aria-label={`写真 ${i + 1}`}
+                      aria-current={i === 0 ? "true" : undefined}
+                    />
+                  ))
+                }
+              </div>
             </div>
           </div>
-
           <div class="amenity-icons" aria-label="設備・アメニティ">
             <div class="amenity-item available">
               <svg class="amenity-icon" role="img" aria-label="シャンプー"
@@ -178,11 +189,88 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
               <span>Body Soap</span>
             </div>
 
+            <div class="amenity-item unavailable">
+              <svg class="amenity-icon" role="img" aria-label="タオル"
+                ><use href="#icon-towel"></use></svg
+              >
+              <span>×Towel</span>
+            </div>
+
+            <div class="amenity-item unavailable">
+              <svg class="amenity-icon" role="img" aria-label="歯ブラシ"
+                ><use href="#icon-toothbrush"></use></svg
+              >
+              <span>×Toothbrush</span>
+            </div>
+
+            <div class="amenity-item unavailable">
+              <svg class="amenity-icon" role="img" aria-label="ドライヤー"
+                ><use href="#icon-dryer"></use></svg
+              >
+              <span>×Hair Dryer</span>
+            </div>
+
+            <div class="amenity-item available">
+              <svg class="amenity-icon" role="img" aria-label="バスルーム"
+                ><use href="#icon-bathroom"></use></svg
+              >
+              <span>Share Bathroom</span>
+            </div>
+
+            <div class="amenity-item available">
+              <svg class="amenity-icon" role="img" aria-label="リビング"
+                ><use href="#icon-livingroom"></use></svg
+              >
+              <span>Share Living</span>
+            </div>
+
+            <div class="amenity-item unavailable">
+              <svg class="amenity-icon" role="img" aria-label="キッチン"
+                ><use href="#icon-kitchen"></use></svg
+              >
+              <span>×Kitchen</span>
+            </div>
+
+            <div class="amenity-item unavailable">
+              <svg class="amenity-icon" role="img" aria-label="浴槽"
+                ><use href="#icon-bath"></use></svg
+              >
+              <span>×Bathtub</span>
+            </div>
+
+            <div class="amenity-item unavailable">
+              <svg class="amenity-icon" role="img" aria-label="洗濯機"
+                ><use href="#icon-washer"></use></svg
+              >
+              <span>×Washing Machine</span>
+            </div>
+
+            <div class="amenity-item unavailable">
+              <svg class="amenity-icon" role="img" aria-label="テレビ"
+                ><use href="#icon-tv"></use></svg
+              >
+              <span>×TV</span>
+            </div>
+
             <div class="amenity-item available">
               <svg class="amenity-icon" role="img" aria-label="Wi-Fi"
                 ><use href="#icon-wifi"></use></svg
               >
               <span>Wi-Fi</span>
+            </div>
+
+            <div class="amenity-item unavailable">
+              <svg class="amenity-icon" role="img" aria-label="駐車場"
+                ><use href="#icon-parking"></use></svg
+              >
+              <span>×Parking</span>
+            </div>
+
+            <div class="amenity-item unavailable">
+              <svg class="amenity-icon" role="img" aria-label="インボイス対応"
+                ><use href="#icon-invoice"></use></svg
+              >
+              <span>×Ⅰnvoice</span>
             </div>
 
             <div class="amenity-item available">
@@ -191,79 +279,8 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
               >
               <span>Non-smoking</span>
             </div>
-
-            <div class="amenity-item unavailable">
-              <svg class="amenity-icon" role="img" aria-label="タオル"
-                ><use href="#icon-towel"></use></svg
-              >
-              <span>Towel</span>
-            </div>
-
-            <div class="amenity-item unavailable">
-              <svg class="amenity-icon" role="img" aria-label="歯ブラシ"
-                ><use href="#icon-toothbrush"></use></svg
-              >
-              <span>Toothbrush</span>
-            </div>
-
-            <div class="amenity-item unavailable">
-              <svg class="amenity-icon" role="img" aria-label="ドライヤー"
-                ><use href="#icon-dryer"></use></svg
-              >
-              <span>Hair Dryer</span>
-            </div>
-
-            <div class="amenity-item unavailable">
-              <svg class="amenity-icon" role="img" aria-label="キッチン"
-                ><use href="#icon-kitchen"></use></svg
-              >
-              <span>Kitchen</span>
-            </div>
-
-            <div class="amenity-item unavailable">
-              <svg class="amenity-icon" role="img" aria-label="浴槽"
-                ><use href="#icon-bath"></use></svg
-              >
-              <span>Bathtub</span>
-            </div>
-
-            <div class="amenity-item unavailable">
-              <svg class="amenity-icon" role="img" aria-label="洗濯機"
-                ><use href="#icon-washer"></use></svg
-              >
-              <span>Washing Machine</span>
-            </div>
-
-            <div class="amenity-item unavailable">
-              <svg class="amenity-icon" role="img" aria-label="テレビ"
-                ><use href="#icon-tv"></use></svg
-              >
-              <span>TV</span>
-            </div>
-
-            <div class="amenity-item unavailable">
-              <svg class="amenity-icon" role="img" aria-label="駐車場"
-                ><use href="#icon-parking"></use></svg
-              >
-              <span>Parking</span>
-            </div>
-
-            <div class="amenity-item unavailable">
-              <svg class="amenity-icon" role="img" aria-label="インボイス対応"
-                ><use href="#icon-invoice"></use></svg
-              >
-              <span>Invoice</span>
-            </div>
           </div>
-          <!--
-            写真を追加するときは、上の facility-card を複製して、
-            画像ファイル名と見出し・説明文を変更してください。
-
-            例：
-            <img src="/bathroom.jpg" alt="浴室" class="facility-image" />
-          -->
         </section>
-
         <section class="content-section booking-section">
           <div class="section-heading">
             <p class="eyebrow">02 / RESERVATION</p>
@@ -366,592 +383,602 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
           </a>
         </section>
       </div>
-    </main>
 
-    <footer class="site-footer">
-      <p>© CENTER INN</p>
-    </footer>
-  </body>
+      <footer class="site-footer">
+        <p>© CENTER INN</p>
+      </footer>
 
-  <script>
-    const contactForm =
-      document.querySelector<HTMLFormElement>("#contact-form");
-    const contactSubmit =
-      document.querySelector<HTMLButtonElement>("#contact-submit");
-    const contactStatus =
-      document.querySelector<HTMLParagraphElement>("#contact-status");
+      <script>
+        const contactForm =
+          document.querySelector<HTMLFormElement>("#contact-form");
+        const contactSubmit =
+          document.querySelector<HTMLButtonElement>("#contact-submit");
+        const contactStatus =
+          document.querySelector<HTMLParagraphElement>("#contact-status");
 
-    contactForm?.addEventListener("submit", async (event) => {
-      event.preventDefault();
+        contactForm?.addEventListener("submit", async (event) => {
+          event.preventDefault();
 
-      if (!contactForm.reportValidity()) return;
+          if (!contactForm.reportValidity()) return;
 
-      if (!contactSubmit || !contactStatus) return;
+          if (!contactSubmit || !contactStatus) return;
 
-      contactSubmit.disabled = true;
-      contactSubmit.textContent = "送信中...";
-      contactStatus.textContent = "";
-      contactStatus.className = "contact-status";
+          contactSubmit.disabled = true;
+          contactSubmit.textContent = "送信中...";
+          contactStatus.textContent = "";
+          contactStatus.className = "contact-status";
 
-      const formData = new FormData(contactForm);
+          const formData = new FormData(contactForm);
 
-      const payload = {
-        name: String(formData.get("name") || ""),
-        email: String(formData.get("email") || ""),
-        message: String(formData.get("message") || ""),
-        website: String(formData.get("website") || ""),
-      };
+          const payload = {
+            name: String(formData.get("name") || ""),
+            email: String(formData.get("email") || ""),
+            message: String(formData.get("message") || ""),
+            website: String(formData.get("website") || ""),
+          };
 
-      try {
-        const response = await fetch("/api/contact", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
+          try {
+            const response = await fetch("/api/contact", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+              throw new Error(result.error || "送信に失敗しました。");
+            }
+
+            contactStatus.textContent =
+              "お問い合わせを送信しました。ありがとうございます。";
+            contactStatus.classList.add("success");
+            contactForm.reset();
+          } catch (error) {
+            contactStatus.textContent =
+              error instanceof Error
+                ? error.message
+                : "送信に失敗しました。時間をおいて再度お試しください。";
+            contactStatus.classList.add("error");
+          } finally {
+            contactSubmit.disabled = false;
+            contactSubmit.textContent = "送信する";
+          }
         });
 
-        const result = await response.json();
+        const roomPhotos = [
+          "/room1.jpg",
+          "/room2.jpg",
+          "/room3.jpg",
+          "/room4.jpg",
+          "/room5.jpg",
+        ];
 
-        if (!response.ok) {
-          throw new Error(result.error || "送信に失敗しました。");
+        const roomImage = document.querySelector("#room-image");
+        const prevButton = document.querySelector(".gallery-prev");
+        const nextButton = document.querySelector(".gallery-next");
+        const dots = document.querySelectorAll(".gallery-dot");
+
+        let currentIndex = 0;
+
+        function showRoomPhoto(index) {
+          currentIndex = (index + roomPhotos.length) % roomPhotos.length;
+
+          roomImage.src = roomPhotos[currentIndex];
+          roomImage.alt = `お部屋の写真 ${currentIndex + 1} / ${roomPhotos.length}`;
+
+          dots.forEach((dot, i) => {
+            dot.classList.toggle("active", i === currentIndex);
+
+            if (i === currentIndex) {
+              dot.setAttribute("aria-current", "true");
+            } else {
+              dot.removeAttribute("aria-current");
+            }
+          });
         }
 
-        contactStatus.textContent =
-          "お問い合わせを送信しました。ありがとうございます。";
-        contactStatus.classList.add("success");
-        contactForm.reset();
-      } catch (error) {
-        contactStatus.textContent =
-          error instanceof Error
-            ? error.message
-            : "送信に失敗しました。時間をおいて再度お試しください。";
-        contactStatus.classList.add("error");
-      } finally {
-        contactSubmit.disabled = false;
-        contactSubmit.textContent = "送信する";
-      }
-    });
+        prevButton?.addEventListener("click", () => {
+          showRoomPhoto(currentIndex - 1);
+        });
 
-    const roomPhotos = [
-      "/room1.jpg",
-      "/room2.jpg",
-      "/room3.jpg",
-      "/room4.jpg",
-      "/room5.jpg",
-    ];
+        nextButton?.addEventListener("click", () => {
+          showRoomPhoto(currentIndex + 1);
+        });
 
-    const roomImage = document.querySelector("#room-image");
-    const prevButton = document.querySelector(".gallery-prev");
-    const nextButton = document.querySelector(".gallery-next");
-    const dots = document.querySelectorAll(".gallery-dot");
+        dots.forEach((dot) => {
+          dot.addEventListener("click", () => {
+            showRoomPhoto(Number(dot.dataset.index));
+          });
+        });
+      </script>
 
-    let currentIndex = 0;
-
-    function showRoomPhoto(index) {
-      currentIndex = (index + roomPhotos.length) % roomPhotos.length;
-
-      roomImage.src = roomPhotos[currentIndex];
-      roomImage.alt = `お部屋の写真 ${currentIndex + 1} / ${roomPhotos.length}`;
-
-      dots.forEach((dot, i) => {
-        dot.classList.toggle("active", i === currentIndex);
-
-        if (i === currentIndex) {
-          dot.setAttribute("aria-current", "true");
-        } else {
-          dot.removeAttribute("aria-current");
+      <style>
+        :root {
+          --navy: #1e293b;
+          --red: #a3080f;
+          --background: #f8fafc;
+          --text: #0f172a;
+          --muted: #64748b;
+          --border: #e2e8f0;
         }
-      });
-    }
-
-    prevButton?.addEventListener("click", () => {
-      showRoomPhoto(currentIndex - 1);
-    });
-
-    nextButton?.addEventListener("click", () => {
-      showRoomPhoto(currentIndex + 1);
-    });
-
-    dots.forEach((dot) => {
-      dot.addEventListener("click", () => {
-        showRoomPhoto(Number(dot.dataset.index));
-      });
-    });
-  </script>
-
-  <style>
-    :root {
-      --navy: #1e293b;
-      --red: #a3080f;
-      --background: #f8fafc;
-      --text: #0f172a;
-      --muted: #64748b;
-      --border: #e2e8f0;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background: var(--background);
-      color: var(--text);
-      font-family:
-        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      line-height: 1.8;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .site-header {
-      height: 68px;
-      padding: 0 6%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: white;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .brand {
-      font-size: 21px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-decoration: none;
-    }
-
-    .brand span {
-      color: #ef4444;
-    }
-
-    .back-link {
-      font-size: 13px;
-      text-decoration: none;
-      border: 1px solid #94a3b8;
-      border-radius: 7px;
-      padding: 6px 12px;
-    }
-    .hero {
-      background: var(--navy);
-      color: white;
-      padding: 65px 20px;
-      text-align: center;
-    }
-
-    .hero-inner {
-      max-width: 900px;
-      margin: auto;
-    }
-
-    .hero h1 {
-      margin: 8px 0;
-      font-size: clamp(1.8rem, 5vw, 2.6rem);
-      letter-spacing: 0.04em;
-    }
-
-    .hero p:last-child {
-      margin: 8px 0 0;
-      color: #cbd5e1;
-    }
-
-    .eyebrow {
-      margin: 0;
-      color: var(--red);
-      font-size: 0.75rem;
-      font-weight: 800;
-      letter-spacing: 0.16em;
-    }
-
-    .hero .eyebrow {
-      color: #fca5a5;
-    }
-
-    .container {
-      width: min(900px, 90%);
-      margin: 45px auto 80px;
-    }
-
-    .draft-warning {
-      padding: 18px 22px;
-      margin-bottom: 65px;
-      background: #fff7ed;
-      border: 1px solid #fdba74;
-      border-left: 5px solid var(--red);
-      border-radius: 8px;
-    }
-
-    .draft-warning strong {
-      color: var(--red);
-    }
-
-    .draft-warning p {
-      margin: 5px 0 0;
-      font-size: 0.9rem;
-    }
-
-    .content-section {
-      margin-bottom: 75px;
-    }
-
-    .section-heading {
-      margin-bottom: 28px;
-    }
-
-    .section-heading h2 {
-      margin: 5px 0;
-      color: var(--navy);
-      font-size: clamp(1.5rem, 4vw, 2rem);
-    }
-
-    .section-lead {
-      color: var(--muted);
-      margin: 8px 0 0;
-    }
-
-    .facility-card {
-      overflow: hidden;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      box-shadow: 0 5px 20px rgb(15 23 42 / 4%);
-    }
-
-    .room-gallery {
-      position: relative;
-      width: 100%;
-      background: #eee;
-    }
-
-    .facility-image {
-      display: block;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      object-fit: cover;
-    }
-
-    .gallery-button {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 2;
-      width: 42px;
-      height: 52px;
-      border: none;
-      border-radius: 6px;
-      background: rgb(0 0 0 / 45%);
-      color: white;
-      font-size: 34px;
-      line-height: 1;
-      cursor: pointer;
-    }
-
-    .gallery-prev {
-      left: 12px;
-    }
-
-    .gallery-next {
-      right: 12px;
-    }
-
-    .gallery-button:hover {
-      background: rgb(0 0 0 / 70%);
-    }
-
-    .gallery-dots {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
-      padding: 18px 0;
-    }
-
-    .gallery-dot {
-      width: 10px;
-      height: 10px;
-      padding: 0;
-      border: none;
-      border-radius: 50%;
-      background: #ccc;
-      cursor: pointer;
-    }
-
-    .gallery-dot.active {
-      background: #333;
-      transform: scale(1.25);
-    }
-
-.amenity-icons {
-  display: grid;
-  grid-template-columns: repeat(5, 60px);
-  justify-content: center;
-  gap: 14px 12px;
-  padding: 20px 12px;
-}
-
-    .amenity-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      min-width: 0;
-    }
-
-    .amenity-icon {
-      width: 20px;
-      height: 20px;
-      fill: none;
-      stroke: #333;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .amenity-item span {
-      font-size: 10px;
-      line-height: 1.3;
-      color: #333;
-      text-align: center;
-      white-space: nowrap;
-    }
-
-    .amenity-item.available {
-      opacity: 1;
-    }
-
-    .amenity-item.unavailable {
-      opacity: 0.35;
-    }
-
-    @media (max-width: 600px) {
-      .gallery-button {
-        width: 36px;
-        height: 46px;
-        font-size: 30px;
-      }
-
-      .gallery-prev {
-        left: 8px;
-      }
-
-      .gallery-next {
-        right: 8px;
-      }
-
-      .amenity-icons {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 12px 4px;
-        padding: 18px 6px;
-      }
-
-      .amenity-icon {
-        width: 20px;
-        height: 20px;
-      }
-
-      .amenity-item span {
-        font-size: 9px;
-      }
-    }
-
-    .facility-text {
-      padding: 24px 28px;
-    }
-
-    .facility-text h3 {
-      margin: 0 0 8px;
-      color: var(--navy);
-    }
-
-    .facility-text p {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    .info-panel {
-      padding: 30px;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-    }
-
-    .info-panel ol {
-      padding-left: 1.5em;
-      margin: 20px 0;
-    }
-
-    .info-panel li {
-      padding: 4px 0;
-    }
-
-    .note {
-      padding: 12px 16px;
-      background: #fff7ed;
-      border-radius: 6px;
-      color: #9a3412;
-      font-size: 0.9rem;
-    }
-
-    .primary-button {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 52px;
-      padding: 12px 30px;
-      border: none;
-      border-radius: 7px;
-      background: var(--red);
-      color: white;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-
-    .primary-button:hover {
-      opacity: 0.85;
-    }
-
-    .primary-button:disabled {
-      opacity: 0.55;
-      cursor: wait;
-    }
-
-    .contact-form {
-      padding: 32px;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      box-shadow: 0 5px 20px rgb(15 23 42 / 4%);
-    }
-
-    .form-group {
-      margin-bottom: 24px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--navy);
-      font-weight: 700;
-    }
-
-    .form-group label span {
-      margin-left: 6px;
-      color: var(--red);
-      font-size: 0.75rem;
-    }
-
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      padding: 13px 15px;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      background: #fff;
-      color: var(--text);
-      font: inherit;
-    }
-
-    .form-group input:focus,
-    .form-group textarea:focus {
-      outline: 2px solid #94a3b8;
-      outline-offset: 1px;
-      border-color: var(--navy);
-    }
-
-    .form-group textarea {
-      resize: vertical;
-    }
-
-    .contact-status {
-      margin: 16px 0 0;
-      font-size: 0.9rem;
-    }
-
-    .contact-status.success {
-      color: #15803d;
-    }
-
-    .contact-status.error {
-      color: var(--red);
-    }
-
-    .honeypot {
-      position: absolute;
-      left: -10000px;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-    }
-
-    .terms-link-section {
-      padding: 25px 0;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .terms-link {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      color: var(--navy);
-      font-weight: 700;
-    }
-
-    .terms-link span {
-      color: var(--red);
-      font-size: 1.3rem;
-    }
-
-    .site-footer {
-      padding: 25px;
-      background: var(--navy);
-      color: #cbd5e1;
-      text-align: center;
-      font-size: 0.85rem;
-    }
-
-    .site-footer p {
-      margin: 0;
-    }
-
-    @media (max-width: 600px) {
-      .hero {
-        padding: 48px 18px;
-      }
-
-      .container {
-        margin-top: 30px;
-      }
-
-      .draft-warning {
-        margin-bottom: 45px;
-      }
-
-      .content-section {
-        margin-bottom: 55px;
-      }
-
-      .info-panel,
-      .contact-form {
-        padding: 22px 18px;
-      }
-
-      .facility-text {
-        padding: 20px;
-      }
-
-      .primary-button {
-        width: 100%;
-      }
-    }
-  </style>
+
+        * {
+          box-sizing: border-box;
+        }
+
+        body {
+          margin: 0;
+          background: var(--background);
+          color: var(--text);
+          font-family:
+            -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+          line-height: 1.8;
+        }
+
+        a {
+          color: inherit;
+          text-decoration: none;
+        }
+
+        .site-header {
+          height: 68px;
+          padding: 0 6%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: white;
+          border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+          font-size: 21px;
+          font-weight: 900;
+          letter-spacing: 1px;
+          text-decoration: none;
+        }
+
+        .brand span {
+          color: #ef4444;
+        }
+
+        .back-link {
+          font-size: 13px;
+          text-decoration: none;
+          border: 1px solid #94a3b8;
+          border-radius: 7px;
+          padding: 6px 12px;
+        }
+        .hero {
+          background: var(--navy);
+          color: white;
+          padding: 65px 20px;
+          text-align: center;
+        }
+
+        .hero-inner {
+          max-width: 900px;
+          margin: auto;
+        }
+
+        .hero h1 {
+          margin: 8px 0;
+          font-size: clamp(1.8rem, 5vw, 2.6rem);
+          letter-spacing: 0.04em;
+        }
+
+        .hero p:last-child {
+          margin: 8px 0 0;
+          color: #cbd5e1;
+        }
+
+        .eyebrow {
+          margin: 0;
+          color: var(--red);
+          font-size: 0.75rem;
+          font-weight: 800;
+          letter-spacing: 0.16em;
+        }
+
+        .hero .eyebrow {
+          color: #fca5a5;
+        }
+
+        .container {
+          width: min(900px, 90%);
+          margin: 45px auto 80px;
+        }
+
+        .draft-warning {
+          padding: 18px 22px;
+          margin-bottom: 65px;
+          background: #fff7ed;
+          border: 1px solid #fdba74;
+          border-left: 5px solid var(--red);
+          border-radius: 8px;
+        }
+
+        .draft-warning strong {
+          color: var(--red);
+        }
+
+        .draft-warning p {
+          margin: 5px 0 0;
+          font-size: 0.9rem;
+        }
+
+        .content-section {
+          margin-bottom: 75px;
+        }
+
+        .section-heading {
+          margin-bottom: 28px;
+        }
+
+        .section-heading h2 {
+          margin: 5px 0;
+          color: var(--navy);
+          font-size: clamp(1.5rem, 4vw, 2rem);
+        }
+
+        .section-lead {
+          color: var(--muted);
+          margin: 8px 0 0;
+        }
+
+        .facility-card {
+          overflow: hidden;
+          background: white;
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          box-shadow: 0 5px 20px rgb(15 23 42 / 4%);
+        }
+
+        .room-gallery {
+          position: relative;
+          width: 100%;
+          background: #eee;
+        }
+
+        .facility-image {
+          display: block;
+          width: 100%;
+          aspect-ratio: 16 / 9;
+          object-fit: cover;
+        }
+
+        .gallery-button {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 2;
+          width: 42px;
+          height: 52px;
+          border: none;
+          border-radius: 6px;
+          background: rgb(0 0 0 / 45%);
+          color: white;
+          font-size: 34px;
+          line-height: 1;
+          cursor: pointer;
+        }
+
+        .gallery-prev {
+          left: 12px;
+        }
+
+        .gallery-next {
+          right: 12px;
+        }
+
+        .gallery-button:hover {
+          background: rgb(0 0 0 / 70%);
+        }
+
+        .gallery-dots {
+          position: absolute;
+          bottom: 10px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 3;
+
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+
+          padding: 6px 10px;
+          background: rgb(0 0 0 / 30%);
+          border-radius: 20px;
+        }
+
+        .gallery-dot {
+          width: 7px;
+          height: 7px;
+          padding: 0;
+          border: none;
+          border-radius: 50%;
+          background: rgb(255 255 255 / 65%);
+          cursor: pointer;
+        }
+
+        .gallery-dot.active {
+          background: white;
+          transform: scale(1.25);
+        }
+
+        .amenity-icons {
+          display: grid;
+          grid-template-columns: repeat(5, 60px);
+          justify-content: center;
+          gap: 14px 12px;
+          padding: 20px 12px;
+        }
+
+        .amenity-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 3px;
+          min-width: 0;
+        }
+
+        .amenity-icon {
+          width: 20px;
+          height: 20px;
+          fill: none;
+          stroke: #333;
+          stroke-width: 1.8;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+
+        .amenity-item span {
+          font-size: 10px;
+          line-height: 1.3;
+          color: #333;
+          text-align: center;
+          white-space: nowrap;
+        }
+
+        .amenity-item.available {
+          opacity: 1;
+        }
+
+        .amenity-item.unavailable {
+          opacity: 0.35;
+        }
+
+        @media (max-width: 600px) {
+          .gallery-button {
+            width: 36px;
+            height: 46px;
+            font-size: 30px;
+          }
+
+          .gallery-prev {
+            left: 8px;
+          }
+
+          .gallery-next {
+            right: 8px;
+          }
+
+          .amenity-icons {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px 4px;
+            padding: 18px 6px;
+          }
+
+          .amenity-icon {
+            width: 20px;
+            height: 20px;
+          }
+
+          .amenity-item span {
+            font-size: 9px;
+          }
+        }
+
+        .facility-text {
+          padding: 24px 28px;
+        }
+
+        .facility-text h3 {
+          margin: 0 0 8px;
+          color: var(--navy);
+        }
+
+        .facility-text p {
+          margin: 0;
+          color: var(--muted);
+        }
+
+        .info-panel {
+          padding: 30px;
+          background: white;
+          border: 1px solid var(--border);
+          border-radius: 12px;
+        }
+
+        .info-panel ol {
+          padding-left: 1.5em;
+          margin: 20px 0;
+        }
+
+        .info-panel li {
+          padding: 4px 0;
+        }
+
+        .note {
+          padding: 12px 16px;
+          background: #fff7ed;
+          border-radius: 6px;
+          color: #9a3412;
+          font-size: 0.9rem;
+        }
+
+        .primary-button {
+          display: inline-flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 52px;
+          padding: 12px 30px;
+          border: none;
+          border-radius: 7px;
+          background: var(--red);
+          color: white;
+          font-size: 1rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: opacity 0.2s;
+        }
+
+        .primary-button:hover {
+          opacity: 0.85;
+        }
+
+        .primary-button:disabled {
+          opacity: 0.55;
+          cursor: wait;
+        }
+
+        .contact-form {
+          padding: 32px;
+          background: white;
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          box-shadow: 0 5px 20px rgb(15 23 42 / 4%);
+        }
+
+        .form-group {
+          margin-bottom: 24px;
+        }
+
+        .form-group label {
+          display: block;
+          margin-bottom: 8px;
+          color: var(--navy);
+          font-weight: 700;
+        }
+
+        .form-group label span {
+          margin-left: 6px;
+          color: var(--red);
+          font-size: 0.75rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+          width: 100%;
+          padding: 13px 15px;
+          border: 1px solid #cbd5e1;
+          border-radius: 6px;
+          background: #fff;
+          color: var(--text);
+          font: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+          outline: 2px solid #94a3b8;
+          outline-offset: 1px;
+          border-color: var(--navy);
+        }
+
+        .form-group textarea {
+          resize: vertical;
+        }
+
+        .contact-status {
+          margin: 16px 0 0;
+          font-size: 0.9rem;
+        }
+
+        .contact-status.success {
+          color: #15803d;
+        }
+
+        .contact-status.error {
+          color: var(--red);
+        }
+
+        .honeypot {
+          position: absolute;
+          left: -10000px;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+        }
+
+        .terms-link-section {
+          padding: 25px 0;
+          border-top: 1px solid var(--border);
+          border-bottom: 1px solid var(--border);
+        }
+
+        .terms-link {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 15px;
+          color: var(--navy);
+          font-weight: 700;
+        }
+
+        .terms-link span {
+          color: var(--red);
+          font-size: 1.3rem;
+        }
+
+        .site-footer {
+          padding: 25px;
+          background: var(--navy);
+          color: #cbd5e1;
+          text-align: center;
+          font-size: 0.85rem;
+        }
+
+        .site-footer p {
+          margin: 0;
+        }
+
+        @media (max-width: 600px) {
+          .hero {
+            padding: 48px 18px;
+          }
+
+          .container {
+            margin-top: 30px;
+          }
+
+          .draft-warning {
+            margin-bottom: 45px;
+          }
+
+          .content-section {
+            margin-bottom: 55px;
+          }
+
+          .info-panel,
+          .contact-form {
+            padding: 22px 18px;
+          }
+
+          .facility-text {
+            padding: 20px;
+          }
+
+          .primary-button {
+            width: 100%;
+          }
+        }
+      </style>
+    </main>
+  </body>
+
 
 </html>
