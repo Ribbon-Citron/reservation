@@ -98,10 +98,12 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
       </symbol>
 
       <symbol id="icon-bathroom" viewBox="0 0 24 24">
-        <path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Z"></path>
-        <path d="M6 12V5a2 2 0 0 1 4 0v1"></path>
-        <path d="M4 19v2M20 19v2"></path>
-        <path d="M7 15v1M12 15v1M17 15v1"></path>
+        <!-- シャワーパイプ -->
+        <path d="M5 3v8a4 4 0 0 0 4 4h5"></path>
+        <!-- シャワーヘッド -->
+        <path d="M14 15l4-4 3 3-4 4z"></path>
+        <!-- 水滴 -->
+        <path d="M14 19l-1 2M17 20l-1 2M20 18l-1 2"></path>
       </symbol>
 
       <symbol id="icon-livingroom" viewBox="0 0 24 24">
@@ -217,6 +219,13 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
               <span>Share Bathroom</span>
             </div>
 
+            <div class="amenity-item unavailable">
+              <svg class="amenity-icon" role="img" aria-label="浴槽"
+                ><use href="#icon-bath"></use></svg
+              >
+              <span>×Bathtub</span>
+            </div>
+
             <div class="amenity-item available">
               <svg class="amenity-icon" role="img" aria-label="リビング"
                 ><use href="#icon-livingroom"></use></svg
@@ -229,13 +238,6 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
                 ><use href="#icon-kitchen"></use></svg
               >
               <span>×Kitchen</span>
-            </div>
-
-            <div class="amenity-item unavailable">
-              <svg class="amenity-icon" role="img" aria-label="浴槽"
-                ><use href="#icon-bath"></use></svg
-              >
-              <span>×Bathtub</span>
             </div>
 
             <div class="amenity-item unavailable">
