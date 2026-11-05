@@ -41,7 +41,7 @@ function formatDate(date: string): string {
   return date.replace(/-/g, '/');
 }
 
-export async function sendReminderEmails() {
+export async function sendReminderEmails(dryRun = false) {
   if (!supabase) {
     throw new Error('Supabaseが初期化されていません');
   }
@@ -89,6 +89,53 @@ export async function sendReminderEmails() {
       );
 
       const subject = `【宿泊3日前のご案内】${checkIn} ご宿泊について`;
+      const html = `
+  <div style="font-family:sans-serif;line-height:1.8;color:#333;max-width:600px;margin:auto;padding:20px;">
+    <h2>ご宿泊3日前のご案内</h2>
+
+    <p>${guestName} 様</p>
+    <p>ご宿泊日が近づいてまいりましたので、予約内容をご案内します。</p>
+
+    <h3>ご予約内容</h3>
+    <p>
+      予約コード：${reservationCode}<br>
+      チェックイン：${checkIn}<br>
+      チェックイン予定時間：${arrivalTime}<br>
+      チェックアウト：${checkOut}<br>
+      宿泊人数：${guestsCount}名<br>
+      宿泊料金：${totalAmount}円<br>
+      お支払い方法：現地決済（チェックイン時）
+    </p>
+
+    <h3>キャンセルについて</h3>
+    <p>
+      チェックイン3日前まで：キャンセル料無料<br>
+      前日・当日・不泊：宿泊料金の100%
+    </p>
+
+    <p>
+      キャンセルや予約内容の変更は、本メールへの返信、
+      または下記電話番号までご連絡ください。
+    </p>
+
+    <h3>施設情報</h3>
+    <p>
+      住所：〒000-0000 仮住所（デバッグ用）<br>
+      メール：example@example.com<br>
+      電話：000-0000-0000
+    </p>
+
+    <p>ご宿泊当日はお気をつけてお越しください。</p>
+  </div>
+`;
+
+      if (dryRun) {
+        console.log(`[DRY RUN] 送信予定: ${reservation.id}`);
+        console.log(`[DRY RUN] 宛先: ${reservation.guest_email}`);
+        console.log(`[DRY RUN] 件名: ${subject}`);
+        console.log(`[DRY RUN] 本文:\n${html}`);
+        continue;
+      }
 
       const { data, error: emailError } = await resend.emails.send(
         {
@@ -96,45 +143,8 @@ export async function sendReminderEmails() {
           to: [reservation.guest_email],
           replyTo: 'example@example.com',
           subject,
-          html: `
-            <div style="font-family:sans-serif;line-height:1.8;color:#333;max-width:600px;margin:auto;padding:20px;">
-              <h2>ご宿泊3日前のご案内</h2>
 
-              <p>${guestName} 様</p>
-              <p>ご宿泊日が近づいてまいりましたので、予約内容をご案内します。</p>
-
-              <h3>ご予約内容</h3>
-              <p>
-                予約コード：${reservationCode}<br>
-                チェックイン：${checkIn}<br>
-                チェックイン予定時間：${arrivalTime}<br>
-                チェックアウト：${checkOut}<br>
-                宿泊人数：${guestsCount}名<br>
-                宿泊料金：${totalAmount}円<br>
-                お支払い方法：現地決済（チェックイン時）
-              </p>
-
-              <h3>キャンセルについて</h3>
-              <p>
-                チェックイン3日前まで：キャンセル料無料<br>
-                前日・当日・不泊：宿泊料金の100%
-              </p>
-
-              <p>
-                キャンセルや予約内容の変更は、本メールへの返信、
-                または下記電話番号までご連絡ください。
-              </p>
-
-              <h3>施設情報</h3>
-              <p>
-                住所：〒000-0000 仮住所（デバッグ用）<br>
-                メール：example@example.com<br>
-                電話：000-0000-0000
-              </p>
-
-              <p>ご宿泊当日はお気をつけてお越しください。</p>
-            </div>
-          `,
+          html,
         },
         {
           idempotencyKey: `reservation-reminder/${reservation.id}`,
