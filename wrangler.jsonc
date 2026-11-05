@@ -1,7 +1,8 @@
+
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "reservation",
-  "main": "@astrojs/cloudflare/entrypoints/server",
+  "main": "./src/worker.ts",
   "compatibility_date": "2026-10-13",
   "compatibility_flags": ["global_fetch_strictly_public"],
   "observability": {
@@ -12,5 +13,8 @@
       "binding": "SESSION",
       "id": "add5b1d92d404404a61ce0e291772be9"
     }
-  ]
+  ],
+  "triggers": {
+    "crons": ["0 0 * * *"]
+  }
 }
