@@ -1,7 +1,7 @@
 (() => {
   const rows = [
     [
-      ["guest_name", "Name1", 200, "text"],
+      ["guest_name", "Name", 200, "text"],
       ["gender", "Gender", 20, "select"],
       ["age_group", "Age", 20, "select"],
     ],
@@ -154,7 +154,7 @@
     hint.textContent =
       "チェックすると、国籍・パスポート番号は入力不要になります。";
     hint.style.cssText =
-      "font-size:0.85rem;color:#64748b;margin:4px 0 12px;";
+      "font-size:0.8rem;color:#64748b;margin:4px 0 12px;";
     section.appendChild(hint);
 
     for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
@@ -232,11 +232,11 @@
       );
 
       nationalityLabel.textContent = domestic.checked
-        ? "Nationality(NR)"
+        ? "Nat.(N/A)"
         : "Nationality";
 
       passportLabel.textContent = domestic.checked
-        ? "Passport(NR)"
+        ? "Passport(N/A)"
         : "Passport";
 
       addressLabel.textContent = isSameAddress
