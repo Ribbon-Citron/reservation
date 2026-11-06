@@ -489,10 +489,10 @@
     </main>
 
     <!-- 最下部 -->
-  <footer>
-    <p>© CENTER INN</p>
-    <p>本ページはデバッグ用の仮情報を含みます。</p>
-  </footer>
+    <footer>
+      <p>© CENTER INN</p>
+      <p>本ページはデバッグ用の仮情報を含みます。</p>
+    </footer>
 
     <!-- 完了モーダル -->
     <div
@@ -869,6 +869,15 @@
             const isAvailable =
               !isPast && !isBeyondTwoMonths && availableCount > 0;
 
+            const isCheckoutSelectable =
+              selectingDate === "checkOut" &&
+              !!checkInInput?.value &&
+              dateStr > checkInInput.value &&
+              !isPast &&
+              (!maxAllowedDateStr || dateStr <= maxAllowedDateStr);
+
+            const isSelectable = isAvailable || isCheckoutSelectable;
+
             const cell = document.createElement("div");
             cell.style.cssText =
               "padding: 6px 2px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.75rem; background: #fff;";
@@ -885,10 +894,10 @@
               cell.style.border = "2px solid #16a34a";
               cell.style.fontWeight = "bold";
             }
-            if (isAvailable) {
+            if (isSelectable) {
               cell.style.cursor = "pointer";
-              cell.style.background = "#f8fafc";
-              cell.innerHTML = `<div>${d}</div><div style="color: #16a34a; font-weight: bold;">${availableCount}</div>`;
+              cell.style.background = isAvailable ? "#f8fafc" : "#fff7ed";
+              cell.innerHTML = `<div>${d}</div><div style="color: ${isAvailable ? "#16a34a" : "#94a3b8"}; font-weight: bold;">${availableCount}</div>`;
               cell.addEventListener("click", () => {
                 if (!checkInInput || !checkOutInput) return;
 
@@ -1088,15 +1097,35 @@
     font-size: 12px;
   }
 
-  footer p { margin: 3px; }
+  footer p {
+    margin: 3px;
+  }
 
   @media (max-width: 600px) {
-    .site-header { padding: 12px 16px; }
-    .container { width: min(100% - 20px, 850px); margin-top: 14px; }
-    .warning { padding: 16px; }
-    .toc, .section, .contact { padding: 17px 15px; }
-    .section-heading h2 { font-size: 20px; }
-    th, td { padding: 10px 9px; }
-    .business-table tbody th { width: 38%; }
+    .site-header {
+      padding: 12px 16px;
+    }
+    .container {
+      width: min(100% - 20px, 850px);
+      margin-top: 14px;
+    }
+    .warning {
+      padding: 16px;
+    }
+    .toc,
+    .section,
+    .contact {
+      padding: 17px 15px;
+    }
+    .section-heading h2 {
+      font-size: 20px;
+    }
+    th,
+    td {
+      padding: 10px 9px;
+    }
+    .business-table tbody th {
+      width: 38%;
+    }
   }
 </style>
