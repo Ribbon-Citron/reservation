@@ -120,19 +120,6 @@ export const prerender = false;
         font-weight: bold;
         cursor: pointer;
       }
-      button2 {
-        width: 100%;
-        margin-top: 24px;
-        padding: 14px;
-        border: 0;
-        border-radius: 8px;
-        background: #d8231d;
-        color: white;
-        font-size: 1rem;
-        font-weight: bold;
-        cursor: pointer;
-      }
-
       button:disabled {
         opacity: 0.6;
         cursor: wait;
@@ -225,9 +212,9 @@ export const prerender = false;
         <div id="guest-fields"></div>
         <button type="submit">事前登録を送信</button>
       </form>
-      <button2 type="button" id="close-page" hidden>
+      <button type="button" id="close-page" hidden>
         終了 (ページを閉じる)
-      </button2>
+      </button>
     </main>
 
     <script is:inline src="/guest-form.js"></script>
