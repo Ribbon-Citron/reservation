@@ -160,7 +160,7 @@
     for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
       const row = document.createElement("div");
       row.style.cssText =
-        "display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1.4fr) minmax(0,1.4fr);gap:3px;margin-bottom:10px;";
+        "display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr);gap:3px;margin-bottom:10px;";
       if (rowIndex === 1) {
         row.style.gridTemplateColumns = "minmax(0,1fr)";
       } else if (rowIndex === 2) {
@@ -232,11 +232,11 @@
       );
 
       nationalityLabel.textContent = domestic.checked
-        ? "Nationality (N/A)"
+        ? "Nationality(NR)"
         : "Nationality";
 
       passportLabel.textContent = domestic.checked
-        ? "Passport (N/A)"
+        ? "Passport(NR)"
         : "Passport";
 
       addressLabel.textContent = isSameAddress
