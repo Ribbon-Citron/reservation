@@ -1,18 +1,18 @@
 (() => {
   const rows = [
     [
-      ["guest_name", "氏名 name", 200, "text"],
-      ["gender", "性別 gender", 30, "select"],
-      ["age_group", "年代 age group", 30, "select"],
+      ["guest_name", "Name", 200, "text"],
+      ["gender", "Gender", 30, "select"],
+      ["age_group", "Age", 30, "select"],
     ],
-    [["guest_address", "住所 address", 500, "text"]],
+    [["guest_address", "Address", 500, "text"]],
     [
-      ["guest_phone", "電話番号 phone", 50, "tel"],
-      ["guest_email", "メールアドレス email", 254, "email"],
+      ["guest_phone", "Phone", 50, "tel"],
+      ["guest_email", "Email", 254, "email"],
     ],
     [
-      ["nationality", "国籍 nationality", 200, "text"],
-      ["passport_number", "パスポート番号 passport number", 200, "text"],
+      ["nationality", "Nationality", 200, "text"],
+      ["passport_number", "Passport", 200, "text"],
     ],
   ];
 
@@ -232,16 +232,16 @@
       );
 
       nationalityLabel.textContent = domestic.checked
-        ? "国籍 (入力不要)"
-        : "国籍 nationality";
+        ? "Nationality (Not Required)"
+        : "Nationality";
 
       passportLabel.textContent = domestic.checked
-        ? "パスポート番号 (入力不要)"
-        : "パスポート番号 passport number";
+        ? "Passport (Not Required)"
+        : "Passport";
 
       addressLabel.textContent = isSameAddress
-        ? "住所 (代表者と同じ)"
-        : "住所 address";
+        ? "Address (Same as Primary)"
+        : "Address";
     }
 
     domesticCheckbox.addEventListener("change", update);
