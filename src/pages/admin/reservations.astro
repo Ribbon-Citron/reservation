@@ -153,78 +153,6 @@ const formatCurrency = (amount) => {
         }
       }
     </style>
-
-    <!-- <style>
-      @media screen and (max-width: 600px) {
-        .reservation-table-wrap {
-          overflow: visible !important;
-          background: transparent !important;
-          box-shadow: none !important;
-          width: 100% !important;
-        }
-
-        .reservation-table {
-          display: block;
-          width: 100% !important;
-        }
-
-        .reservation-table thead {
-          display: none;
-        }
-
-        .reservation-table tbody {
-          display: block;
-          width: 100%;
-        }
-
-        .reservation-table tbody tr {
-          display: block;
-          width: 100%;
-          margin-bottom: 12px;
-          padding: 6px 10px;
-          box-sizing: border-box;
-          background: white;
-          border: 1px solid #e2e8f0 !important;
-          border-radius: 8px;
-        }
-
-        .reservation-table tbody td {
-          display: block;
-          width: 100% !important;
-          min-width: 0 !important;
-          box-sizing: border-box;
-          padding: 8px 4px !important;
-          white-space: normal !important;
-          text-align: left !important;
-          border-bottom: 1px solid #f1f5f9;
-          overflow-wrap: anywhere;
-        }
-
-        .reservation-table tbody td:nth-child(2)::before {
-          content: "宿泊日程・到着時刻";
-          display: block;
-          color: #64748b;
-          font-size: 0.75rem;
-          margin-bottom: 4px;
-        }
-
-        .reservation-table tbody td:nth-child(3) {
-          text-align: left !important;
-          font-size: 0.9rem;
-        }
-
-        .reservation-table tbody td:nth-child(4) {
-          text-align: center !important;
-          border-bottom: none;
-        }
-
-        .reservation-table tbody td:nth-child(4) button {
-          width: 100% !important;
-          max-width: 180px;
-          padding: 9px !important;
-        }
-      }
-    </style> -->
   </head>
 
   <body
@@ -562,18 +490,18 @@ const formatCurrency = (amount) => {
 
     const adminGuestRows = [
       [
-        ["guest_name", "氏名", 200, "text"],
-        ["gender", "性別", 30, "select"],
-        ["age_group", "年代", 30, "select"],
+        ["guest_name", "氏名 name", 200, "text"],
+        ["gender", "性別 gender", 30, "select"],
+        ["age_group", "年代 age ", 30, "select"],
       ],
-      [["guest_address", "住所", 500, "text"]],
+      [["guest_address", "住所 address", 500, "text"]],
       [
-        ["guest_phone", "電話番号", 50, "tel"],
-        ["guest_email", "メールアドレス", 254, "email"],
+        ["guest_phone", "電話番号 phone", 50, "tel"],
+        ["guest_email", "メールアドレス email", 254, "email"],
       ],
       [
-        ["nationality", "国籍", 200, "text"],
-        ["passport_number", "パスポート番号", 200, "text"],
+        ["nationality", "国籍 nationality", 200, "text"],
+        ["passport_number", "パスポート番号 passport number", 200, "text"],
       ],
     ];
 
@@ -652,6 +580,9 @@ const formatCurrency = (amount) => {
       const passport = document.getElementById(
         `guest-${index}-passport_number`,
       );
+      const passportNotice = section.querySelector(
+        '[data-role="passport-notice"]',
+      );
       const address = document.getElementById(`guest-${index}-guest_address`);
       const sameAddress = section.querySelector('[data-role="same-address"]');
 
@@ -668,6 +599,8 @@ const formatCurrency = (amount) => {
         nationality.required = true;
         passport.required = true;
       }
+
+      passportNotice.style.display = domestic.checked ? "none" : "block";
 
       const isSameAddress = index > 0 && sameAddress && sameAddress.checked;
 
@@ -691,20 +624,20 @@ const formatCurrency = (amount) => {
 
       if (nationalityLabel) {
         nationalityLabel.textContent = domestic.checked
-          ? "国籍（入力不要）"
-          : "国籍";
+          ? "国籍 (入力不要)"
+          : "国籍 nationality";
       }
 
       if (passportLabel) {
         passportLabel.textContent = domestic.checked
-          ? "パスポート番号（入力不要）"
-          : "パスポート番号";
+          ? "パスポート番号 (入力不要)"
+          : "パスポート番号 passport number";
       }
 
       if (addressLabel) {
         addressLabel.textContent = isSameAddress
-          ? "住所（代表者と同じ）"
-          : "住所";
+          ? "住所 (代表者と同じ)"
+          : "住所 address";
       }
     }
 
@@ -781,7 +714,7 @@ const formatCurrency = (amount) => {
             "border:1px solid #cbd5e1;border-radius:8px;padding:14px;margin-top:14px;";
 
           const heading = document.createElement("h3");
-          heading.textContent = `宿泊者 ${i + 1}${i === 0 ? "（代表者）" : ""}`;
+          heading.textContent = `宿泊者 ${i + 1}${i === 0 ? " (代表者)" : ""}`;
           heading.style.marginTop = "0";
           section.appendChild(heading);
 
@@ -858,6 +791,14 @@ const formatCurrency = (amount) => {
 
             section.appendChild(row);
           }
+
+          const passportNotice = document.createElement("p");
+          passportNotice.dataset.role = "passport-notice";
+          passportNotice.textContent =
+            "ℹ️ According to Japanese law (the Hotels and Inns Act), all text-based registration and a photo/copy of the passport are mandatory for guests who do not have an address in Japan. Thank you for your cooperation.";
+            passportNotice.style.cssText =
+            "font-size:0.8rem;line-height:1.5;margin:0 0 10px;color:#475569;";
+          section.appendChild(passportNotice);
 
           fields.appendChild(section);
 
