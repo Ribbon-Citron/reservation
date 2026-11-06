@@ -155,47 +155,47 @@ export const prerender = false;
       }
 
       .passport-notice {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 16px;
-  padding: 14px 16px;
-  border: 1px solid #3b82f6;
-  border-radius: 12px;
-  background: #eff6ff;
-  color: #1e3a8a;
-}
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 16px;
+        padding: 14px 16px;
+        border: 1px solid #3b82f6;
+        border-radius: 12px;
+        background: #eff6ff;
+        color: #1e3a8a;
+      }
 
-.passport-notice-icon {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: #2563eb;
-  color: #fff;
-  font-size: 18px;
-  font-weight: bold;
-}
+      .passport-notice-icon {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #2563eb;
+        color: #fff;
+        font-size: 18px;
+        font-weight: bold;
+      }
 
-.passport-notice p {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.6;
-}
+      .passport-notice p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.6;
+      }
 
-@media screen and (max-width: 600px) {
-  .passport-notice {
-    align-items: flex-start;
-    padding: 12px;
-  }
+      @media screen and (max-width: 600px) {
+        .passport-notice {
+          align-items: flex-start;
+          padding: 12px;
+        }
 
-  .passport-notice p {
-    font-size: 12px;
-  }
-}
+        .passport-notice p {
+          font-size: 12px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -210,17 +210,6 @@ export const prerender = false;
       <p id="message" role="status" aria-live="polite"></p>
       <form id="precheckin-form" hidden>
         <div id="guest-fields"></div>
-
-        <div class="passport-notice">
-          <span class="passport-notice-icon">i</span>
-          <p>
-            According to Japanese law (the Hotels and Inns Act), all text-based
-            registration and a photo/copy of the passport are mandatory for
-            guests who do not have an address in Japan. Thank you for your
-            cooperation.
-          </p>
-        </div>
-
         <button type="submit">事前登録を送信</button>
       </form>
       <button type="button" id="close-page" hidden>
@@ -228,6 +217,7 @@ export const prerender = false;
       </button>
     </main>
 
+    <script is:inline src="/guest-form.js"></script>
     <script>
       const form = document.querySelector("#precheckin-form");
       const fields = document.querySelector("#guest-fields");
@@ -257,34 +247,6 @@ export const prerender = false;
         ["passport_number", "パスポート番号 passport number", "text"],
       ];
 
-      function updateGuestFields(section, isPrimary) {
-        const japanResident = section.querySelector('[name="japan_resident"]');
-        const address = section.querySelector('[name="guest_address"]');
-        const nationality = section.querySelector('[name="nationality"]');
-        const passport = section.querySelector('[name="passport_number"]');
-        const sameAddress = section.querySelector('[name="same_address"]');
-
-        nationality.disabled = japanResident.checked;
-        passport.disabled = japanResident.checked;
-        nationality.required = !japanResident.checked;
-        passport.required = !japanResident.checked;
-
-        if (japanResident.checked) {
-          nationality.value = "";
-          passport.value = "";
-        }
-
-        if (!isPrimary && sameAddress.checked) {
-          const primaryAddress = fields.querySelector(
-            '.guest:first-child [name="guest_address"]',
-          );
-          address.value = primaryAddress ? primaryAddress.value : "";
-          address.readOnly = true;
-        } else {
-          address.readOnly = false;
-        }
-      }
-
       async function initialize() {
         try {
           const response = await fetch(
@@ -300,151 +262,59 @@ export const prerender = false;
           }
 
           for (let i = 0; i < result.guestsCount; i++) {
-            const section = document.createElement("section");
             const savedGuest = result.savedGuests?.[i];
-            section.className = "guest";
 
-            const heading = document.createElement("h2");
-            heading.textContent =
-              i === 0 ? "代表者 (1人目)" : "宿泊者 " + (i + 1) + "人目";
-            section.appendChild(heading);
-
-            if (i > 0) {
-              const sameAddressLabel = document.createElement("label");
-              sameAddressLabel.className = "choice";
-
-              const sameAddress = document.createElement("input");
-              sameAddress.type = "checkbox";
-              sameAddress.name = "same_address";
-
-              sameAddressLabel.appendChild(sameAddress);
-              sameAddressLabel.append("代表者と同じ住所にする");
-              section.appendChild(sameAddressLabel);
-
-              sameAddress.addEventListener("change", () => {
-                updateGuestFields(section, false);
-              });
-            }
-            for (const [name, labelText, type, options] of labels) {
-              const field = document.createElement("div");
-              field.className = "form-field";
-
-              const label = document.createElement("label");
-              label.textContent = labelText;
-
-              const input =
-                type === "select"
-                  ? document.createElement("select")
-                  : document.createElement("input");
-
-              input.name = name;
-              input.required = !["nationality", "passport_number"].includes(
-                name,
-              );
-
-              if (type === "select") {
-                const placeholder = document.createElement("option");
-                placeholder.value = "";
-                placeholder.textContent = "選択してください";
-                input.appendChild(placeholder);
-
-                for (const optionText of options || []) {
-                  const option = document.createElement("option");
-                  option.value = optionText;
-                  option.textContent = optionText;
-                  input.appendChild(option);
+            // 保存済みの宿泊者情報を優先して表示
+            // 保存済み情報がなければ、代表者には予約時の情報を表示
+            const values = savedGuest
+              ? {
+                  guest_name: savedGuest.guest_name,
+                  gender: savedGuest.gender,
+                  age_group: savedGuest.age_group,
+                  guest_address: savedGuest.guest_address,
+                  guest_phone: savedGuest.guest_phone,
+                  guest_email: savedGuest.guest_email,
+                  nationality: savedGuest.nationality,
+                  passport_number: savedGuest.passport_number,
                 }
-              } else {
-                input.type = type;
-                input.maxLength = name === "guest_address" ? 500 : 200;
-                input.autocomplete = "off";
-              }
-              // 予約時に入力された代表者情報を初期表示
-              // 保存済みの宿泊者情報を優先して表示
-              const savedGuest = result.savedGuests?.[i];
+              : i === 0
+                ? result.primaryGuest
+                : null;
 
-              const values = savedGuest
-                ? {
-                    guest_name: savedGuest.guest_name,
-                    gender: savedGuest.gender,
-                    age_group: savedGuest.age_group,
-                    guest_address: savedGuest.guest_address,
-                    guest_phone: savedGuest.guest_phone,
-                    guest_email: savedGuest.guest_email,
-                    nationality: savedGuest.nationality,
-                    passport_number: savedGuest.passport_number,
-                  }
-                : i === 0
-                  ? result.primaryGuest
-                  : null;
-
-              const value = values?.[name];
-
-              if (value && (type !== "select" || options.includes(value))) {
-                input.value = value;
-              }
-              if (name === "guest_address" && i > 0) {
-                input.addEventListener("input", () => {
-                  const sameAddress = section.querySelector(
-                    '[name="same_address"]',
-                  );
-                  if (sameAddress?.checked) sameAddress.checked = false;
-                });
-              }
-
-              label.htmlFor = name + "_" + i;
-              input.id = name + "_" + i;
-
-              field.appendChild(label);
-              field.appendChild(input);
-              section.appendChild(field);
-
-              if (name === "guest_address" && i === 0) {
-                input.addEventListener("input", () => {
-                  for (const guestSection of fields.querySelectorAll(
-                    ".guest",
-                  )) {
-                    if (guestSection === section) continue;
-                    const sameAddress = guestSection.querySelector(
-                      '[name="same_address"]',
-                    );
-                    if (sameAddress?.checked) {
-                      updateGuestFields(guestSection, false);
-                    }
-                  }
-                });
-              }
-
-              if (name === "nationality") {
-                const residenceLabel = document.createElement("label");
-                residenceLabel.className = "choice";
-
-                const residence = document.createElement("input");
-                residence.type = "checkbox";
-                residence.name = "japan_resident";
-                residence.checked =
-                  !!savedGuest &&
-                  !savedGuest.nationality &&
-                  !savedGuest.passport_number;
-
-                residenceLabel.appendChild(residence);
-                residenceLabel.append("日本国内に住所がある");
-                section.insertBefore(residenceLabel, field);
-
-                const hint = document.createElement("p");
-                hint.className = "hint";
-                hint.textContent =
-                  "日本国内に住所がある場合はチェックしてください。国籍・パスポート欄は空欄になります。";
-                section.insertBefore(hint, field);
-
-                residence.addEventListener("change", () => {
-                  updateGuestFields(section, i === 0);
-                });
-              }
-            }
+            const section = window.GuestForm.createSection({
+              index: i,
+              guest: values,
+              isPrimary: i === 0,
+              headingText: i === 0 ? "代表者 (1人目)" : `宿泊者 (${i + 1}人目)`,
+              sectionClass: "guest",
+              japanResident:
+                !!savedGuest &&
+                !savedGuest.nationality &&
+                !savedGuest.passport_number,
+              idStyle: "precheckin",
+              requiredFields: true,
+              addressLockMode: "readonly",
+              getPrimaryAddress: () =>
+                fields.querySelector(
+                  '.guest:first-child [name="guest_address"]',
+                )?.value || "",
+            });
 
             fields.appendChild(section);
-            updateGuestFields(section, i === 0);
+
+            // 代表者の住所変更を、同じ住所に設定した宿泊者へ反映
+            if (i === 0) {
+              const primaryAddress = section.querySelector(
+                '[name="guest_address"]',
+              );
+
+              primaryAddress?.addEventListener("input", () => {
+                for (const guestSection of fields.querySelectorAll(".guest")) {
+                  if (guestSection === section) continue;
+                  guestSection.updateGuestFields?.();
+                }
+              });
+            }
           }
 
           loading.hidden = true;
