@@ -1,9 +1,9 @@
 (() => {
   const rows = [
     [
-      ["guest_name", "Name", 200, "text"],
-      ["gender", "Gender", 30, "select"],
-      ["age_group", "Age", 30, "select"],
+      ["guest_name", "Name1", 200, "text"],
+      ["gender", "Gender", 20, "select"],
+      ["age_group", "Age", 20, "select"],
     ],
     [["guest_address", "Address", 500, "text"]],
     [
@@ -160,8 +160,7 @@
     for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
       const row = document.createElement("div");
       row.style.cssText =
-        "display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:10px;";
-
+        "display:grid;grid-template-columns:minmax(0,5fr) minmax(0,2fr) minmax(0,2fr);gap:3px;margin-bottom:10px;";
       if (rowIndex === 1) {
         row.style.gridTemplateColumns = "minmax(0,1fr)";
       } else if (rowIndex === 2 || rowIndex === 3) {
@@ -232,11 +231,11 @@
       );
 
       nationalityLabel.textContent = domestic.checked
-        ? "Nationality (Not Required)"
+        ? "Nationality (N/A)"
         : "Nationality";
 
       passportLabel.textContent = domestic.checked
-        ? "Passport (Not Required)"
+        ? "Passport (N/A)"
         : "Passport";
 
       addressLabel.textContent = isSameAddress
