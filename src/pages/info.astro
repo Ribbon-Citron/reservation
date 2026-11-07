@@ -15,8 +15,6 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
     />
   </head>
 
-  <use href="#icon-shampoo"></use>
-
   <body>
     <header class="site-header">
       <a href="/" class="brand">CENTER <span>INN</span></a>
@@ -302,10 +300,10 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
               <li>施設からの承認・確定の連絡をもって予約成立となります。</li>
             </ol>
             <p class="note">
-              予約リクエストを送信した時点では、宿泊予約は確定していません。
+              予約リクエストを送信した時点では予約は確定していません。
             </p>
 
-            <a href="/" class="primary-button">予約ページへ進む</a>
+            <a href="/" class="primary-button">予約ページへ</a>
           </div>
         </section>
 
@@ -381,6 +379,7 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
         </section>
 
         <section class="terms-link-section">
+          <p class="eyebrow">04 / CONTACT</p>
           <a href="/terms" class="terms-link">
             利用規約・宿泊約款（特商法に基づく表示）
             <span>→</span>
@@ -548,13 +547,6 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
           color: #ef4444;
         }
 
-        .back-link {
-          font-size: 13px;
-          text-decoration: none;
-          border: 1px solid #94a3b8;
-          border-radius: 7px;
-          padding: 6px 12px;
-        }
         .hero {
           background: var(--navy);
           color: white;
@@ -568,8 +560,8 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
         }
 
         .hero h1 {
-          margin: 8px 0;
-          font-size: clamp(1.8rem, 5vw, 1rem);
+          margin: 0px 0;
+          font-size: clamp(0.8rem, 5vw, 3rem);
           letter-spacing: 0.04em;
         }
 
@@ -624,15 +616,15 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
         .section-heading h2 {
           margin: 0px 0;
           color: var(--navy);
-          font-size: clamp(1.5rem, 4vw, 1rem);
+          font-size: clamp(0.8rem, 5vw, 1rem);
         }
 
         .facility-card {
           overflow: hidden;
           background: white;
-          border: 1px solid var(--border);
+          /* border: 1px solid var(--border); */
           border-radius: 12px;
-          box-shadow: 0 5px 20px rgb(15 23 42 / 4%);
+          /* box-shadow: 0 1px 1px rgb(15 23 42 / 4%); */
         }
 
         .room-gallery {
@@ -751,65 +743,6 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
           opacity: 0.35;
         }
 
-        @media (max-width: 600px) {
-          .gallery-button {
-            width: 36px;
-            height: 46px;
-            font-size: 30px;
-          }
-
-          .gallery-prev {
-            left: 8px;
-          }
-
-          .gallery-next {
-            right: 8px;
-          }
-
-          .amenity-icons {
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px 4px;
-            padding: 18px 6px;
-          }
-
-          .amenity-icon {
-            width: 20px;
-            height: 20px;
-          }
-
-          .amenity-item span {
-            font-size: 9px;
-          }
-          .hero {
-            padding: 18px 18px;
-          }
-
-          .container {
-            margin-top: 30px;
-          }
-
-          .draft-warning {
-            margin-bottom: 45px;
-          }
-
-          .content-section {
-            margin-bottom: 55px;
-          }
-
-          .info-panel,
-          .contact-form {
-            padding: 22px 18px;
-          }
-
-          .facility-text {
-            padding: 20px;
-          }
-
-          .primary-button {
-            width: 100%;
-          }
-        }
-
         .facility-text {
           padding: 24px 28px;
         }
@@ -825,7 +758,8 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
         }
 
         .info-panel {
-          padding: 0 20px;
+          font-size: 0.8rem;
+          padding: 0 10px;
           background: white;
           border: 1px solid var(--border);
           border-radius: 12px;
@@ -837,7 +771,7 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
         }
 
         .info-panel li {
-          padding: 4px 0;
+          padding: 0px 0;
         }
 
         .note {
@@ -845,10 +779,20 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
           background: #fff7ed;
           border-radius: 6px;
           color: #9a3412;
-          font-size: 0.9rem;
+          font-size: 0.8rem;
         }
 
+        /* .back-link {
+          font-size: 0.8rem;
+          text-decoration: none;
+          border: 1px solid #94a3b8;
+          border-radius: 7px;
+          padding: 6px 12px;
+        } */
+
+        .back-link,
         .primary-button {
+          font-size: 0.8rem;
           display: inline-flex;
           justify-content: center;
           align-items: center;
@@ -858,7 +802,6 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
           border-radius: 7px;
           background: var(--red);
           color: white;
-          font-size: 1rem;
           font-weight: 700;
           cursor: pointer;
           transition: opacity 0.2s;
@@ -874,7 +817,8 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
         }
 
         .contact-form {
-          padding: 22px;
+          font-size: 0.8rem;
+          padding: 10px;
           background: #ffffff;
           border: 1px solid var(--border);
           border-radius: 12px;
@@ -948,7 +892,7 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
         }
 
         .terms-link {
-          display: flex;
+          /* display: flex; */
           justify-content: space-between;
           align-items: center;
           gap: 15px;
@@ -975,6 +919,4 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
       </style>
     </main>
   </body>
-
-
 </html>
