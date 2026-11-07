@@ -26,7 +26,8 @@
           CENTER <span style="color: #a3080f;">INN</span>
         </h1>
         <p style="margin: 0 0 1.25rem 0; color: #edeae5; font-size: 0.95rem;">
-          ここは開発中の架空サイトです
+          ⚠️このサイトは構築中で内容は仮のものです<br />
+          This site is under construction, and the content is provisional.
         </p>
 
         <!-- 写真1プレースホルダー部分の置き換え -->
@@ -40,20 +41,7 @@
           />
         </div>
 
-        <p
-          style="margin: 0; color: #e5eae0; font-size: 0.9rem; line-height: 1.6; text-align: center;"
-        >
-          九州中央市のシェアスタイル素泊まり宿
-        </p>
-
-        <p style="margin: 0.6rem 0 0; text-align: center;">
-          <a
-            href="/info"
-            style="color: #e5eae0; text-decoration: underline; font-size: 0.9rem;"
-          >
-            宿・施設案内はこちら
-          </a>
-        </p>
+        <a href="/info" class="back-link">宿泊施設のご案内</a>
       </div>
     </header>
 
@@ -434,32 +422,21 @@
           <section
             style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem;"
           >
-            <h4 style="font-size: 0.8rem; margin: 0 0 0.4rem; color: #475569;">
+            <h4 style="font-size: 0.8rem; margin: 0 0 0.4rem; color: #15191f;">
               📜 キャンセル規定・注意事項
             </h4>
             <ul
-              style="margin: 0 0 0.75rem 0; padding-left: 1.2rem; font-size: 0.75rem; color: #64748b; display: flex; flex-direction: column; gap: 0.2rem;"
+              style="margin: 0 0 0.75rem 0; padding-left: 1.2rem; font-size: 0.75rem; color: #111b29; display: flex; flex-direction: column; gap: 0.2rem;"
             >
               <li>チェックイン3日前まで: キャンセル料 無料</li>
               <li>前日〜当日・不泊: 100%</li>
-              <li>状況確認✉が24時間以内に届かない時はお電話ください</li>
+              <li>
+                <a href="/terms" style="font-weight: bold; color: #2563eb; text-decoration: underline;">
+                  利用規則・宿泊約款
+                </a>を確認してください
+              </li>
+              <li>状況確認メールが24時間以内に届かない時はお電話ください</li>
             </ul>
-
-            <div style="padding-top: 0.65rem; border-top: 1px dashed #cbd5e1;">
-              <p
-                style="margin: 0 0 0.4rem; font-size: 0.8rem; font-weight: bold; color: #0f172a;"
-              >
-                利用規則・宿泊約款を確認承諾してください
-              </p>
-              <a
-                href="/terms"
-                target="_blank"
-                rel="noopener noreferrer"
-                style="font-size: 0.8rem; color: #2563eb; text-decoration: underline;"
-              >
-                利用規則・宿泊約款を確認する
-              </a>
-            </div>
 
             <label
               style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; font-weight: bold; color: #0f172a; cursor: pointer; padding-top: 0.65rem; margin-top: 0.65rem; border-top: 1px dashed #cbd5e1;"
@@ -470,7 +447,7 @@
                 required
                 style="width: 16px; height: 16px; accent-color: #2563eb;"
               />
-              キャンセル規定・注意事項に同意します
+              利用規則・宿泊約款に同意します
             </label>
           </section>
 
@@ -1089,6 +1066,16 @@
 </html>
 
 <style>
+  .back-link {
+    color: #f8fcf3;
+    background: #0f1477;
+    font-size: 15px;
+    text-decoration: none;
+    border: 2px solid #343a79;
+    border-radius: 7px;
+    padding: 6px 12px;
+  }
+
   footer {
     background: #1e293b;
     color: #cbd5e1;

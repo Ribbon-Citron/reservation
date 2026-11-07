@@ -1,251 +1,357 @@
-
 ---
 const business = {
-  name: 'CENTER INN (仮)',
-  operator: '宿泊施設運営責任者 (仮)',
-  address: '〒000-0000 仮住所 (デバッグ用)',
-  phone: '000-0000-0000',
-  email: 'example@example.com',
-  license: '旅館業許可番号：仮番号 (未確定)',
-  price: '宿泊日・人数・プランにより予約画面に表示',
-  payment: '予約画面に表示する方法によりお支払いいただきます (仮)',
+  name: "CENTER INN (仮)",
+  operator: "宿泊施設運営責任者 (仮)",
+  address: "〒000-0000 仮住所 (デバッグ用)",
+  phone: "000-0000-0000",
+  email: "example@example.com",
+  license: "旅館業許可番号：仮番号 (未確定)",
+  price: "宿泊日・人数・プランにより予約画面に表示",
+  payment: "予約画面に表示する方法によりお支払いいただきます (仮)",
 };
 
 const cancellation = [
-  { period: 'チェックイン3日前まで', fee: '無料' },
-  { period: '前日〜当日・不泊', fee: '100%' },
-  { period: 'その他の期間区分', fee: '予約画面に表示する条件を適用' },
-];
-
-const rules = [
-  {
-    title: '第1条 (適用範囲)',
-    body: '本規則は、CENTER INN (以下「当施設」といいます)が提供する宿泊サービスおよびこれに付随するサービスの利用に適用されます。'
-  },
-  {
-    title: '第2条 (宿泊契約の申込み)',
-    body: '宿泊を希望するお客様は、当施設所定の方法により、宿泊日、宿泊人数、氏名、連絡先その他必要事項を申し出てください。'
-  },
-  {
-    title: '第3条 (宿泊料金)',
-    body: '宿泊料金は、予約画面に表示された金額とします。追加サービスや追加料金が発生する場合は、事前に内容と金額をお知らせします。'
-  },
-  {
-    title: '第4条 (チェックイン・チェックアウト)',
-    body: 'チェックインおよびチェックアウトの時刻は、予約画面または当施設からの案内に表示する時刻とします。時間の変更を希望する場合は、事前に当施設へご相談ください。'
-  },
-  {
-    title: '第5条 (施設利用上の注意)',
-    body: 'お客様は、施設および備品を適切に取り扱い、他のお客様や近隣の方に迷惑を及ぼす行為をしないものとします。施設内の案内およびスタッフの指示に従ってください。'
-  },
-  {
-    title: '第6条 (禁止事項)',
-    body: '法令に違反する行為、危険物の持込み、施設や備品を故意に損傷する行為、他のお客様への迷惑行為、無断での定員超過や第三者への宿泊権の譲渡を禁止します。'
-  },
-  {
-    title: '第7条 (損害賠償)',
-    body: 'お客様の故意または過失により当施設に損害が生じた場合、法令に従い、その損害の賠償をお願いすることがあります。'
-  },
-  {
-    title: '第8条 (個人情報の取扱い)',
-    body: '当施設は、予約、本人確認、宿泊サービスの提供、お問い合わせへの対応および法令上必要な手続のために個人情報を利用します。業務委託先への必要な提供や法令に基づく場合を除き、本人の同意なく個人情報を第三者に提供しません。'
-  },
-  {
-    title: '第9条 (規則の変更)',
-    body: '当施設は、必要に応じて本規則を変更することがあります。変更後の規則は、当施設のウェブサイト等で告知した時点から適用します。ただし、成立済みの宿泊契約については、予約時に合意された条件を原則として適用します。'
-  },
-];
-
-const lodgingTerms = [
-  {
-    title: '第1条 (宿泊契約の成立)',
-    body: '宿泊契約は、お客様からの申込みに対し、当施設が承諾したときに成立します。予約完了画面または予約確認メール等をもって成立の確認とします。'
-  },
-  {
-    title: '第2条 (宿泊契約の拒否)',
-    body: '当施設は、法令に定める場合その他正当な理由がある場合、宿泊の申込みをお断りすることがあります。'
-  },
-  {
-    title: '第3条 (宿泊者情報)',
-    body: 'お客様は、予約時および宿泊時に、当施設が求める必要な情報を正確に提供するものとします。'
-  },
-  {
-    title: '第4条 (宿泊料金の支払い)',
-    body: '宿泊料金および追加料金は、予約時または当施設が指定する方法・時期にお支払いください。現地払いの場合は、当施設が案内する方法によりお支払いください。'
-  },
-  {
-    title: '第5条 (契約の解除)',
-    body: 'お客様が宿泊契約を解除する場合、予約時に表示されたキャンセル条件に従うものとします。当施設から契約を解除する場合は、法令および適用される宿泊約款に従います。'
-  },
-  {
-    title: '第6条 (免責)',
-    body: '天災、交通機関の運休その他当施設の合理的な管理の範囲を超える事情によりサービスの提供が困難となる場合があります。責任の有無および範囲は、関係法令に従って判断します。'
-  },
-  {
-    title: '第7条 (準拠法・管轄)',
-    body: '本約款は日本法に準拠します。本約款または宿泊契約に関して紛争が生じた場合は、法令に従い管轄裁判所を定めます。'
-  },
+  { period: "チェックイン3日前まで", fee: "無料" },
+  { period: "前日〜当日・不泊", fee: "100%" },
+  { period: "その他の期間区分", fee: "予約画面に表示する条件を適用" },
 ];
 ---
 
 <!doctype html>
 <html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex,nofollow" />
-  <title>利用規則・宿泊約款・特商法表示 | CENTER INN</title>
-  <meta name="description" content="CENTER INNの利用規則、宿泊約款、キャンセル規定および特定商取引法に基づく表示です。" />
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>利用規則・宿泊約款・特商法表示 | CENTER INN</title>
+    <meta
+      name="description"
+      content="CENTER INNの利用規則、宿泊約款、キャンセル規定および特定商取引法に基づく表示です。"
+    />
+  </head>
 
-<body>
-  <header class="site-header">
-    <a href="/" class="brand">CENTER <span>INN</span></a>
-    <a href="/" class="back-link">予約ページへ戻る</a>
-  </header>
+  <body>
+    <header class="site-header">
+      <a href="/" class="brand">CENTER <span>INN</span></a>
+      <a href="/" class="back-link">予約ページへ戻る</a>
+    </header>
 
-  <main class="container">
-    <section class="warning">
-      <div class="warning-title">⚠ これは仮情報です</div>
-      <p>
-        このページはデバッグ用の仮ページです。事業者情報、連絡先、許可番号、
-        料金、キャンセル条件等には架空または未確定の情報が含まれています。
-        実際の宿泊契約・営業には使用できません。
-      </p>
-    </section>
-
-    <section class="page-heading">
-      <p class="eyebrow">CENTER INN</p>
-      <h1>利用規則・宿泊約款</h1>
-      <p>安心してご利用いただくために、以下の内容をご確認ください。</p>
-    </section>
-
-    <nav class="toc" aria-label="ページ内目次">
-      <h2>目次</h2>
-      <a href="#rules">1. 利用規則</a>
-      <a href="#lodging">2. 宿泊約款</a>
-      <a href="#cancellation">3. キャンセル規定</a>
-      <a href="#commerce">4. 特定商取引法に基づく表示</a>
-    </nav>
-
-    <section id="rules" class="section">
-      <div class="section-heading">
-        <span>01</span>
-        <h2>利用規則</h2>
-      </div>
-      <p class="section-lead">当施設をご利用いただく際の基本的なルールです。</p>
-
-      {rules.map((item) => (
-        <details class="article">
-          <summary>{item.title}</summary>
-          <p>{item.body}</p>
-        </details>
-      ))}
-    </section>
-
-    <section id="lodging" class="section">
-      <div class="section-heading">
-        <span>02</span>
-        <h2>宿泊約款</h2>
-      </div>
-      <p class="section-lead">宿泊契約の成立、料金、解除等について定めています。</p>
-
-      {lodgingTerms.map((item) => (
-        <details class="article">
-          <summary>{item.title}</summary>
-          <p>{item.body}</p>
-        </details>
-      ))}
-    </section>
-
-    <section id="cancellation" class="section">
-      <div class="section-heading">
-        <span>03</span>
-        <h2>キャンセル規定</h2>
-      </div>
-
-      <div class="notice">
-        <strong>予約時に表示されたキャンセル条件が適用されます。</strong>
+    <main class="container">
+      <section class="warning">
+        <div class="warning-title">⚠ これは仮情報です</div>
         <p>
-          キャンセル料の具体的な条件は、予約時に画面上で確認できるように表示します。
-          ご予約成立後は、原則として予約時に合意された条件を適用します。
+          このページはデバッグ用の仮ページです。事業者情報、連絡先、許可番号、
+          料金、キャンセル条件等には架空または未確定の情報が含まれています。
+          実際の宿泊契約・営業には使用できません。
         </p>
+      </section>
+
+      <section class="page-heading">
+        <p class="eyebrow">CENTER INN</p>
+        <h1>利用規則・宿泊約款</h1>
+        <p>安心してご利用いただくために、以下の内容をご確認ください。</p>
+      </section>
+
+      <nav class="toc" aria-label="ページ内目次">
+        <h2>目次</h2>
+        <a href="#rules">1. 利用規則</a>
+        <a href="#lodging">2. 宿泊約款</a>
+        <a href="#cancellation">3. キャンセル規定</a>
+        <a href="#commerce">4. 特定商取引法に基づく表示</a>
+      </nav>
+
+      <section id="rules" class="section">
+        <div class="section-heading">
+          <span>01</span>
+          <h2>利用規則</h2>
+        </div>
+        <p class="section-lead">
+          当施設をご利用いただく際の基本的なルールです。
+        </p>
+
+        <pre
+          class="wrap-text">
+CENTER INN(以下、当館という)では、お客様に安全かつ快適にご利用頂くために、次の通り利用規則を定めておりますので、ご協力下さいますようお願い申し上げます。この規則をお守り頂けない場合は、当館内諸施設のご利用をお断り申し上げますので、予めご承知おき下さい。
+
+■ 適用範囲
+当館の全施設(宿泊施設、敷地等すべてを含みます。以下総称して「当館内諸施設」といいます。)ご利用の来館者に適用させて頂きます。但し、本規則に定めのないものは、宿泊約款を適用させて頂きます。
+
+■ 火災予防および保安に関すること
+1. 当館内は全館禁煙とさせて頂きます。喫煙される場合は必ず指定の屋外喫煙所をご利用下さい。
+2. バックヤード、母屋建物などお客様用以外の施設には立ち入らないで下さい。
+3. 当館内に危険物や法律により禁じられたものを持ち込むことはできません。
+
+■ お預かり品、お忘れ物等の取扱いに関すること
+1. お忘れ物、拾得物の処置は法令(遺失物法)に基づいてお取り扱いさせて頂きます。
+
+■ 当館内諸施設・設備の利用時間
+1. 受付時間は16時〜21時とします。
+2. 共用スペースの利用可能時間は6時〜23時とします。
+3. 【今は無し】当館の洗濯機は自由にご利用頂けますが、利用後は直ちに洗濯物を取り出し、次の利用者の妨げにならないようにして下さい。また、洗濯設備の性能に関するご意見は一切受付けておりません。
+
+■ 行動に関すること
+1. 当館ご利用のお客様は必ず当館スタッフの指示に従って行動して下さい。承諾頂けない場合は退館頂く場合がございます。
+2. 当館内の入退出は当館とご契約頂いたお客様のみ可能となります。
+3. 当館内で発生したゴミ類は、当館の分別に従ってお捨て下さい。
+4. 当館内で飲酒をされた方は自動車・自転車等の運転を行うことはできません。
+5. 当館に門限や消灯はございませんが、他のお客様や近隣住人の迷惑にならないよう節度を持った行動を心掛けて下さい。
+
+■ 責任に関すること
+1. 当館利用者間に発生したトラブルは一切責任を負いません。必ず当事者間にて解決して下さい。
+
+■ その他の禁止事項
+1. 当館内諸施設で賭博、又は風紀を乱すような行為。
+2. 当館内諸施設で他のお客様にご迷惑を及ぼすような大声、放歌、または喧騒な行為。
+3. 著しく不潔な身体または服装により他のお客様に迷惑を及ぼす恐れが認められること。
+4. 客室を当館の許可なしに宿泊及び飲食以外の目的に使用すること。
+5. 当館内施設に他のお客様の迷惑になるもの(犬、猫、小鳥等の動物、ペット全般。ただし盲導犬、介助犬は除く)をお持込みになること。
+6. 発火又は引火しやすい火薬・揮発油類、危険性のある製品、悪臭を発する物、その他法令で所持を禁じられている物等の持ち込み。
+7. 当館内諸施設の諸設備、諸物品に傷や異物をつけたり、当館の許可なく他の場所へ移動させる等、現状を変更する行為。又、館外に持ち出したりする行為。
+8. 当館内諸施設で許可なく、広告、宣伝物の配布、掲示、物品の販売、勧誘、営業行為等、及びビラ等の配布、署名活動等を行うこと。
+9. 館内で撮影された写真等を当館の許可なく営業上の目的で公にすること。
+10. その他当館が不適当と判断する行為。
+
+■ 情報・運営に関すること
+1. 当館の屋号「CENTER INN」を当館以外の第三者が使用することを禁じます。
+2. 当館は簡易宿所に定義されるゲストハウスとなり、旅館業営業許可にて運営を行っております。
+3. 当館ご利用時にご登録頂いた個人情報は個人情報保護法に基づいて守られ、第三者への開示・譲渡・販売を行うことは一切ありません。但し、お客様の同意がある場合や法令に基づく場合は除きます。
+4. 当館ご利用時にご登録頂いた電子メールアドレスは、当館の任意のタイミングでお客様ご本人へ広告やお知らせを行うことができます。
+5. 当館の運営に必要な情報は、当館の判断により変更されることがあります。
+6. 本利用規則に関する内容は予告なく変更する事があり、その事前通知の義務はありません。
+
+        </pre>
+      </section>
+
+      <section id="lodging" class="section">
+        <div class="section-heading">
+          <span>02</span>
+          <h2>宿泊約款</h2>
+        </div>
+        <p class="section-lead">
+          宿泊契約の成立、料金、解除等について定めています。
+        </p>
+
+        <pre
+          class="wrap-text">
+第1条(本約款の適用)
+1. CENTER INN(以下「当施設」という)が宿泊客との間で締結する宿泊契約及びこれに関連する契約は、この約款の定めるところによるものとし、この約款に定められていない事項については、法令または一般に確立された慣習によるものとします。
+2. 当施設は前項の規定に関わらず、この約款の趣旨、法令及び慣習に反しない範囲で特約に応ずることができます。
+  
+第2条(宿泊契約の申込み)
+1. 当施設に宿泊契約の申込みをしようとする者は、次の事項を当施設へ申し出て頂きます。
+(1) 氏名、住所、年齢、電話番号、性別、職業、宿泊日
+(2) 外国人にあっては、国籍、旅券番号、前泊地、後泊地
+(3) 出発日、人数、出発時刻、同室者の年齢区分(大人・小人・幼児・乳児)
+(4) その他、当施設が必要と認めた事項
+1. 宿泊客が、宿泊中に前項第１号の宿泊日を超えて宿泊の継続を申し入れた場合、当施設はその申し出がなされた時点で新たな宿泊契約の申し込みがあったものとして処理します。
+
+第3条(宿泊契約の成立等)
+1. 宿泊契約は、当施設が前条の申し込みを承諾した時に成立するものとします。但し、当施設が承諾しなかった時は、この限りではありません。
+2. 前項の規定により宿泊契約が成立した時は、期間を定めて宿泊期間の宿泊料金を限度とする予約金の支払いを求める事があります。
+3. 前項の予約金は、第５条に該当する場合には同条の違約金に充当し、残額があれば返還します。
+   
+第4条(宿泊契約締結の拒否)
+当施設は次に掲げる場合において、宿泊契約の締結に応じないことがあります。
+(1) 満室により客室の余裕がないとき。
+(2) 休館日により営業外のとき。
+(3) 宿泊の申し込みがこの約款によらないとき。
+(4) 宿泊しようとする者が、宿泊に関し、法令の規定または公の秩序もしくは善良の風俗に反する行為をするおそれがあると認められるとき。
+(5) 宿泊しようとする者が、暴力団、暴力団員、暴力団準構成員又は暴力団関係者その他の反社会勢力であるとき。
+(6) 宿泊しようとする者が、伝染病であると明らかに認められるとき。
+(7) 宿泊しようとする者が利用施設もしくは利用施設関係者に対し暴力的要求行為、あるいは合理的範囲を超える負担を要求した場合。
+(8) 天災・施設の故障、その他やむを得ない理由により宿泊させることができないとき。
+(9) 他のお客様の迷惑となる行為と判断した場合。
+
+第5条(宿泊客の契約解除・違約金)
+1. 宿泊客は、当施設に申し出て、宿泊契約を解除することができます。
+2. 当施設は、宿泊客がその責めに帰すべき事由により宿泊契約の全部または一部を解除したときは、次の項目に掲げるところにより違約金(キャンセル料)を申し受けます。
+	• 宿泊日当日〜前日の解除、および連絡なき不着(ノーショウ)： 宿泊料金の100%
+3. 当施設は、宿泊者が宿泊日当日の21時(あらかじめ到着時刻が明示されている場合は、その時刻を2時間経過した時刻)になっても到着しないとき、その宿泊予約は取消しされたものとみなして処理することがあります。
+
+第6条(当施設の契約解除)
+1. 当施設は次に掲げる場合においては、宿泊契約を解除することがあります。
+(1) 宿泊客が宿泊に関し、法令の規定、公の秩序もしくは善良の風俗に反する行為をするおそれがあると認められるとき、または同行為をしたと認められるとき。
+(2) 宿泊客が反社会勢力等に該当すると認められるとき。
+(3) 宿泊客がほかの宿泊客等(施設関係者、近隣住民含む)に迷惑を及ぼす行為をしたとき。
+(4) 宿泊客が伝染病者であると明らかに認められるとき。
+(5) 宿泊に関し暴力的要求行為が行われ、又は合理的な範囲を超える負担を求められたとき。
+(6) 天災等不可抗力に起因する事由により宿泊させることができないとき。
+(7) 第3条第2項の予約金の支払いを請求した場合において期限までにその支払がないとき。
+(8) 申告事項に虚偽が認められたとき。
+(9) 当施設が定める利用規則に従わないとき。
+2. 当施設が前項の規定に基づいて宿泊契約を解除したときは、宿泊客がいまだ提供を受けていない宿泊サービス等の料金は頂きません。
+
+第7条(宿泊の登録)
+宿泊者は、宿泊日当日、当施設受付において宿帳(登録画面含む)にて次の事項を登録して頂きます。
+(1) 氏名、住所、年齢、電話番号、性別、職業、緊急連絡先
+(2) 外国人にあっては、国籍、旅券番号を追加記入
+(3) 出発日、人数、出発時刻、同室者の年齢区分
+(4) その他、当施設が必要と認めた事項
+
+第8条(客室の使用時間および館内利用時間)
+1. 宿泊客が当施設の客室を使用できる時間は、チェックイン日の16時から翌朝10時までとします。ただし、連続して宿泊する場合においては、到着日及び出発日を除き、終日使用することができます。
+2. チェックイン前、およびチェックアウト後の館内設備の利用(ラウンジ利用や手荷物預かり等)については、当施設が別途定める別料金を請求いたします。
+3. 宿泊客がチェックアウトしたのち、手荷物や携帯品が置き忘れられていた場合、法令に基づいて当施設が相当と考える措置をとるものとします。
+4. 宿泊客がチェックアウトしたのち、共用スペース等の客室以外の当施設内にて、宿泊に相当する長時間の使用が明らかな場合、相当の料金を申し受けます。
+
+第9条(利用規則の遵守)
+宿泊者は当施設の利用規則に従っていただきます。
+
+第10条(宿泊料金の支払いおよび特定商取引法に基づく表示)
+当施設がウェブサイト等を通じて提供する宿泊予約サービス、およびオンライン決済等に関わる特定商取引法に基づく表示事項は以下の通りです。
+1. 役務提供事業者・運営責任者
+	• 事業者名：【例：〇〇株式会社 または 個人事業主の本名】
+	• 運営責任者：【例：代表者名、または館長名】
+	• 所在地：【正確な住所を記載】
+	• 電話番号：【電話番号を記載】(受付時間：16:00〜21:00)
+	• メールアドレス：【アドレスを記載】
+2. 宿泊料金およびその他の費用
+	• 宿泊料金：各宿泊プランおよびお部屋タイプごとに予約画面に表示する料金(消費税込)。
+	• 宿泊料金以外に必要な費用：宿泊税(対象地域のみ：1人1泊あたり所定額)、オプション利用料、インターネット接続に関わる通信料。
+3. 代金の支払い時期および方法
+	• 支払い方法：クレジットカード決済(オンライン事前決済)、現地払い(現金、その他当施設が認める決済手段)。
+	• 支払い時期：オンライン事前決済の場合は予約完了時に決済が確定します。現地払いの場合は到着の際、または当施設が請求した時にお支払いいただきます。
+4. 役務の提供時期
+	• ご予約いただいた宿泊日(チェックインからチェックアウトまで)。
+5. キャンセルの取扱・返金
+	• サービスの特性上、宿泊後の返金は承っておりません。宿泊前のキャンセルにつきましては、本約款第5条に定める違約金が発生します。任意に宿泊しなかった場合においても宿泊料金は申し受けます。
+6. 旅館業許可番号
+	• 【例：〇〇指定第〇〇号】
+
+第11条(当施設の責任)
+1. 当施設の宿泊に関する責任は、宿泊者が当施設受付において宿泊の登録を行ったとき、または客室に入ったときのうち、いずれか早い時期に始まり、宿泊客が出発するためチェックアウトした時に終わります。
+2. 宿泊客が当施設の利用規則に従わない為に発生した事故に関して、当施設はその責任を負いません。
+3. 当施設の責に帰すべき理由により、宿泊客に客室の提供ができなくなったときは、天災その他の理由により困難な場合を除き、その宿泊客にできる限り同一の条件による他の宿泊施設を斡旋するものとします。
+
+第12条(宿泊客の責任)
+宿泊客の故意又は過失により当施設が損害を被ったときは、当該宿泊客は当施設に対し、その損害を賠償していただきます。
+第13条(金銭その他貴重品)
+金銭その他貴重品は、自己責任にて管理して頂きます。滅失又は毀損等の損害について、当施設は一切責任を負いません。
+
+第14条(インターネット通信の使用)
+1. 当施設内でのインターネット通信の利用に当たっては、利用者自身の責任において行うものとします。利用中のシステム障害その他理由によりサービスが中断し、その結果、利用者がいかなる損害を受けた場合においても、当施設は一切の責任を負いません。
+2. インターネット通信の利用に際し、当施設が不適切と判断した行為により、当施設及び第三者に損害が見込まれる場合、または生じた損害についてはその損害相当額を申し受けます。
+
+第15条(本約款の変更)
+この約款に定めのない事項及び営業を行う上で必要であると判断した場合には、事前に予告なく内容を変更することがあります。
+
+        </pre> 
+      </section>
+
+      <section id="cancellation" class="section">
+        <div class="section-heading">
+          <span>03</span>
+          <h2>キャンセル規定</h2>
+        </div>
+
+        <div class="notice">
+          <strong>予約時に表示されたキャンセル条件が適用されます。</strong>
+          <p>
+            キャンセル料の具体的な条件は、予約時に画面上で確認できるように表示します。
+            ご予約成立後は、原則として予約時に合意された条件を適用します。
+          </p>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>キャンセル時期</th><th>キャンセル料</th></tr>
+            </thead>
+            <tbody>
+              {
+                cancellation.map((item) => (
+                  <tr>
+                    <>
+                      <td>{item.period}</td>
+                      <td>{item.fee}</td>
+                    </>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <p class="small-note">
+          ※上記はデバッグ用の暫定表示です。その他の期間区分、算定方法および例外条件は今後調整します。
+        </p>
+      </section>
+
+      <section id="commerce" class="section">
+        <div class="section-heading">
+          <span>04</span>
+          <h2>特定商取引法に基づく表示</h2>
+        </div>
+
+        <div class="table-wrap">
+          <table class="business-table">
+            <tbody>
+              <tr><th>販売事業者</th><td>{business.name}</td></tr>
+              <tr><th>運営責任者</th><td>{business.operator}</td></tr>
+              <tr><th>所在地</th><td>{business.address}</td></tr>
+              <tr><th>電話番号</th><td>{business.phone}</td></tr>
+              <tr><th>メールアドレス</th><td>{business.email}</td></tr>
+              <tr><th>旅館業許可</th><td>{business.license}</td></tr>
+              <tr><th>販売価格</th><td>{business.price}</td></tr>
+              <tr
+                ><th>商品代金以外の必要料金</th><td
+                  >追加料金がある場合は、予約画面に表示します (仮)。</td
+                ></tr
+              >
+              <tr><th>支払方法</th><td>{business.payment}</td></tr>
+              <tr
+                ><th>支払時期</th><td
+                  >選択した支払方法に応じて予約画面に表示します (仮)。</td
+                ></tr
+              >
+              <tr
+                ><th>サービス提供時期</th><td
+                  >予約された宿泊日および宿泊期間に提供します。</td
+                ></tr
+              >
+              <tr
+                ><th>キャンセル・返金</th><td
+                  >予約時に表示されたキャンセル条件に従います。</td
+                ></tr
+              >
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="contact">
+        <h2>お問い合わせ</h2>
+        <p>ご不明な点がございましたら、下記までお問い合わせください。</p>
+        <p class="contact-email">{business.email}</p>
+        <p class="small-note">※連絡先はデバッグ用の仮情報です。</p>
+      </section>
+
+      <p class="updated">制定日・最終改定日：公開時に設定</p>
+
+      <div class="bottom-link">
+        <a href="/">予約ページへ戻る</a>
       </div>
+    </main>
 
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>キャンセル時期</th><th>キャンセル料</th></tr>
-          </thead>
-          <tbody>
-            {cancellation.map((item) => (
-              <tr><td>{item.period}</td><td>{item.fee}</td></tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <p class="small-note">
-        ※上記はデバッグ用の暫定表示です。その他の期間区分、算定方法および例外条件は今後調整します。
-      </p>
-    </section>
-
-    <section id="commerce" class="section">
-      <div class="section-heading">
-        <span>04</span>
-        <h2>特定商取引法に基づく表示</h2>
-      </div>
-
-      <div class="table-wrap">
-        <table class="business-table">
-          <tbody>
-            <tr><th>販売事業者</th><td>{business.name}</td></tr>
-            <tr><th>運営責任者</th><td>{business.operator}</td></tr>
-            <tr><th>所在地</th><td>{business.address}</td></tr>
-            <tr><th>電話番号</th><td>{business.phone}</td></tr>
-            <tr><th>メールアドレス</th><td>{business.email}</td></tr>
-            <tr><th>旅館業許可</th><td>{business.license}</td></tr>
-            <tr><th>販売価格</th><td>{business.price}</td></tr>
-            <tr><th>商品代金以外の必要料金</th><td>追加料金がある場合は、予約画面に表示します (仮)。</td></tr>
-            <tr><th>支払方法</th><td>{business.payment}</td></tr>
-            <tr><th>支払時期</th><td>選択した支払方法に応じて予約画面に表示します (仮)。</td></tr>
-            <tr><th>サービス提供時期</th><td>予約された宿泊日および宿泊期間に提供します。</td></tr>
-            <tr><th>キャンセル・返金</th><td>予約時に表示されたキャンセル条件に従います。</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="contact">
-      <h2>お問い合わせ</h2>
-      <p>ご不明な点がございましたら、下記までお問い合わせください。</p>
-      <p class="contact-email">{business.email}</p>
-      <p class="small-note">※連絡先はデバッグ用の仮情報です。</p>
-    </section>
-
-    <p class="updated">制定日・最終改定日：公開時に設定</p>
-
-    <div class="bottom-link">
-      <a href="/">予約ページへ戻る</a>
-    </div>
-  </main>
-
-  <footer>
-    <p>© CENTER INN</p>
-    <p>本ページはデバッグ用の仮情報を含みます。</p>
-  </footer>
-</body>
+    <footer>
+      <p>© CENTER INN</p>
+      <p>本ページはデバッグ用の仮情報を含みます。</p>
+    </footer>
+  </body>
 </html>
 
 <style>
   :root {
     color-scheme: light;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family:
+      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     color: #0f172a;
     background: #f8fafc;
   }
 
-  * { box-sizing: border-box; }
+  * {
+    box-sizing: border-box;
+  }
 
   body {
     margin: 0;
@@ -253,7 +359,9 @@ const lodgingTerms = [
     background: #f8fafc;
   }
 
-  a { color: inherit; }
+  a {
+    color: inherit;
+  }
 
   .site-header {
     min-height: 64px;
@@ -273,7 +381,9 @@ const lodgingTerms = [
     text-decoration: none;
   }
 
-  .brand span { color: #ef4444; }
+  .brand span {
+    color: #ef4444;
+  }
 
   .back-link {
     font-size: 13px;
@@ -333,13 +443,22 @@ const lodgingTerms = [
     margin: 0;
   }
 
-  .toc, .section, .contact {
+  .toc,
+  .section,
+  .contact {
     background: white;
     border: 1px solid #e2e8f0;
     border-radius: 13px;
     padding: 22px;
     margin-bottom: 24px;
     box-shadow: 0 3px 12px rgb(15 23 42 / 4%);
+  }
+
+  .wrap-text {
+    white-space: pre-wrap; /* 改行・スペースを維持しつつ、端で折り返す */
+    word-wrap: break-word; /* 長い単語(英数字など)も途中で折り返す */
+    overflow-wrap: break-word; /* 同上(ブラウザ互換性のための記述) */
+    margin: 0; /* preタグ特有の上下の余白をリセット */
   }
 
   .toc h2 {
@@ -355,7 +474,9 @@ const lodgingTerms = [
     border-top: 1px solid #f1f5f9;
   }
 
-  .toc a:hover { color: #a3080f; }
+  .toc a:hover {
+    color: #a3080f;
+  }
 
   .section-heading {
     display: flex;
@@ -392,7 +513,9 @@ const lodgingTerms = [
     padding: 13px 2px;
   }
 
-  .article:last-child { border-bottom: 0; }
+  .article:last-child {
+    border-bottom: 0;
+  }
 
   .article summary {
     cursor: pointer;
@@ -400,7 +523,9 @@ const lodgingTerms = [
     color: #1e293b;
   }
 
-  .article summary::marker { color: #a3080f; }
+  .article summary::marker {
+    color: #a3080f;
+  }
 
   .article p {
     margin: 10px 0 2px;
@@ -415,8 +540,13 @@ const lodgingTerms = [
     margin: 16px 0;
   }
 
-  .notice strong { color: #991b1b; }
-  .notice p { margin: 6px 0 0; font-size: 14px; }
+  .notice strong {
+    color: #991b1b;
+  }
+  .notice p {
+    margin: 6px 0 0;
+    font-size: 14px;
+  }
 
   .table-wrap {
     overflow-x: auto;
@@ -429,7 +559,8 @@ const lodgingTerms = [
     font-size: 14px;
   }
 
-  th, td {
+  th,
+  td {
     padding: 12px 13px;
     border: 1px solid #e2e8f0;
     text-align: left;
@@ -452,10 +583,19 @@ const lodgingTerms = [
     font-size: 12px;
   }
 
-  .contact { text-align: center; }
-  .contact h2 { margin: 0 0 8px; }
-  .contact p { margin: 5px 0; }
-  .contact-email { color: #a3080f; font-weight: 800; }
+  .contact {
+    text-align: center;
+  }
+  .contact h2 {
+    margin: 0 0 8px;
+  }
+  .contact p {
+    margin: 5px 0;
+  }
+  .contact-email {
+    color: #a3080f;
+    font-weight: 800;
+  }
 
   .updated {
     text-align: right;
@@ -463,7 +603,10 @@ const lodgingTerms = [
     color: #64748b;
   }
 
-  .bottom-link { text-align: center; margin-top: 28px; }
+  .bottom-link {
+    text-align: center;
+    margin-top: 28px;
+  }
 
   .bottom-link a {
     display: inline-block;
@@ -483,15 +626,35 @@ const lodgingTerms = [
     font-size: 12px;
   }
 
-  footer p { margin: 3px; }
+  footer p {
+    margin: 3px;
+  }
 
   @media (max-width: 600px) {
-    .site-header { padding: 12px 16px; }
-    .container { width: min(100% - 20px, 850px); margin-top: 14px; }
-    .warning { padding: 16px; }
-    .toc, .section, .contact { padding: 17px 15px; }
-    .section-heading h2 { font-size: 20px; }
-    th, td { padding: 10px 9px; }
-    .business-table tbody th { width: 38%; }
+    .site-header {
+      padding: 12px 16px;
+    }
+    .container {
+      width: min(100% - 20px, 850px);
+      margin-top: 14px;
+    }
+    .warning {
+      padding: 16px;
+    }
+    .toc,
+    .section,
+    .contact {
+      padding: 17px 15px;
+    }
+    .section-heading h2 {
+      font-size: 20px;
+    }
+    th,
+    td {
+      padding: 10px 9px;
+    }
+    .business-table tbody th {
+      width: 38%;
+    }
   }
 </style>
