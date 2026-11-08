@@ -302,7 +302,6 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
             <p class="note">
               予約リクエストを送信した時点では予約は確定していません。
             </p>
-
             <a href="/" class="primary-button">予約ページへ</a>
           </div>
         </section>
@@ -757,12 +756,14 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
           color: var(--muted);
         }
 
-        .info-panel {
+        .info-panel,
+        .contact-form {
           font-size: 0.8rem;
-          padding: 0 10px;
-          background: white;
+          padding: 10px;
+          background: #ffffff;
           border: 1px solid var(--border);
           border-radius: 12px;
+          box-shadow: 0 5px 20px rgb(15 23 42 / 4%);
         }
 
         .info-panel ol {
@@ -782,30 +783,16 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
           font-size: 0.8rem;
         }
 
-        /* .back-link {
+        .back-link,
+        .primary-button {
           font-size: 0.8rem;
           text-decoration: none;
           border: 1px solid #94a3b8;
           border-radius: 7px;
           padding: 6px 12px;
-        } */
-
-        .back-link,
-        .primary-button {
-          font-size: 0.8rem;
-          display: inline-flex;
-          justify-content: center;
-          align-items: center;
-          min-height: 20px;
-          padding: 6px 12px;
-          border: none;
-          border-radius: 7px;
-          background: var(--red);
-          color: white;
-          font-weight: 700;
-          cursor: pointer;
-          transition: opacity 0.2s;
-        }
+          background: white;
+          color: var(--navy);
+          }
 
         .primary-button:hover {
           opacity: 0.85;
@@ -816,18 +803,9 @@ const pageTitle = "宿泊施設のご案内 | CENTER INN";
           cursor: wait;
         }
 
-        .contact-form {
-          font-size: 0.8rem;
-          padding: 10px;
-          background: #ffffff;
-          border: 1px solid var(--border);
-          border-radius: 12px;
-          box-shadow: 0 5px 20px rgb(15 23 42 / 4%);
-        }
-
         .form-group {
-          margin-bottom: 15px;
-        }
+          margin-bottom: 5px;
+          margin-top: 10px;        }
 
         .form-group label {
           display: block;
