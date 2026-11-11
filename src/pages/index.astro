@@ -432,7 +432,10 @@
               <li>チェックイン3日前まで: キャンセル料 無料</li>
               <li>前日〜当日・不泊: 100%</li>
               <li>
-                <a href="/terms" style="font-weight: bold; color: #2563eb; text-decoration: underline;">
+                <a
+                  href="/terms"
+                  style="font-weight: bold; color: #2563eb; text-decoration: underline;"
+                >
                   利用規則・宿泊約款
                 </a>をご確認ください
               </li>
@@ -623,6 +626,7 @@
           checkInInput.addEventListener("change", handleCheckInChange);
           checkInInput.addEventListener("input", handleCheckInChange);
         }
+
         if (checkOutInput) {
           checkOutInput.addEventListener("change", () => {
             if (
@@ -887,6 +891,7 @@
                     checkInInput.value = dateStr;
                     checkOutInput.value = "";
                     handleCheckInChange();
+                    saveReservationDraft();
                     fetchAndRenderCalendar();
                     return;
                   }
@@ -898,7 +903,7 @@
                   calculateTotal();
                   checkGuestAvailability();
                 }
-
+                saveReservationDraft();
                 fetchAndRenderCalendar();
               });
             } else {
@@ -922,6 +927,176 @@
 
           calculateTotal();
         }
+
+
+        // 予約フォームの入力内容を一時保存・復元
+        const draftKey = "centerInnReservationDraft";
+
+        function saveReservationDraft() {
+          if (!form) return;
+
+          const draft = {};
+
+          form.querySelectorAll("input, select, textarea").forEach((el) => {
+            if (el.id === "agreeTerms") return;
+
+            if (el.type === "radio") {
+              if (el.checked) {
+                draft[`radio_${el.name}`] = el.value;
+              }
+            } else if (el.type === "checkbox") {
+              draft[el.id] = el.checked;
+            } else if (el.id) {
+              draft[el.id] = el.value;
+            }
+          });
+
+          try {
+            sessionStorage.setItem(draftKey, JSON.stringify(draft));
+          } catch (e) {
+            console.warn("予約情報の一時保存に失敗しました:", e);
+          }
+        }
+
+        function restoreReservationDraft() {
+          if (!form) return;
+
+          try {
+            const saved = sessionStorage.getItem(draftKey);
+            if (!saved) return;
+
+            const draft = JSON.parse(saved);
+
+            form.querySelectorAll("input, select, textarea").forEach((el) => {
+              if (el.id === "agreeTerms") return;
+
+              if (el.type === "radio") {
+                el.checked = draft[`radio_${el.name}`] === el.value;
+              } else if (el.type === "checkbox") {
+                if (draft[el.id] !== undefined) {
+                  el.checked = draft[el.id];
+                }
+              } else if (el.id && draft[el.id] !== undefined) {
+                el.value = draft[el.id];
+              }
+            });
+
+            if (checkInInput.value) {
+              const selectedDate = new Date(
+                `${checkInInput.value}T00:00:00`,
+              );
+              selectedDate.setDate(selectedDate.getDate() + 1);
+
+              checkOutInput.min = [
+                selectedDate.getFullYear(),
+                String(selectedDate.getMonth() + 1).padStart(2, "0"),
+                String(selectedDate.getDate()).padStart(2, "0"),
+              ].join("-");
+            }
+
+            selectingDate =
+              checkInInput.value && !checkOutInput.value
+                ? "checkOut"
+                : "checkIn";
+
+            updateDateSelection();
+            calculateTotal();
+          } catch (e) {
+            console.warn("予約情報の復元に失敗しました:", e);
+          }
+        }
+
+        if (form) {
+          form.addEventListener("input", saveReservationDraft);
+          form.addEventListener("change", saveReservationDraft);
+        }
+
+        restoreReservationDraft();
+        fetchAndRenderCalendar();
+
+        function saveReservationDraft() {
+          if (!form) return;
+
+          const draft = {};
+
+          form.querySelectorAll("input, select, textarea").forEach((el) => {
+            if (el.id === "agreeTerms") return;
+
+            if (el.type === "radio") {
+              if (el.checked) {
+                draft[`radio_${el.name}`] = el.value;
+              }
+            } else if (el.type === "checkbox") {
+              if (el.id) draft[el.id] = el.checked;
+            } else if (el.id) {
+              draft[el.id] = el.value;
+            }
+          });
+
+          try {
+            sessionStorage.setItem(draftKey, JSON.stringify(draft));
+          } catch (e) {
+            console.warn("予約情報の一時保存に失敗しました:", e);
+          }
+        }
+
+        function restoreReservationDraft() {
+          if (!form) return;
+
+          try {
+            const saved = sessionStorage.getItem(draftKey);
+            if (!saved) return;
+
+            const draft = JSON.parse(saved);
+
+            form.querySelectorAll("input, select, textarea").forEach((el) => {
+              if (el.id === "agreeTerms") return;
+
+              if (el.type === "radio") {
+                el.checked = draft[`radio_${el.name}`] === el.value;
+              } else if (el.type === "checkbox") {
+                if (el.id && draft[el.id] !== undefined) {
+                  el.checked = draft[el.id];
+                }
+              } else if (el.id && draft[el.id] !== undefined) {
+                el.value = draft[el.id];
+              }
+            });
+
+            if (checkInInput.value) {
+              const restoredDate = new Date(`${checkInInput.value}T00:00:00`);
+
+              year = restoredDate.getFullYear();
+              month = restoredDate.getMonth();
+
+              const nextDate = new Date(restoredDate);
+              nextDate.setDate(nextDate.getDate() + 1);
+
+              checkOutInput.min = [
+                nextDate.getFullYear(),
+                String(nextDate.getMonth() + 1).padStart(2, "0"),
+                String(nextDate.getDate()).padStart(2, "0"),
+              ].join("-");
+            }
+
+            selectingDate =
+              checkInInput.value && !checkOutInput.value
+                ? "checkOut"
+                : "checkIn";
+
+            updateDateSelection();
+            calculateTotal();
+          } catch (e) {
+            console.warn("予約情報の復元に失敗しました:", e);
+          }
+        }
+
+        if (form) {
+          form.addEventListener("input", saveReservationDraft);
+          form.addEventListener("change", saveReservationDraft);
+        }
+
+        restoreReservationDraft();
 
         fetchAndRenderCalendar();
 
@@ -1032,6 +1207,7 @@
               const result = await res.json();
 
               if (res.ok) {
+                sessionStorage.removeItem(draftKey);
                 if (qrModal) qrModal.style.display = "flex";
               } else {
                 alert(
